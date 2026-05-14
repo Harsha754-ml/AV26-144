@@ -641,10 +641,10 @@ function App() {
                                      .catch(() => {});
                                  }
                                }}
-                               className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-rose-500/10 hover:border-rose-500/20 transition-all opacity-0 group-hover:opacity-100"
+                               className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 hover:bg-rose-500/20 transition-all"
                                title="Delete"
                             >
-                               <CloseIcon className="w-4 h-4 text-slate-600 hover:text-rose-400" />
+                               <CloseIcon className="w-4 h-4 text-rose-400" />
                             </button>
                          </div>
                       </div>
