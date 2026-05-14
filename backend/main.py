@@ -14,6 +14,7 @@ import ingest
 from scheduler import start_scheduler
 from hlr_model import get_engine as get_hlr_engine
 import socratic_swarm
+import auth
 
 import pyttsx3
 
@@ -563,3 +564,41 @@ def knowledge_graph():
                 edges.append({"source": topic_list[i], "target": topic_list[j]})
     
     return {"nodes": nodes, "links": edges}
+
+
+# -----------------
+# AUTH & ROLES
+# -----------------
+class LoginReq(BaseModel):
+    username: str
+    password: str
+
+class RegisterReq(BaseModel):
+    username: str
+    password: str
+    role: str = "student"
+    name: str = ""
+
+@app.post("/auth/login")
+def login_endpoint(req: LoginReq):
+    result = auth.login(req.username, req.password)
+    if "error" in result:
+        raise HTTPException(status_code=401, detail=result["error"])
+    return result
+
+@app.post("/auth/register")
+def register_endpoint(req: RegisterReq):
+    result = auth.register(req.username, req.password, req.role, req.name)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+
+@app.get("/teacher/alerts")
+def teacher_alerts():
+    """Get alerts for teacher - students with critical decay."""
+    return auth.get_teacher_alerts()
+
+@app.get("/teacher/students")
+def teacher_student_stats():
+    """Get student performance overview for teacher dashboard."""
+    return auth.get_student_stats()

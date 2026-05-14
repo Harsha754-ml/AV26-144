@@ -7,6 +7,7 @@ import NeuralGraph3D from './NeuralGraph3D';
 import BiometricPanel from './BiometricPanel';
 import LearningFlow from './LearningFlow';
 import SplashScreen from './SplashScreen';
+import LoginPage from './LoginPage';
 
 const API_BASE = "http://127.0.0.1:8000";
 const WS_URL = "ws://127.0.0.1:8000/ws";
@@ -64,6 +65,7 @@ function App() {
   const [ingestLoading, setIngestLoading] = useState(false);
   const [ingestSuccess, setIngestSuccess] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
+  const [user, setUser] = useState(null); // {role, user: {username, name}}
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'game', 'graph', 'ml'
   const [audioReviewOpen, setAudioReviewOpen] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(null);
@@ -197,6 +199,13 @@ function App() {
       
       {/* SPLASH SCREEN */}
       {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+
+      {/* LOGIN SCREEN */}
+      {!showSplash && !user && (
+        <div className="absolute inset-0 z-40">
+          <LoginPage onLogin={(data) => setUser(data)} />
+        </div>
+      )}
       
       {/* SIDEBAR - NEURAL ARCHITECTURE */}
       <aside className="w-80 h-full flex flex-col bg-[#0f0f11] border-r border-white/5 z-20 shadow-[10px_0_30px_rgba(0,0,0,0.8)] glass-morphism">
