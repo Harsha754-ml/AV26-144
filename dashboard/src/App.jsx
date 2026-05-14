@@ -4,6 +4,8 @@ import { Activity, Brain, Server, RefreshCw, Layers, ShieldCheck, Zap, AlertTria
 import SynapticMatchGame, { syncQueue } from './SynapticMatchGame';
 import KnowledgeGraph from './KnowledgeGraph';
 import BiometricPanel from './BiometricPanel';
+import LearningFlow from './LearningFlow';
+import SplashScreen from './SplashScreen';
 
 const API_BASE = "http://127.0.0.1:8000";
 const WS_URL = "ws://127.0.0.1:8000/ws";
@@ -60,9 +62,11 @@ function App() {
   const [ingestType, setIngestType] = useState('text');
   const [ingestLoading, setIngestLoading] = useState(false);
   const [ingestSuccess, setIngestSuccess] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'game', 'graph', 'ml'
   const [audioReviewOpen, setAudioReviewOpen] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(null);
+  const [learningCard, setLearningCard] = useState(null);
   
   // UI Form States
   const [topicName, setTopicName] = useState('');
@@ -193,6 +197,9 @@ function App() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#0a0a0b] text-[#f4f1ea] font-sans selection:bg-[#c5a059]/30">
+      
+      {/* SPLASH SCREEN */}
+      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
       
       {/* SIDEBAR - NEURAL ARCHITECTURE */}
       <aside className="w-80 h-full flex flex-col bg-[#0f0f11] border-r border-white/5 z-20 shadow-[10px_0_30px_rgba(0,0,0,0.8)] glass-morphism">
@@ -653,28 +660,23 @@ function App() {
                          "{fc.question}"
                       </p>
 
-                      {/* AUDIO PLAYBACK */}
+                      {/* LEARNING FLOW BUTTON */}
                       <div className="mb-8 flex items-center gap-4">
                          <button 
-                            onClick={() => {
-                              // Try backend audio first, fallback to browser TTS
-                              const audio = new Audio(`${API_BASE}/audio/${fc.id}`);
-                              audio.play().catch(() => {
-                                // Fallback: use browser speech synthesis
-                                const text = fc.summary || fc.answer || fc.question;
-                                playAudioSummary(text);
-                              });
-                            }}
-                            className="flex items-center gap-3 px-6 py-3 bg-[#c5a059]/10 border border-[#c5a059]/20 rounded-2xl hover:bg-[#c5a059]/20 transition-all group/audio"
+                            onClick={() => setLearningCard(fc)}
+                            className="flex items-center gap-3 px-8 py-4 bg-[#c5a059] text-black font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-white transition-all hover:scale-105 shadow-lg"
                          >
-                            <Volume2 className="w-4 h-4 text-[#c5a059] group-hover/audio:scale-110 transition-transform" />
-                            <span className="text-[10px] font-black text-[#c5a059] uppercase tracking-widest">Listen</span>
+                            <Volume2 className="w-4 h-4" />
+                            Learn Now
                          </button>
                          <button 
-                            onClick={() => playAudioSummary(fc.question)}
+                            onClick={() => {
+                              const audio = new Audio(`${API_BASE}/audio/${fc.id}`);
+                              audio.play().catch(() => playAudioSummary(fc.summary || fc.answer || fc.question));
+                            }}
                             className="flex items-center gap-3 px-5 py-3 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/[0.06] transition-all"
                          >
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Read Question</span>
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Audio Only</span>
                          </button>
                       </div>
 
@@ -777,6 +779,11 @@ function App() {
            ) : null}
         </div>
       </main>
+
+      {/* LEARNING FLOW MODAL */}
+      {learningCard && (
+        <LearningFlow flashcard={learningCard} onClose={() => setLearningCard(null)} />
+      )}
 
       {/* AUDIO REVIEW MODAL */}
       {audioReviewOpen && (

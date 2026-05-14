@@ -8,6 +8,8 @@ import 'models.dart';
 import 'constants.dart';
 import 'game_screen.dart';
 import 'knowledge_graph_screen.dart';
+import 'learning_flow_screen.dart';
+import 'splash_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -56,8 +58,26 @@ class MemoryForgeApp extends StatelessWidget {
           unselectedItemColor: Colors.white54,
         ),
       ),
-      home: const MainScreen(),
+      home: const _AppEntry(),
     );
+  }
+}
+
+class _AppEntry extends StatefulWidget {
+  const _AppEntry({Key? key}) : super(key: key);
+  @override
+  _AppEntryState createState() => _AppEntryState();
+}
+
+class _AppEntryState extends State<_AppEntry> {
+  bool _showSplash = true;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_showSplash) {
+      return SplashScreen(onComplete: () => setState(() => _showSplash = false));
+    }
+    return const MainScreen();
   }
 }
 
@@ -491,55 +511,47 @@ class _FlashcardTile extends StatelessWidget {
           ),
           const SizedBox(height: 14),
 
-          // Audio buttons
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  final player = AudioPlayer();
-                  // Try backend audio, uses gTTS-generated MP3
-                  player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC5A059).withAlpha(20),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFC5A059).withAlpha(60)),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.volume_up, size: 14, color: Color(0xFFC5A059)),
-                      SizedBox(width: 6),
-                      Text("LISTEN", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Color(0xFFC5A059))),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              GestureDetector(
-                onTap: () {
-                  final player = AudioPlayer();
-                  // Read question aloud via backend TTS
-                  player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withAlpha(5),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white10),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.record_voice_over, size: 14, color: Colors.grey),
-                      SizedBox(width: 6),
-                      Text("READ", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Colors.grey)),
-                    ],
+          // Learning Flow button
+          Builder(
+            builder: (context) => Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => LearningFlowScreen(flashcard: topic)));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC5A059),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.play_arrow, size: 16, color: Colors.black),
+                        SizedBox(width: 6),
+                        Text("LEARN NOW", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Colors.black)),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    final player = AudioPlayer();
+                    player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(5),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.white10),
+                    ),
+                    child: const Icon(Icons.volume_up, size: 16, color: Colors.grey),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 14),
 

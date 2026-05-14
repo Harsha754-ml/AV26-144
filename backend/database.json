@@ -1,28 +1,28 @@
 {
   "flashcards": [
     {
-      "id": "fc_e3577870",
-      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
-      "question": "What is the primary purpose of a Half-Life Regression Model?",
-      "answer": "A Half-Life Regression Model is used to measure and predict how something decreases or loses value over time using exponential decay.",
+      "id": "fc_3d9cb6fe",
+      "topic_name": "Half-Life Regression",
+      "question": "What is Half-Life Regression?",
+      "answer": "It is a machine learning model that predicts memory retention.",
       "source_type": "ai_ingest",
-      "created_at": 1778783230.219747,
-      "last_reviewed": 1778783230.219747,
+      "created_at": 1778783672.405756,
+      "last_reviewed": 1778783672.405756,
       "stability": 24.0,
       "review_count": 0,
       "ignore_count": 0,
       "status": "active",
-      "summary": "It measures and predicts the exponential decay of value over time.",
+      "summary": "Half-Life Regression predicts memory retention using machine learning.",
       "audio_ready": true
     },
     {
-      "id": "fc_5a30dac0",
-      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
-      "question": "In the context of the Half-Life Regression Model, what does \"half-life\" refer to?",
-      "answer": "Half-life is the amount of time required for a value to reduce to half of its current amount.",
+      "id": "fc_ff796598",
+      "topic_name": "Half-Life Regression",
+      "question": "In Half-Life Regression, what does the 'half-life' represent?",
+      "answer": "The time until recall probability drops to 50 percent.",
       "source_type": "ai_ingest",
-      "created_at": 1778783230.2235003,
-      "last_reviewed": 1778783230.2235003,
+      "created_at": 1778783672.4168525,
+      "last_reviewed": 1778783672.4168525,
       "stability": 24.0,
       "review_count": 0,
       "ignore_count": 0,
@@ -31,13 +31,13 @@
       "audio_ready": false
     },
     {
-      "id": "fc_e5e79f43",
-      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
-      "question": "State the main formula for the Half-Life Regression Model to calculate the value at time (t), and identify its components.",
-      "answer": "The main formula is (N(t)=N_0\\left(\\frac12\\right)^{t/T}).\nWhere: (N(t)) = value at time (t), (N_0) = initial value, (T) = half-life, (t) = time.",
+      "id": "fc_bc275871",
+      "topic_name": "Half-Life Regression",
+      "question": "What are some of the features Half-Life Regression uses to predict forgetting curves?",
+      "answer": "Review count, difficulty, and time elapsed.",
       "source_type": "ai_ingest",
-      "created_at": 1778783230.231932,
-      "last_reviewed": 1778783230.231932,
+      "created_at": 1778783672.421311,
+      "last_reviewed": 1778783672.421311,
       "stability": 24.0,
       "review_count": 0,
       "ignore_count": 0,
@@ -46,13 +46,13 @@
       "audio_ready": false
     },
     {
-      "id": "fc_84929905",
-      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
-      "question": "What is the general exponential decay form, and how can half-life (T_{1/2}) be calculated from the decay rate (b) in this form?",
-      "answer": "The general exponential decay form is (y = ae^{-bx}). Half-life (T_{1/2}) can be calculated using (T_{1/2}=\\frac{\\ln 2}{b}).",
+      "id": "fc_f4b8a1aa",
+      "topic_name": "Half-Life Regression",
+      "question": "What is the primary output or prediction generated by the Half-Life Regression model?",
+      "answer": "Personalized forgetting curves.",
       "source_type": "ai_ingest",
-      "created_at": 1778783230.2501814,
-      "last_reviewed": 1778783230.2501814,
+      "created_at": 1778783672.428358,
+      "last_reviewed": 1778783672.428358,
       "stability": 24.0,
       "review_count": 0,
       "ignore_count": 0,
@@ -61,13 +61,13 @@
       "audio_ready": false
     },
     {
-      "id": "fc_eb6e8746",
-      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
-      "question": "What is the significance of \"regression\" in the Half-Life Regression Model, and what does the model learn through this process?",
-      "answer": "Regression is used to fit real-world data and estimate how fast the decay happens. The model learns the decay rate, future values, and effective half-life.",
+      "id": "fc_6e56cd72",
+      "topic_name": "Half-Life Regression",
+      "question": "How does Half-Life Regression personalize its predictions about memory retention?",
+      "answer": "By using features like review count, difficulty, and time elapsed to predict personalized forgetting curves.",
       "source_type": "ai_ingest",
-      "created_at": 1778783230.262321,
-      "last_reviewed": 1778783230.262321,
+      "created_at": 1778783672.4355412,
+      "last_reviewed": 1778783672.4355412,
       "stability": 24.0,
       "review_count": 0,
       "ignore_count": 0,
@@ -76,13 +76,28 @@
       "audio_ready": false
     },
     {
-      "id": "fc_ed2433a8",
-      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
-      "question": "Name at least three distinct real-world applications where Half-Life Regression Models are useful.",
-      "answer": "Finance (e.g., signal decay), Marketing (e.g., ad effectiveness over time), Machine Learning (e.g., giving more importance to recent data), Biology/Physics (e.g., radioactive decay), and Psychology (e.g., memory retention decline).",
+      "id": "fc_3e08c018",
+      "topic_name": "hello",
+      "question": "Explain the core concept of the Grid-based approach in clustering.",
+      "answer": "The Grid-based approach is a space-driven clustering technique that partitions the data space into a finite number of cells (a grid structure) and fits the data into these cells to form clusters. It's efficient for large datasets as its processing time depends on the number of grid cells, not data objects.",
       "source_type": "ai_ingest",
-      "created_at": 1778783230.2804961,
-      "last_reviewed": 1778783230.2804961,
+      "created_at": 1778783795.182165,
+      "last_reviewed": 1778783795.182165,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "Grid-based clustering efficiently forms clusters by dividing the entire data space into grid cells.",
+      "audio_ready": true
+    },
+    {
+      "id": "fc_6b3c7344",
+      "topic_name": "hello",
+      "question": "Describe the two main stages of the CLIQUE algorithm.",
+      "answer": "Stage 1 (Identifying Subspaces containing Clusters): Partitions the data space into non-overlapping cells, identifies dense cells in 1D, merges dense cells, and generates candidate dense cells in (k+1) dimensions using an Apriori-like property until no new dense cells are generated. Stage 2 (Cluster Generation): Finds maximal regions (hyper-rectangles) that cover all connected dense cells in a subspace and merges them to form the final clusters.",
+      "source_type": "ai_ingest",
+      "created_at": 1778783795.182165,
+      "last_reviewed": 1778783795.182165,
       "stability": 24.0,
       "review_count": 0,
       "ignore_count": 0,
@@ -91,13 +106,58 @@
       "audio_ready": false
     },
     {
-      "id": "fc_c17753f5",
-      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
-      "question": "What is the key insight for determining when Half-Life Regression Models are useful?",
-      "answer": "Half-life models are useful whenever importance fades with time, old data becomes less useful, or systems naturally decay. They model \"How quickly does something lose value over time?\"",
+      "id": "fc_86d7b546",
+      "topic_name": "hello",
+      "question": "What are the main advantages and disadvantages of the CLIQUE algorithm?",
+      "answer": "Advantages: Insensitive to input order, no assumption of underlying data distribution. Disadvantages: Tuning grid parameters (size and density threshold) is challenging.",
       "source_type": "ai_ingest",
-      "created_at": 1778783230.2924545,
-      "last_reviewed": 1778783230.2924545,
+      "created_at": 1778783795.2023754,
+      "last_reviewed": 1778783795.2023754,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_ad4df60c",
+      "topic_name": "hello",
+      "question": "What is the core principle of the Mean Shift clustering algorithm?",
+      "answer": "Mean Shift is a non-parametric, density-based clustering algorithm. Its core principle is to iteratively shift data points towards the mode (the highest density of data points) within a given region, using a 'sliding window' approach to find dense areas.",
+      "source_type": "ai_ingest",
+      "created_at": 1778783795.2204676,
+      "last_reviewed": 1778783795.2204676,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_6f9347f8",
+      "topic_name": "hello",
+      "question": "What are the main advantages and disadvantages of the Mean Shift algorithm?",
+      "answer": "Advantages: Does not require predefined cluster counts; robust to arbitrary shapes and outliers. Disadvantages: Computationally expensive for large datasets (O(N^2) complexity), and highly sensitive to the choice of the bandwidth parameter.",
+      "source_type": "ai_ingest",
+      "created_at": 1778783795.245689,
+      "last_reviewed": 1778783795.245689,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_9d45f943",
+      "topic_name": "hello",
+      "question": "Define Reinforcement Learning (RL).",
+      "answer": "Reinforcement Learning (RL) is a behavioral machine learning paradigm where an agent learns to make decisions by performing actions in an environment to maximize cumulative rewards.",
+      "source_type": "ai_ingest",
+      "created_at": 1778783795.2718246,
+      "last_reviewed": 1778783795.2718246,
       "stability": 24.0,
       "review_count": 0,
       "ignore_count": 0,
@@ -112,6 +172,18 @@
       "text": "AI Ingested: # Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d (7 cards)",
       "type": "info",
       "timestamp": 1778783230.326817
+    },
+    {
+      "id": "evt_1778783672445",
+      "text": "AI Ingested: Half-Life Regression (5 cards)",
+      "type": "info",
+      "timestamp": 1778783672.4459927
+    },
+    {
+      "id": "evt_1778783795299",
+      "text": "AI Ingested: hello (7 cards)",
+      "type": "info",
+      "timestamp": 1778783795.299307
     }
   ],
   "pending_notifications": [],
@@ -145,6 +217,72 @@
           "title": "The Knowledge Litmus",
           "content": "Final challenge for # Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d.",
           "due_at": 1778869630.3289034,
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "topic_id": "topic_595cc327",
+      "topic_name": "Half-Life Regression",
+      "created_at": 1778783672.4459927,
+      "status": "active",
+      "current_stage": 0,
+      "steps": [
+        {
+          "stage": 0,
+          "type": "audio_summary",
+          "title": "Immediate Synthesis",
+          "content": "Audio summary for Half-Life Regression is ready for review.",
+          "due_at": 1778783672.4459927,
+          "status": "pending"
+        },
+        {
+          "stage": 1,
+          "type": "text_recap",
+          "title": "Synaptic Calibration",
+          "content": "Recapping Half-Life Regression: What is Half-Life Regression?",
+          "due_at": 1778787272.4459927,
+          "status": "pending"
+        },
+        {
+          "stage": 2,
+          "type": "quiz",
+          "title": "The Knowledge Litmus",
+          "content": "Final challenge for Half-Life Regression.",
+          "due_at": 1778870072.4459927,
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "topic_id": "topic_fb820d69",
+      "topic_name": "hello",
+      "created_at": 1778783795.299307,
+      "status": "active",
+      "current_stage": 0,
+      "steps": [
+        {
+          "stage": 0,
+          "type": "audio_summary",
+          "title": "Immediate Synthesis",
+          "content": "Audio summary for hello is ready for review.",
+          "due_at": 1778783795.299307,
+          "status": "pending"
+        },
+        {
+          "stage": 1,
+          "type": "text_recap",
+          "title": "Synaptic Calibration",
+          "content": "Recapping hello: Explain the core concept of the Grid-based approach in clustering.",
+          "due_at": 1778787395.299307,
+          "status": "pending"
+        },
+        {
+          "stage": 2,
+          "type": "quiz",
+          "title": "The Knowledge Litmus",
+          "content": "Final challenge for hello.",
+          "due_at": 1778870195.299307,
           "status": "pending"
         }
       ]
