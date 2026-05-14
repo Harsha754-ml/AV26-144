@@ -33,7 +33,9 @@ class _KnowledgeGraphScreenState extends State<KnowledgeGraphScreen> with Single
 
   Future<void> _fetchGraph() async {
     try {
-      final response = await http.get(Uri.parse('${AppConstants.backendUrl}/knowledge-graph'));
+      final response = await http.get(
+        Uri.parse('${AppConstants.backendUrl}/knowledge-graph'),
+      ).timeout(const Duration(seconds: 3));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final nodes = (data['nodes'] as List).map((n) => _GraphNode(
