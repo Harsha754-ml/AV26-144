@@ -103,6 +103,7 @@ class _MainScreenState extends State<MainScreen> {
     startGameSyncService();
     // Start background polling for local isolated network
     _pollingTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      _fetchData();
       _pollNotifications();
     });
   }
@@ -115,16 +116,19 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> _fetchData() async {
     try {
-      final cards = await ApiService.getFlashcards();
-      setState(() {
-        _flashcards = cards;
-        _isConnected = true;
-      });
+      final cards = await ApiService.getFlashcards().timeout(const Duration(seconds: 5));
+      if (mounted) {
+        setState(() {
+          _flashcards = cards;
+          _isConnected = true;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _isConnected = false;
-      });
-      debugPrint("Failed to fetch flashcards: $e");
+      if (mounted) {
+        setState(() {
+          _isConnected = false;
+        });
+      }
     }
   }
 
