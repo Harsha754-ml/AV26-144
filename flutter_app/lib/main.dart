@@ -845,17 +845,7 @@ class _AudioReviewScreenState extends State<AudioReviewScreen> {
   final AudioPlayer _player = AudioPlayer();
   String? _playingId;
 
-  // Use demo data if no flashcards from server
-  static final List<Topic> _demoCards = [
-    Topic(id: "d1", topicName: "Philosophy: Stoicism", question: "What is the Dichotomy of Control?", answer: "The distinction between things within our power and things not in our power.", sourceType: "demo", retentionScore: 94, urgencyLevel: "safe", nextReminderMinutes: 480),
-    Topic(id: "d2", topicName: "Quantum Mechanics", question: "Define the Heisenberg Uncertainty Principle.", answer: "Cannot simultaneously know exact position and momentum of a particle.", sourceType: "demo", retentionScore: 38, urgencyLevel: "critical", nextReminderMinutes: 15),
-    Topic(id: "d3", topicName: "React Performance", question: "When should useMemo be preferred?", answer: "When computation is expensive and dependencies change infrequently.", sourceType: "demo", retentionScore: 72, urgencyLevel: "warning", nextReminderMinutes: 120),
-    Topic(id: "d4", topicName: "Growth Strategy", question: "Explain the AARRR framework.", answer: "Acquisition, Activation, Retention, Revenue, Referral for SaaS growth.", sourceType: "demo", retentionScore: 55, urgencyLevel: "danger", nextReminderMinutes: 30),
-    Topic(id: "d5", topicName: "Neuroscience", question: "What role does the hippocampus play?", answer: "Consolidates short-term memories into long-term memories.", sourceType: "demo", retentionScore: 88, urgencyLevel: "safe", nextReminderMinutes: 720),
-    Topic(id: "d6", topicName: "Distributed Systems", question: "What is the Saga Pattern?", answer: "Managing data consistency across microservices with compensating transactions.", sourceType: "demo", retentionScore: 65, urgencyLevel: "warning", nextReminderMinutes: 90),
-  ];
-
-  List<Topic> get _activeCards => widget.flashcards.isNotEmpty ? widget.flashcards : _demoCards;
+  List<Topic> get _activeCards => widget.flashcards;
 
   @override
   void dispose() {
@@ -920,7 +910,20 @@ class _AudioReviewScreenState extends State<AudioReviewScreen> {
             IconButton(icon: const Icon(Icons.stop_circle, color: Colors.redAccent), onPressed: _stop),
         ],
       ),
-      body: Column(
+      body: _activeCards.isEmpty
+        ? const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.headphones, size: 64, color: Colors.grey),
+                SizedBox(height: 16),
+                Text("No Topics Yet", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
+                SizedBox(height: 8),
+                Text("Upload content first to generate audio summaries.", style: TextStyle(color: Colors.grey)),
+              ],
+            ),
+          )
+        : Column(
         children: [
           // Header
           Container(
