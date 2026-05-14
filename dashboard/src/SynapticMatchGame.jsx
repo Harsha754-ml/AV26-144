@@ -800,4 +800,5 @@ const SynapticMatchGame = ({ flashcards }) => {
   );
 };
 
+export { syncQueue };
 export default SynapticMatchGame;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { Activity, Brain, Server, RefreshCw, Layers, ShieldCheck, Zap, AlertTriangle, Terminal, Upload, Link, Type, Send, CheckCircle2, X as CloseIcon, Clock, Sparkles, User, Database, Globe, Cpu } from 'lucide-react';
-import SynapticMatchGame from './SynapticMatchGame';
+import SynapticMatchGame, { syncQueue } from './SynapticMatchGame';
 
 const API_BASE = "http://127.0.0.1:8000";
 const WS_URL = "ws://127.0.0.1:8000/ws";
@@ -104,7 +104,7 @@ function App() {
     let ws;
     const connect = () => {
       ws = new WebSocket(WS_URL);
-      ws.onopen = () => setIsConnected(true);
+      ws.onopen = () => { setIsConnected(true); syncQueue(); };
       ws.onmessage = (event) => {
         try {
           const parsed = JSON.parse(event.data);
