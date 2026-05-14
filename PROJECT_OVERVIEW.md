@@ -10,41 +10,37 @@ The system is split into three core modules:
 
 ### A. Python Backend (FastAPI)
 *   **Role:** The "Brain" of the system.
-*   **Key Features:**
-    *   **AI Ingestion:** Uses Google Gemini to summarize content and generate smart flashcards.
-    *   **Curve Engine:** Calculates `retention_score` based on time elapsed since last review.
-    *   **Escalation Logic:** 
-        *   `Safe`: Retention > 70%
-        *   `Warning`: 40-70% (Dashboard Alert)
-        *   `Danger`: 15-40% (App Notification)
-        *   `Critical`: < 15% (High-priority escalation)
-    *   **Audio Generation:** gTTS creates MP3 summaries for passive listening.
-    *   **WebSockets:** Pushes real-time logs and metrics to the Dashboard.
+*   **Key Features Built So Far:**
+    *   **AI Ingestion:** Summarizes content via Gemini to create smart flashcards.
+    *   **Curve Engine:** Calculates `retention_score` to determine memory decay.
+    *   **Escalation Logic:** Categorizes memory states (`Safe`, `Warning`, `Danger`, `Critical`).
+    *   **Audio Generation:** Generates MP3 audio overviews of knowledge notes using gTTS.
+    *   **WebSockets:** Streams real-time logs to the Dashboard.
 
 ### B. React Dashboard (Vite + Tailwind)
 *   **Role:** Admin console and visualizer.
-*   **Key Features:**
-    *   Live retention charts using **Recharts**.
-    *   Real-time system log streaming via WebSockets.
-    *   Manual curve overrides and content management.
+*   **Key Features Built So Far:**
+    *   **Audio Overview Playback:** Play and stop generated audio summaries for individual flashcards directly from the UI.
+    *   **Live Charts:** Visual retention tracking using Recharts.
+    *   **Live Logs:** Real-time WebSocket connection to backend activity.
+    *   **Note Management:** Manual overrides and content controls.
 
 ### C. Flutter Mobile App
 *   **Role:** The "Edge" delivery system.
-*   **Key Features:**
-    *   Smart Modal ingestion for adding notes on the go.
-    *   **5s Local Polling:** Hits the backend `notifications/pending` endpoint every 5 seconds.
-    *   Native MaterialBanner alerts when cards decay into "Warning" or "Danger" zones.
+*   **Key Features Built So Far:**
+    *   **Quick Add:** Smart Modal ingestion for creating notes.
+    *   **Local Polling:** Checks for pending notifications every 5 seconds.
+    *   **Alerts:** Native MaterialBanners when retention drops into Warning/Danger zones.
 
 ---
 
 ## 3. Tech Stack
 | Component | Technology |
 | :--- | :--- |
-| **Backend** | Python, FastAPI, APScheduler, gTTS, Gemini AI |
+| **Backend** | Python, FastAPI, gTTS, Google Gemini |
 | **Database** | JSON (Flat-file for portability) |
 | **Dashboard** | React 19, Vite, Tailwind CSS, Recharts |
 | **Mobile** | Flutter (Dart) |
-| **Automation** | n8n (Optional Push Fallback) |
 
 ---
 
