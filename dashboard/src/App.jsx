@@ -569,6 +569,8 @@ function App() {
                            </div>
                            
                            <button 
+                             type="submit"
+                             onClick={handleIngest}
                              disabled={ingestLoading || !topicName}
                              className={`w-full flex items-center justify-center gap-6 px-12 py-7 rounded-[3rem] font-black text-xl tracking-[0.2em] transition-all ${ingestLoading ? 'bg-slate-900 text-slate-600 cursor-not-allowed' : 'bg-[#c5a059] text-black hover:bg-[#d8b577] hover:shadow-[0_25px_50px_rgba(197,160,89,0.3)] hover:-translate-y-1 active:scale-95'}`}
                            >
