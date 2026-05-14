@@ -56,6 +56,16 @@ const MOCK_FLASHCARDS = [
   }
 ];
 
+const MOCK_TREND = [
+  { day: 'Mon', load: 45, retention: 82 },
+  { day: 'Tue', load: 52, retention: 85 },
+  { day: 'Wed', load: 68, retention: 79 },
+  { day: 'Thu', load: 75, retention: 74 },
+  { day: 'Fri', load: 88, retention: 81 },
+  { day: 'Sat', load: 92, retention: 88 },
+  { day: 'Sun', load: 95, retention: 91 },
+];
+
 const EBBINGHAUS_DATA = [
   { day: '0', r0: 100 },
   { day: '1', r0: 60, r1: 100 },

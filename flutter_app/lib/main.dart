@@ -20,9 +20,27 @@ class MemoryForgeApp extends StatelessWidget {
       title: 'MemoryForge',
       theme: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.green,
-        scaffoldBackgroundColor: const Color(0xFF0F172A),
-        appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF1E293B)),
+        primaryColor: const Color(0xFFC5A059), // Gold accent
+        scaffoldBackgroundColor: const Color(0xFF0A0A0B), // Dashboard bg
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF0F0F11),
+          elevation: 0,
+          titleTextStyle: TextStyle(color: Color(0xFFF4F1EA), fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'serif'),
+        ),
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Color(0xFFF4F1EA)),
+          bodyMedium: TextStyle(color: Color(0xFFF4F1EA)),
+        ),
+        cardColor: const Color(0xFF0F0F11),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(0xFFC5A059),
+          foregroundColor: Colors.black,
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFF0F0F11),
+          selectedItemColor: Color(0xFFC5A059),
+          unselectedItemColor: Colors.white54,
+        ),
       ),
       home: const MainScreen(),
     );
@@ -92,9 +110,9 @@ class _MainScreenState extends State<MainScreen> {
     ApiService.clearNotification(notification.notificationId);
 
     // Calculate Banner Color
-    Color bannerColor = Colors.blueGrey.shade800;
-    if (notification.urgencyLevel == "critical") bannerColor = Colors.red.shade900;
-    if (notification.urgencyLevel == "danger") bannerColor = Colors.orange.shade900;
+    Color urgencyColor = const Color(0xFF8DA290); // default greenish
+    if (notification.urgencyLevel == "critical") urgencyColor = Colors.redAccent;
+    if (notification.urgencyLevel == "warning" || notification.urgencyLevel == "danger") urgencyColor = Colors.orangeAccent;
 
     final bannerController = ScaffoldMessenger.of(context).showMaterialBanner(
       MaterialBanner(
@@ -103,7 +121,7 @@ class _MainScreenState extends State<MainScreen> {
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: const Icon(Icons.warning_rounded, color: Colors.white),
-        backgroundColor: bannerColor,
+        backgroundColor: urgencyColor,
         actions: [
           TextButton(
             onPressed: () {
