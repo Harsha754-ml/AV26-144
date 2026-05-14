@@ -1,6 +1,13 @@
 {
   "flashcards": [],
-  "events": [],
+  "events": [
+    {
+      "id": "evt_1778802828982",
+      "text": "Daily email sent to harsha54k@gmail.com",
+      "type": "info",
+      "timestamp": 1778802828.9824307
+    }
+  ],
   "pending_notifications": [],
   "learning_plans": [],
   "demo_mode": false,

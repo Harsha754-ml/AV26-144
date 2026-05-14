@@ -8,6 +8,7 @@ const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [role, setRole] = useState('student');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ const LoginPage = ({ onLogin }) => {
     try {
       const endpoint = isRegister ? '/auth/register' : '/auth/login';
       const body = isRegister 
-        ? { username, password, role, name: name || username }
+        ? { username, password, role, name: name || username, email }
         : { username, password };
 
       const res = await fetch(`${API_BASE}${endpoint}`, {
@@ -79,6 +80,21 @@ const LoginPage = ({ onLogin }) => {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Your name"
                     className="w-full bg-[#0a0a0b] border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-[#f4f1ea] placeholder-slate-700 focus:border-[#c5a059]/30 outline-none"
+                  />
+                </div>
+              </div>
+            )}
+
+            {isRegister && (
+              <div>
+                <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Email (for daily reports)</label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full bg-[#0a0a0b] border border-white/10 rounded-2xl pl-4 pr-4 py-3.5 text-[#f4f1ea] placeholder-slate-700 focus:border-[#c5a059]/30 outline-none"
                   />
                 </div>
               </div>

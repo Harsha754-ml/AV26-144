@@ -27,7 +27,7 @@ def save_users(users):
     data["users"] = users
     database.write_db(data)
 
-def register(username: str, password: str, role: str, name: str = "") -> dict:
+def register(username: str, password: str, role: str, name: str = "", email: str = "") -> dict:
     users = init_users()
     
     # Check if exists in either role
@@ -38,6 +38,7 @@ def register(username: str, password: str, role: str, name: str = "") -> dict:
         "username": username,
         "password": password,  # Plain text for demo
         "name": name or username,
+        "email": email,
         "role": role,
         "created_at": time.time(),
         "last_active": time.time(),

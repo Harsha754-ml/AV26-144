@@ -579,6 +579,7 @@ class RegisterReq(BaseModel):
     password: str
     role: str = "student"
     name: str = ""
+    email: str = ""
 
 @app.post("/auth/login")
 def login_endpoint(req: LoginReq):
@@ -589,7 +590,7 @@ def login_endpoint(req: LoginReq):
 
 @app.post("/auth/register")
 def register_endpoint(req: RegisterReq):
-    result = auth.register(req.username, req.password, req.role, req.name)
+    result = auth.register(req.username, req.password, req.role, req.name, req.email)
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
     return result
