@@ -18,25 +18,50 @@ const DEMO_FLASHCARDS = [
 ];
 
 // ============================================================
-// HELPER: Send review to backend (affects notifications/revisions)
+// HELPER: Offline-first sync queue for game results
+// Games always work. Results queue in localStorage and sync when server is up.
 // ============================================================
-const sendReview = async (flashcardId, result) => {
-  try {
-    await fetch(`${API_BASE}/flashcard/review`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ flashcard_id: flashcardId, result })
-    });
-  } catch (e) {
-    // Silent fail for demo mode
+const QUEUE_KEY = 'memoryforge_game_queue';
+
+const queueGameResults = (results) => {
+  const existing = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+  const updated = [...existing, ...results];
+  localStorage.setItem(QUEUE_KEY, JSON.stringify(updated));
+  // Try immediate sync
+  syncQueue();
+};
+
+const syncQueue = async () => {
+  const queue = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+  if (queue.length === 0) return;
+
+  const synced = [];
+  for (const item of queue) {
+    try {
+      await fetch(`${API_BASE}/flashcard/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ flashcard_id: item.id, result: item.result })
+      });
+      synced.push(item);
+    } catch (e) {
+      break; // Server unreachable, stop trying
+    }
+  }
+
+  if (synced.length > 0) {
+    const remaining = queue.slice(synced.length);
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(remaining));
+    console.log(`✅ Synced ${synced.length} game results. ${remaining.length} pending.`);
   }
 };
 
-// Send batch reviews after game completion
-const sendGameResults = async (results) => {
-  for (const { id, result } of results) {
-    await sendReview(id, result);
-  }
+// Background sync every 10 seconds
+setInterval(syncQueue, 10000);
+
+// Send game results — always works offline, syncs when connected
+const sendGameResults = (results) => {
+  queueGameResults(results);
 };
 
 // ============================================================

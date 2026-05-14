@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'models.dart';
 import 'api_service.dart';
 
@@ -17,13 +19,73 @@ final List<Topic> _demoFlashcards = [
   Topic(id: "d8", topicName: "Operating Systems", question: "What is a deadlock?", answer: "A state where two or more processes are blocked forever, each waiting for a resource held by the other, forming a circular dependency.", sourceType: "demo"),
 ];
 
-/// Send game results to backend to affect notifications/revisions
-Future<void> _sendGameResults(List<Map<String, String>> results) async {
-  for (final r in results) {
-    try {
-      await ApiService.reviewFlashcard(r['id']!, r['result']!);
-    } catch (_) {}
+// ============================================================
+// OFFLINE-FIRST SYNC QUEUE
+// Games always work. Results queue locally and sync when server is up.
+// ============================================================
+class _GameSyncQueue {
+  static const _storageKey = 'game_results_queue';
+  static Timer? _syncTimer;
+
+  /// Queue results locally (always succeeds, no server needed)
+  static Future<void> queueResults(List<Map<String, String>> results) async {
+    if (results.isEmpty) return;
+    final prefs = await SharedPreferences.getInstance();
+    final existing = prefs.getStringList(_storageKey) ?? [];
+    for (final r in results) {
+      existing.add(json.encode(r));
+    }
+    await prefs.setStringList(_storageKey, existing);
+    // Try immediate sync
+    _attemptSync();
   }
+
+  /// Try to sync queued results to server
+  static Future<void> _attemptSync() async {
+    final prefs = await SharedPreferences.getInstance();
+    final queue = prefs.getStringList(_storageKey) ?? [];
+    if (queue.isEmpty) return;
+
+    final synced = <String>[];
+    for (final item in queue) {
+      try {
+        final r = json.decode(item) as Map<String, dynamic>;
+        await ApiService.reviewFlashcard(r['id']!, r['result']!);
+        synced.add(item);
+      } catch (_) {
+        // Server unreachable — stop trying, will retry later
+        break;
+      }
+    }
+
+    if (synced.isNotEmpty) {
+      final remaining = queue.where((item) => !synced.contains(item)).toList();
+      await prefs.setStringList(_storageKey, remaining);
+      debugPrint("✅ Synced ${synced.length} game results. ${remaining.length} remaining.");
+    }
+  }
+
+  /// Start background sync timer (call once on app start)
+  static void startPeriodicSync() {
+    _syncTimer?.cancel();
+    _syncTimer = Timer.periodic(const Duration(seconds: 10), (_) => _attemptSync());
+  }
+
+  /// Get count of pending unsynced results
+  static Future<int> getPendingCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    return (prefs.getStringList(_storageKey) ?? []).length;
+  }
+}
+
+/// Send game results — queues offline, syncs when connected
+Future<void> _sendGameResults(List<Map<String, String>> results) async {
+  await _GameSyncQueue.queueResults(results);
+}
+
+/// Call this from main.dart to start background sync
+void startGameSyncService() {
+  _GameSyncQueue.startPeriodicSync();
 }
 
 // ============================================================

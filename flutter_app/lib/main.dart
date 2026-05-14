@@ -78,6 +78,8 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _fetchData();
+    // Start background sync for offline game results
+    startGameSyncService();
     // Start background polling for local isolated network
     _pollingTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       _pollNotifications();
