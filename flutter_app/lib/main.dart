@@ -163,7 +163,7 @@ class _MainScreenState extends State<MainScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: const Color(0xFF1E293B),
+      backgroundColor: const Color(0xFF0F0F11),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
         return const AddBottomSheet();
@@ -182,15 +182,15 @@ class _MainScreenState extends State<MainScreen> {
       body: screens[_currentIndex],
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
-        backgroundColor: Colors.greenAccent.shade400,
+        backgroundColor: const Color(0xFFC5A059),
         child: const Icon(Icons.add, color: Colors.black),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (i) => setState(() => _currentIndex = i),
-        backgroundColor: const Color(0xFF1E293B),
-        selectedItemColor: Colors.greenAccent,
+        backgroundColor: const Color(0xFF0F0F11),
+        selectedItemColor: const Color(0xFFC5A059),
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -246,7 +246,18 @@ class HomeScreen extends StatelessWidget {
           ),
           if (flashcards.isEmpty)
             const SliverFillRemaining(
-              child: Center(child: Text("No memories tracked.\nTap + to ingest data.", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey))),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.psychology, size: 80, color: Color(0xFF8DA290)),
+                    SizedBox(height: 16),
+                    Text("Awaiting Synaptic Data", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'serif', color: Color(0xFFF4F1EA))),
+                    SizedBox(height: 8),
+                    Text("Upload a resource to begin.", style: TextStyle(color: Colors.white54)),
+                  ],
+                ),
+              ),
             )
           else
             SliverList(
