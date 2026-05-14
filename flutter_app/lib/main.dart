@@ -7,8 +7,18 @@ import 'api_service.dart';
 import 'models.dart';
 import 'constants.dart';
 import 'game_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher');
+  const InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      macOS: null,
+      iOS: null);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   runApp(const MemoryForgeApp());
 }
 
@@ -58,6 +68,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   List<Topic> _flashcards = [];
+  Set<String> _shownNotifications = {};
   Timer? _pollingTimer;
   bool _isConnected = false;
 
@@ -98,7 +109,11 @@ class _MainScreenState extends State<MainScreen> {
       setState(() { _isConnected = true; });
       if (notifications.isNotEmpty) {
         for (var n in notifications) {
-          _showBanner(n);
+          if (!_shownNotifications.contains(n.notificationId)) {
+            _shownNotifications.add(n.notificationId);
+            _showPushNotification(n);
+            _showBanner(n);
+          }
         }
       }
     } catch (e) {
@@ -106,9 +121,30 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  Future<void> _showPushNotification(NotificationDetail notification) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'memory_forge_channel',
+      'Memory Alerts',
+      channelDescription: 'Notifications for memory decay',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      notification.notificationId.hashCode,
+      'Memory Decay: ${notification.topicName}',
+      'Retention dropped to ${notification.retentionScore}%! Review now.',
+      platformChannelSpecifics,
+    );
+  }
+
   void _showBanner(NotificationDetail notification) {
     // Clear notification locally
     ApiService.clearNotification(notification.notificationId);
+    
+    // Clear previous banners so they don't stack infinitely
+    ScaffoldMessenger.of(context).clearMaterialBanners();
 
     // Calculate Banner Color
     Color urgencyColor = const Color(0xFF8DA290); // default greenish
@@ -156,7 +192,9 @@ class _MainScreenState extends State<MainScreen> {
     
     // Auto-close banner after 10s
     Future.delayed(const Duration(seconds: 10), () {
-       ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+       if (mounted) {
+         ScaffoldMessenger.of(context).clearMaterialBanners();
+       }
     });
   }
 
