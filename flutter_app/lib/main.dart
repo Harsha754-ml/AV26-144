@@ -28,37 +28,54 @@ void main() async {
   runApp(const MemoryForgeApp());
 }
 
-class MemoryForgeApp extends StatelessWidget {
+class MemoryForgeApp extends StatefulWidget {
   const MemoryForgeApp({Key? key}) : super(key: key);
+
+  @override
+  State<MemoryForgeApp> createState() => _MemoryForgeAppState();
+
+  // Global key to access state from anywhere
+  static _MemoryForgeAppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_MemoryForgeAppState>();
+}
+
+class _MemoryForgeAppState extends State<MemoryForgeApp> {
+  bool isDarkMode = true;
+  bool isDemoMode = false;
+
+  void toggleTheme(bool dark) => setState(() => isDarkMode = dark);
+  void toggleDemoMode(bool demo) {
+    setState(() => isDemoMode = demo);
+    ApiService.setDemoMode(demo);
+  }
+
+  ThemeData get _darkTheme => ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: const Color(0xFFC5A059),
+    scaffoldBackgroundColor: const Color(0xFF0A0A0B),
+    appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF0F0F11), elevation: 0, titleTextStyle: TextStyle(color: Color(0xFFF4F1EA), fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'serif')),
+    textTheme: const TextTheme(bodyLarge: TextStyle(color: Color(0xFFF4F1EA)), bodyMedium: TextStyle(color: Color(0xFFF4F1EA))),
+    cardColor: const Color(0xFF0F0F11),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: Color(0xFFC5A059), foregroundColor: Colors.black),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(backgroundColor: Color(0xFF0F0F11), selectedItemColor: Color(0xFFC5A059), unselectedItemColor: Colors.white54),
+  );
+
+  ThemeData get _lightTheme => ThemeData(
+    brightness: Brightness.light,
+    primaryColor: const Color(0xFFC5A059),
+    scaffoldBackgroundColor: const Color(0xFFF5F5F0),
+    appBarTheme: const AppBarTheme(backgroundColor: Colors.white, elevation: 0, titleTextStyle: TextStyle(color: Color(0xFF1a1a1c), fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'serif'), iconTheme: IconThemeData(color: Color(0xFF1a1a1c))),
+    textTheme: const TextTheme(bodyLarge: TextStyle(color: Color(0xFF1a1a1c)), bodyMedium: TextStyle(color: Color(0xFF1a1a1c))),
+    cardColor: Colors.white,
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: Color(0xFFC5A059), foregroundColor: Colors.black),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(backgroundColor: Colors.white, selectedItemColor: Color(0xFFC5A059), unselectedItemColor: Colors.grey),
+  );
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MemoryForge',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: const Color(0xFFC5A059), // Gold accent
-        scaffoldBackgroundColor: const Color(0xFF0A0A0B), // Dashboard bg
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF0F0F11),
-          elevation: 0,
-          titleTextStyle: TextStyle(color: Color(0xFFF4F1EA), fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'serif'),
-        ),
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Color(0xFFF4F1EA)),
-          bodyMedium: TextStyle(color: Color(0xFFF4F1EA)),
-        ),
-        cardColor: const Color(0xFF0F0F11),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: Color(0xFFC5A059),
-          foregroundColor: Colors.black,
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF0F0F11),
-          selectedItemColor: Color(0xFFC5A059),
-          unselectedItemColor: Colors.white54,
-        ),
-      ),
+      theme: isDarkMode ? _darkTheme : _lightTheme,
       home: const _AppEntry(),
     );
   }
@@ -1059,11 +1076,12 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _demoMode = false;
   bool _notificationsEnabled = true;
-  bool _darkMode = true;
   double _reviewInterval = 24.0;
   final TextEditingController _ipCtrl = TextEditingController(text: AppConstants.laptopIp);
+
+  bool get _demoMode => MemoryForgeApp.of(context)?.isDemoMode ?? false;
+  bool get _darkMode => MemoryForgeApp.of(context)?.isDarkMode ?? true;
 
   @override
   Widget build(BuildContext context) {
@@ -1138,8 +1156,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               value: _demoMode,
               activeColor: const Color(0xFFC5A059),
               onChanged: (val) {
-                setState(() => _demoMode = val);
-                ApiService.setDemoMode(val);
+                MemoryForgeApp.of(context)?.toggleDemoMode(val);
               },
             ),
           ),
@@ -1165,11 +1182,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _settingsCard(
             icon: Icons.dark_mode,
             title: "Dark Mode",
-            subtitle: "System-wide dark theme",
+            subtitle: _darkMode ? "Dark theme active" : "Light theme active",
             trailing: Switch(
               value: _darkMode,
               activeColor: const Color(0xFFC5A059),
-              onChanged: (val) => setState(() => _darkMode = val),
+              onChanged: (val) {
+                MemoryForgeApp.of(context)?.toggleTheme(val);
+              },
             ),
           ),
           const SizedBox(height: 12),
