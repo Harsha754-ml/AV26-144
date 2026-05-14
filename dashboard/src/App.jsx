@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { Activity, Brain, Server, RefreshCw, Layers, ShieldCheck, Zap, AlertTriangle, Terminal, Upload, Link, Type, Send, CheckCircle2, X as CloseIcon, Clock, Sparkles, User, Database, Globe, Cpu, Volume2 } from 'lucide-react';
 import SynapticMatchGame, { syncQueue } from './SynapticMatchGame';
+import KnowledgeGraph from './KnowledgeGraph';
+import BiometricPanel from './BiometricPanel';
 
 const API_BASE = "http://127.0.0.1:8000";
 const WS_URL = "ws://127.0.0.1:8000/ws";
@@ -93,7 +95,7 @@ function App() {
   const [ingestLoading, setIngestLoading] = useState(false);
   const [ingestSuccess, setIngestSuccess] = useState(false);
   const [simulationMode, setSimulationMode] = useState(false);
-  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' or 'game'
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'game', 'graph', 'ml'
   const [audioReviewOpen, setAudioReviewOpen] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(null);
   
@@ -283,6 +285,20 @@ function App() {
            >
              <Volume2 className="w-4 h-4" />
              <span className="text-xs font-black uppercase tracking-widest">Audio Review</span>
+           </button>
+           <button 
+             onClick={() => setActiveTab('graph')}
+             className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all ${activeTab === 'graph' ? 'bg-[#c5a059]/10 text-[#c5a059] border border-[#c5a059]/20' : 'text-slate-500 hover:bg-white/5 hover:text-slate-300 border border-transparent'}`}
+           >
+             <Globe className="w-4 h-4" />
+             <span className="text-xs font-black uppercase tracking-widest">Neural Graph</span>
+           </button>
+           <button 
+             onClick={() => setActiveTab('ml')}
+             className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all ${activeTab === 'ml' ? 'bg-[#c5a059]/10 text-[#c5a059] border border-[#c5a059]/20' : 'text-slate-500 hover:bg-white/5 hover:text-slate-300 border border-transparent'}`}
+           >
+             <Cpu className="w-4 h-4" />
+             <span className="text-xs font-black uppercase tracking-widest">ML Engine</span>
            </button>
         </div>
 
@@ -733,7 +749,7 @@ function App() {
                </div>
            )}
            </>
-           ) : (
+           ) : activeTab === 'game' ? (
              <div className="pt-10 h-full">
                 {activeCards.length > 0 ? (
                   <SynapticMatchGame flashcards={activeCards} />
@@ -751,7 +767,27 @@ function App() {
                   </div>
                 )}
              </div>
-           )}
+           ) : activeTab === 'graph' ? (
+             <div className="pt-10 h-full">
+                <div className="flex items-center gap-3 text-[#c5a059] mb-6">
+                  <Globe className="w-5 h-5" />
+                  <span className="text-[11px] font-black uppercase tracking-[0.3em]">Knowledge Architecture</span>
+                </div>
+                <h2 className="text-5xl font-black text-[#f4f1ea] font-serif tracking-tighter mb-8">Neural <span className="text-[#8da290] italic">Graph.</span></h2>
+                <div className="h-[600px] bg-[#0f0f11] rounded-[3rem] border border-white/5 overflow-hidden">
+                  <KnowledgeGraph />
+                </div>
+             </div>
+           ) : activeTab === 'ml' ? (
+             <div className="pt-10">
+                <div className="flex items-center gap-3 text-[#c5a059] mb-6">
+                  <Cpu className="w-5 h-5" />
+                  <span className="text-[11px] font-black uppercase tracking-[0.3em]">Machine Learning Core</span>
+                </div>
+                <h2 className="text-5xl font-black text-[#f4f1ea] font-serif tracking-tighter mb-8">ML <span className="text-[#8da290] italic">Engine.</span></h2>
+                <BiometricPanel />
+             </div>
+           ) : null}
         </div>
       </main>
 

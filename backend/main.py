@@ -12,6 +12,8 @@ import database
 import curve_engine
 import ingest
 from scheduler import start_scheduler
+from hlr_model import get_engine as get_hlr_engine
+import socratic_swarm
 
 import pyttsx3
 
@@ -130,13 +132,28 @@ def review_flashcard(req: ReviewReq):
     fc = database.get_flashcard(req.flashcard_id)
     if not fc:
         raise HTTPException(status_code=404, detail="Flashcard not found")
-        
+    
+    # Update HLR model with review outcome (online learning)
+    try:
+        engine = get_hlr_engine()
+        engine.update_on_review(fc, req.result)
+    except Exception as e:
+        print(f"HLR update error (non-fatal): {e}")
+    
     new_stability = curve_engine.update_stability(fc["stability"], req.result)
+    
+    # Track failures for Socratic Swarm trigger
+    ignore_count = fc.get("ignore_count", 0)
+    if req.result == "forgot":
+        ignore_count += 1
+    else:
+        ignore_count = 0
+    
     updates = {
         "stability": new_stability,
         "last_reviewed": time.time(),
         "review_count": fc.get("review_count", 0) + 1,
-        "ignore_count": 0
+        "ignore_count": ignore_count
     }
     database.update_flashcard(req.flashcard_id, updates)
     database.add_event(f"Reviewed: {fc['topic_name']} ({req.result})")
@@ -146,8 +163,15 @@ def review_flashcard(req: ReviewReq):
     for p in pending:
         if p["flashcard_id"] == req.flashcard_id:
             database.clear_notification(p["notification_id"])
-            
-    return get_flashcard(req.flashcard_id)
+    
+    result = get_flashcard(req.flashcard_id)
+    
+    # Check if Socratic Swarm should trigger
+    if ignore_count >= 3:
+        result["socratic_trigger"] = True
+        result["socratic_message"] = f"Failed {ignore_count} times. Socratic Swarm available."
+    
+    return result
 
 @app.delete("/flashcard/{id}")
 def delete_flashcard(id: str):
@@ -369,3 +393,174 @@ async def websocket_endpoint(websocket: WebSocket):
         print(f"WS Error: {e}")
         if websocket in active_connections:
             active_connections.remove(websocket)
+
+# -----------------
+# HLR ML ENGINE ENDPOINTS
+# -----------------
+@app.get("/ml/metrics")
+def ml_metrics():
+    """Get PyTorch HLR model performance metrics."""
+    engine = get_hlr_engine()
+    return engine.get_metrics()
+
+@app.get("/ml/predict/{flashcard_id}")
+def ml_predict(flashcard_id: str):
+    """Get ML-powered recall prediction for a specific flashcard."""
+    fc = database.get_flashcard(flashcard_id)
+    if not fc:
+        raise HTTPException(status_code=404, detail="Flashcard not found")
+    engine = get_hlr_engine()
+    demo_mode = database.get_demo_mode()
+    return engine.predict_recall(fc, demo_mode=demo_mode)
+
+@app.get("/ml/curve/{flashcard_id}")
+def ml_curve(flashcard_id: str):
+    """Get predicted retention curve from HLR model."""
+    fc = database.get_flashcard(flashcard_id)
+    if not fc:
+        raise HTTPException(status_code=404, detail="Flashcard not found")
+    engine = get_hlr_engine()
+    demo_mode = database.get_demo_mode()
+    return engine.get_curve_points(fc, demo_mode=demo_mode)
+
+# -----------------
+# SOCRATIC SWARM ENDPOINTS
+# -----------------
+@app.get("/socratic/{flashcard_id}")
+def get_socratic_debate(flashcard_id: str):
+    """Trigger Socratic Swarm for a struggling flashcard."""
+    fc = database.get_flashcard(flashcard_id)
+    if not fc:
+        raise HTTPException(status_code=404, detail="Flashcard not found")
+    
+    result = socratic_swarm.trigger_socratic_swarm(
+        question=fc.get("question", ""),
+        answer=fc.get("answer", ""),
+        topic_name=fc.get("topic_name", "Unknown"),
+        failure_count=fc.get("ignore_count", 0)
+    )
+    database.add_event(f"Socratic Swarm triggered: {fc.get('topic_name')}")
+    return result
+
+@app.get("/socratic/check/{flashcard_id}")
+def check_socratic(flashcard_id: str):
+    """Check if a flashcard qualifies for Socratic intervention."""
+    fc = database.get_flashcard(flashcard_id)
+    if not fc:
+        raise HTTPException(status_code=404, detail="Flashcard not found")
+    return {
+        "qualifies": fc.get("ignore_count", 0) >= 3,
+        "failure_count": fc.get("ignore_count", 0),
+        "threshold": 3
+    }
+
+# -----------------
+# BIOMETRIC TELEMETRY (Simulated rPPG)
+# -----------------
+_biometric_state = {
+    "bpm": 72,
+    "hrv": 55,
+    "stress_level": 0.3,
+    "cognitive_load": 0.4,
+    "last_updated": time.time()
+}
+
+class BiometricUpdate(BaseModel):
+    bpm: int = 72
+    hrv: int = 55
+    stress_level: float = 0.3
+
+@app.get("/biometrics")
+def get_biometrics():
+    """Get current biometric state (simulated rPPG telemetry)."""
+    # Simulate slight variations for realism
+    import random
+    _biometric_state["bpm"] = max(55, min(120, _biometric_state["bpm"] + random.randint(-3, 3)))
+    _biometric_state["hrv"] = max(20, min(90, _biometric_state["hrv"] + random.randint(-2, 2)))
+    _biometric_state["stress_level"] = max(0, min(1, _biometric_state["stress_level"] + random.uniform(-0.05, 0.05)))
+    _biometric_state["cognitive_load"] = min(1.0, max(0.0, (_biometric_state["bpm"] - 60) / 60.0 * 0.7))
+    _biometric_state["last_updated"] = time.time()
+    return _biometric_state
+
+@app.post("/biometrics")
+def update_biometrics(req: BiometricUpdate):
+    """Update biometric state (from webcam rPPG or manual)."""
+    _biometric_state["bpm"] = req.bpm
+    _biometric_state["hrv"] = req.hrv
+    _biometric_state["stress_level"] = req.stress_level
+    _biometric_state["cognitive_load"] = min(1.0, max(0.0, (req.bpm - 60) / 60.0 * 0.7))
+    _biometric_state["last_updated"] = time.time()
+    return _biometric_state
+
+# -----------------
+# KNOWLEDGE GRAPH DATA
+# -----------------
+@app.get("/knowledge-graph")
+def knowledge_graph():
+    """Generate knowledge graph data from flashcards for visualization."""
+    flashcards = database.get_all_flashcards()
+    
+    # Build nodes (topics) and edges (shared concepts)
+    topics = {}
+    for fc in flashcards:
+        topic = fc.get("topic_name", "Unknown")
+        if topic not in topics:
+            topics[topic] = {
+                "id": topic,
+                "cards": 0,
+                "avg_retention": 0,
+                "total_retention": 0,
+            }
+        topics[topic]["cards"] += 1
+        demo_mode = database.get_demo_mode()
+        retention = curve_engine.calculate_retention(fc["last_reviewed"], fc["stability"], demo_mode)
+        score = curve_engine.calculate_score(retention)
+        topics[topic]["total_retention"] += score
+    
+    nodes = []
+    for topic, data in topics.items():
+        avg_ret = data["total_retention"] / max(data["cards"], 1)
+        nodes.append({
+            "id": topic,
+            "name": topic,
+            "val": data["cards"] * 3 + 5,  # Node size
+            "retention": int(avg_ret),
+            "cards": data["cards"],
+            "color": "#c5a059" if avg_ret >= 70 else "#f59e0b" if avg_ret >= 50 else "#f43f5e"
+        })
+    
+    # Create edges between topics that share keywords
+    edges = []
+    topic_list = list(topics.keys())
+    for i in range(len(topic_list)):
+        for j in range(i + 1, len(topic_list)):
+            # Simple heuristic: connect topics with shared words
+            words_i = set(topic_list[i].lower().split())
+            words_j = set(topic_list[j].lower().split())
+            if words_i & words_j:
+                edges.append({"source": topic_list[i], "target": topic_list[j]})
+    
+    # If no real data, return demo graph
+    if not nodes:
+        nodes = [
+            {"id": "Philosophy", "name": "Philosophy: Stoicism", "val": 12, "retention": 94, "cards": 3, "color": "#c5a059"},
+            {"id": "Quantum", "name": "Quantum Mechanics", "val": 8, "retention": 38, "cards": 2, "color": "#f43f5e"},
+            {"id": "React", "name": "React: Performance", "val": 10, "retention": 72, "cards": 2, "color": "#f59e0b"},
+            {"id": "Growth", "name": "Growth Strategy", "val": 9, "retention": 55, "cards": 2, "color": "#f59e0b"},
+            {"id": "Neuro", "name": "Neuroscience", "val": 14, "retention": 88, "cards": 4, "color": "#c5a059"},
+            {"id": "Systems", "name": "Distributed Systems", "val": 11, "retention": 65, "cards": 3, "color": "#f59e0b"},
+            {"id": "ML", "name": "Machine Learning", "val": 13, "retention": 78, "cards": 3, "color": "#c5a059"},
+            {"id": "OS", "name": "Operating Systems", "val": 7, "retention": 45, "cards": 1, "color": "#f43f5e"},
+        ]
+        edges = [
+            {"source": "Quantum", "target": "Neuro"},
+            {"source": "Neuro", "target": "ML"},
+            {"source": "ML", "target": "React"},
+            {"source": "React", "target": "Systems"},
+            {"source": "Systems", "target": "OS"},
+            {"source": "Philosophy", "target": "Neuro"},
+            {"source": "Growth", "target": "ML"},
+            {"source": "Quantum", "target": "ML"},
+        ]
+    
+    return {"nodes": nodes, "links": edges}
