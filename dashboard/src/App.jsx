@@ -25,40 +25,6 @@ const StatusCard = ({ label, value, icon, sub, urgency }) => (
   </div>
 );
 
-// HUMANLY MOCK DATA - THE "NEURAL SIMULATION" LAYER
-const MOCK_FLASHCARDS = [
-  { 
-    id: "m1", topic_name: "Philosophy: Stocism", urgency_level: "safe", retention_score: 94, stability: 120, next_reminder_minutes: 480,
-    question: "What is the 'Dichotomy of Control' as defined by Epictetus?",
-    curve_points: Array.from({length: 10}, (_, i) => ({ day: i, score: 90 + Math.random() * 10 }))
-  },
-  { 
-    id: "m2", topic_name: "Quantum Mechanics", urgency_level: "critical", retention_score: 38, stability: 12, next_reminder_minutes: 15,
-    question: "Define the Heisenberg Uncertainty Principle in terms of position and momentum.",
-    curve_points: Array.from({length: 10}, (_, i) => ({ day: i, score: 80 - (i * 12) }))
-  },
-  { 
-    id: "m3", topic_name: "React: Performance", urgency_level: "warning", retention_score: 72, stability: 45, next_reminder_minutes: 120,
-    question: "When should useMemo be favored over simple memoization?",
-    curve_points: Array.from({length: 10}, (_, i) => ({ day: i, score: 95 - (i * 5) }))
-  },
-  { 
-    id: "m4", topic_name: "Growth Strategy", urgency_level: "danger", retention_score: 55, stability: 24, next_reminder_minutes: 30,
-    question: "Explain the AARRR (Pirate Metrics) framework for SaaS.",
-    curve_points: Array.from({length: 10}, (_, i) => ({ day: i, score: 70 - (i * 8) }))
-  },
-  { 
-    id: "m5", topic_name: "Neuroscience", urgency_level: "safe", retention_score: 88, stability: 96, next_reminder_minutes: 720,
-    question: "What role does the hippocampus play in memory consolidation?",
-    curve_points: Array.from({length: 10}, (_, i) => ({ day: i, score: 85 + Math.random() * 5 }))
-  },
-  { 
-    id: "m6", topic_name: "Microservices", urgency_level: "warning", retention_score: 65, stability: 36, next_reminder_minutes: 90,
-    question: "What is the Saga Pattern used for in distributed systems?",
-    curve_points: Array.from({length: 10}, (_, i) => ({ day: i, score: 88 - (i * 6) }))
-  }
-];
-
 const MOCK_TREND = [
   { day: 'Mon', load: 45, retention: 82 },
   { day: 'Tue', load: 52, retention: 85 },
@@ -94,7 +60,6 @@ function App() {
   const [ingestType, setIngestType] = useState('text');
   const [ingestLoading, setIngestLoading] = useState(false);
   const [ingestSuccess, setIngestSuccess] = useState(false);
-  const [simulationMode, setSimulationMode] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'game', 'graph', 'ml'
   const [audioReviewOpen, setAudioReviewOpen] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(null);
@@ -115,12 +80,10 @@ function App() {
         try {
           const parsed = JSON.parse(event.data);
           setData(parsed);
-          setSimulationMode(parsed.flashcards.length === 0);
         } catch(e) {}
       };
       ws.onclose = () => {
         setIsConnected(false);
-        setSimulationMode(true); // Default to simulation if server is down
         setTimeout(connect, 3000);
       };
     };
@@ -142,24 +105,16 @@ function App() {
   };
 
   const activeCards = useMemo(() => {
-    return simulationMode || data.flashcards.length === 0 ? MOCK_FLASHCARDS : data.flashcards;
-  }, [simulationMode, data.flashcards]);
+    return data.flashcards.length > 0 ? data.flashcards : [];
+  }, [data.flashcards]);
 
   const activeEvents = useMemo(() => {
-    if (data.events.length > 0) return data.events;
-    return [
-      { text: "Neural Link Initialized", timestamp: Date.now()/1000 - 3600 },
-      { text: "Cognitive Load Balancing...", timestamp: Date.now()/1000 - 1800 },
-      { text: "Heuristic Search Optimized", timestamp: Date.now()/1000 - 600 }
-    ];
+    return data.events.length > 0 ? data.events : [];
   }, [data.events]);
 
   const stats = useMemo(() => {
-    if (simulationMode) {
-      return { total: 124, safe: 88, critical: 12 };
-    }
-    return { total: data.dashboard.total_cards, safe: data.dashboard.safe_cards, critical: data.dashboard.critical_cards };
-  }, [simulationMode, data.dashboard]);
+    return { total: data.dashboard.total_cards || 0, safe: data.dashboard.safe_cards || 0, critical: data.dashboard.critical_cards || 0 };
+  }, [data.dashboard]);
 
   const handleIngest = async (e) => {
     e.preventDefault();
@@ -221,8 +176,7 @@ function App() {
         setSelectedFileName('');
         if (fileInputRef.current) fileInputRef.current.value = '';
         
-        // Disable simulation once real data is present
-        setSimulationMode(false);
+        // Data is now live
         
         setTimeout(() => setIngestSuccess(false), 5000);
       } else {
@@ -243,7 +197,7 @@ function App() {
       {/* SIDEBAR - NEURAL ARCHITECTURE */}
       <aside className="w-80 h-full flex flex-col bg-[#0f0f11] border-r border-white/5 z-20 shadow-[10px_0_30px_rgba(0,0,0,0.8)] glass-morphism">
         <div className="p-8 pb-4">
-           <div className="flex items-center gap-4 mb-8 group cursor-pointer" onClick={() => setSimulationMode(!simulationMode)}>
+           <div className="flex items-center gap-4 mb-8 group cursor-pointer">
               <div className="w-11 h-11 bg-[#c5a059] rounded-xl shadow-[0_0_25px_rgba(197,160,89,0.3)] flex items-center justify-center border border-white/5 group-hover:rotate-6 transition-transform">
                  <Brain className="w-6 h-6 text-black" />
               </div>
@@ -741,10 +695,10 @@ function App() {
                       <p className="text-[#8da290] font-serif italic text-lg opacity-50">Upload a resource to begin the architecture of your memory.</p>
                    </div>
                    <button 
-                      onClick={() => setSimulationMode(true)} 
+                      onClick={() => document.getElementById('ingest')?.scrollIntoView({behavior: 'smooth'})} 
                       className="px-12 py-5 bg-[#c5a059] text-black font-black uppercase text-xs tracking-[0.3em] rounded-full hover:bg-white transition-all scale-110"
                    >
-                      Ignite Simulation
+                      Upload Content
                    </button>
                </div>
            )}

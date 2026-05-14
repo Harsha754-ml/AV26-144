@@ -729,7 +729,7 @@ const SurvivalMode = ({ flashcards }) => {
 const SynapticMatchGame = ({ flashcards }) => {
   const [activeGame, setActiveGame] = useState('match');
   
-  // Use real flashcards if available, otherwise demo data
+  // Use real flashcards — only fall back to demo if nothing available
   const gameCards = flashcards && flashcards.length > 0 ? flashcards : DEMO_FLASHCARDS;
 
   const games = [

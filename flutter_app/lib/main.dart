@@ -257,16 +257,9 @@ class _MainScreenState extends State<MainScreen> {
 // HOME SCREEN - Rich Dashboard with Demo Data
 // ----------------------------------------------------
 
-// Mock data matching the web dashboard
-final List<Topic> _mockFlashcards = [
-  Topic(id: "m1", topicName: "Philosophy: Stoicism", question: "What is the 'Dichotomy of Control' as defined by Epictetus?", answer: "The distinction between things within our power and things not.", sourceType: "ai_ingest", retentionScore: 94, urgencyLevel: "safe", nextReminderMinutes: 480),
-  Topic(id: "m2", topicName: "Quantum Mechanics", question: "Define the Heisenberg Uncertainty Principle in terms of position and momentum.", answer: "Cannot know both position and momentum simultaneously.", sourceType: "ai_ingest", retentionScore: 38, urgencyLevel: "critical", nextReminderMinutes: 15),
-  Topic(id: "m3", topicName: "React: Performance", question: "When should useMemo be favored over simple memoization?", answer: "When computation is expensive and deps change infrequently.", sourceType: "ai_ingest", retentionScore: 72, urgencyLevel: "warning", nextReminderMinutes: 120),
-  Topic(id: "m4", topicName: "Growth Strategy", question: "Explain the AARRR (Pirate Metrics) framework for SaaS.", answer: "Acquisition, Activation, Retention, Revenue, Referral.", sourceType: "ai_ingest", retentionScore: 55, urgencyLevel: "danger", nextReminderMinutes: 30),
-  Topic(id: "m5", topicName: "Neuroscience", question: "What role does the hippocampus play in memory consolidation?", answer: "Consolidates short-term to long-term memories.", sourceType: "ai_ingest", retentionScore: 88, urgencyLevel: "safe", nextReminderMinutes: 720),
-  Topic(id: "m6", topicName: "Microservices", question: "What is the Saga Pattern used for in distributed systems?", answer: "Managing data consistency across microservices.", sourceType: "ai_ingest", retentionScore: 65, urgencyLevel: "warning", nextReminderMinutes: 90),
-];
-
+// ----------------------------------------------------
+// HOME SCREEN - Rich Dashboard
+// ----------------------------------------------------
 class HomeScreen extends StatelessWidget {
   final List<Topic> flashcards;
   final bool isConnected;
@@ -274,8 +267,8 @@ class HomeScreen extends StatelessWidget {
 
   const HomeScreen({Key? key, required this.flashcards, required this.isConnected, required this.onRefresh}) : super(key: key);
 
-  List<Topic> get _activeCards => flashcards.isNotEmpty ? flashcards : _mockFlashcards;
-  bool get _isDemo => flashcards.isEmpty;
+  List<Topic> get _activeCards => flashcards;
+  bool get _isDemo => false;
 
   @override
   Widget build(BuildContext context) {
