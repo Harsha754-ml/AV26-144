@@ -1,6 +1,7 @@
 import os
 import json
 import re
+import time
 from uuid import uuid4
 from dotenv import load_dotenv
 from google import genai
@@ -21,7 +22,7 @@ if API_KEY:
 # Use the latest verified models from the list
 MODEL_NAME = 'gemini-2.5-flash' 
 # Secondary fallback
-FALLBACK_MODEL = 'gemini-1.5-flash'
+FALLBACK_MODEL = 'gemini-2.0-flash'
 
 def create_chronos_plan(topic_name: str, flashcards: list):
     """
@@ -88,7 +89,6 @@ Input Text:
 {text}"""
 
     try:
-        import time
         time.sleep(1) # Simple throttle to help with quota
         # New SDK syntax - try primary model, fallback if unavailable
         response = None
