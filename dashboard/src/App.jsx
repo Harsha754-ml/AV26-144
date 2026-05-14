@@ -68,14 +68,16 @@ const MOCK_TREND = [
 ];
 
 const EBBINGHAUS_DATA = [
-  { day: '0', r0: 100 },
-  { day: '1', r0: 60, r1: 100 },
-  { day: '2', r0: 36, r1: 80 },
-  { day: '3', r0: 21, r1: 60, r2: 100 },
-  { day: '4', r0: 13, r1: 45, r2: 85 },
-  { day: '5', r0: 8,  r1: 35, r2: 72 },
-  { day: '6', r0: 5,  r1: 25, r2: 60, r3: 100 },
-  { day: '7', r0: 3,  r1: 20, r2: 52, r3: 92 },
+  // Forgetting curve with spaced repetition resets at day 1, 3, 6
+  // r0 = no review (pure decay), r1 = 1st review at day 1, r2 = 2nd review at day 3, r3 = 3rd review at day 6
+  { day: '0', r0: 100, r1: 100, r2: 100, r3: 100 },
+  { day: '1', r0: 44,  r1: 100, r2: 100, r3: 100 },
+  { day: '2', r0: 28,  r1: 75,  r2: 75,  r3: 75 },
+  { day: '3', r0: 20,  r1: 55,  r2: 100, r3: 100 },
+  { day: '4', r0: 15,  r1: 42,  r2: 82,  r3: 82 },
+  { day: '5', r0: 12,  r1: 33,  r2: 68,  r3: 68 },
+  { day: '6', r0: 10,  r1: 27,  r2: 56,  r3: 100 },
+  { day: '7', r0: 8,   r1: 22,  r2: 48,  r3: 92 },
 ];
 
 const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6'];
@@ -370,39 +372,84 @@ function App() {
               <div className="col-span-1 xl:col-span-2 bg-[#0a0a0b] rounded-[3.5rem] p-12 border border-white/5 relative group hover:shadow-[0_40px_100px_rgba(0,0,0,0.8)] transition-all overflow-hidden">
                  <div className="absolute top-0 right-0 w-80 h-80 bg-[#c5a059]/5 rounded-full blur-[100px] -mr-40 -mt-40" />
                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-12">
-                       <h3 className="text-2xl font-black text-[#f4f1ea] font-serif flex items-center gap-5">
-                          <Activity className="w-7 h-7 text-[#c5a059]" /> Synaptic Stability Trend
-                       </h3>
-                       <div className="flex gap-6">
+                    <div className="flex items-center justify-between mb-8">
+                       <div>
+                          <h3 className="text-2xl font-black text-[#f4f1ea] font-serif flex items-center gap-5">
+                             <Activity className="w-7 h-7 text-[#c5a059]" /> Combating The Forgetting Curve
+                          </h3>
+                          <p className="text-slate-500 text-xs font-serif italic mt-2">Spaced repetition resets decay at optimal intervals</p>
+                       </div>
+                       <div className="flex flex-col gap-2">
                           <div className="flex items-center gap-2">
-                             <div className="w-2.5 h-2.5 rounded-full bg-[#c5a059]" />
-                             <span className="text-[10px] uppercase font-black tracking-widest text-slate-500">Load</span>
+                             <div className="w-8 h-[3px] rounded-full bg-rose-400/60" />
+                             <span className="text-[9px] uppercase font-black tracking-widest text-slate-500">No Review</span>
                           </div>
                           <div className="flex items-center gap-2">
-                             <div className="w-2.5 h-2.5 rounded-full bg-[#8da290]" />
-                             <span className="text-[10px] uppercase font-black tracking-widest text-slate-500">Score</span>
+                             <div className="w-8 h-[3px] rounded-full bg-[#8da290]" />
+                             <span className="text-[9px] uppercase font-black tracking-widest text-slate-500">With Reviews</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                             <div className="w-8 h-[3px] rounded-full bg-[#c5a059]" />
+                             <span className="text-[9px] uppercase font-black tracking-widest text-slate-500">Optimal Path</span>
                           </div>
                        </div>
                     </div>
+                    
+                    {/* Review markers */}
+                    <div className="flex justify-between px-12 mb-4">
+                       <div className="flex flex-col items-center opacity-0">
+                          <span className="text-[8px]">.</span>
+                       </div>
+                       <div className="flex flex-col items-center">
+                          <span className="text-[9px] font-black text-[#c5a059] uppercase tracking-wider">📧 Review 1</span>
+                       </div>
+                       <div className="flex flex-col items-center opacity-0"><span className="text-[8px]">.</span></div>
+                       <div className="flex flex-col items-center">
+                          <span className="text-[9px] font-black text-[#c5a059] uppercase tracking-wider">📱 Review 2</span>
+                       </div>
+                       <div className="flex flex-col items-center opacity-0"><span className="text-[8px]">.</span></div>
+                       <div className="flex flex-col items-center opacity-0"><span className="text-[8px]">.</span></div>
+                       <div className="flex flex-col items-center">
+                          <span className="text-[9px] font-black text-[#c5a059] uppercase tracking-wider">🧑‍💻 Review 3</span>
+                       </div>
+                       <div className="flex flex-col items-center opacity-0"><span className="text-[8px]">.</span></div>
+                    </div>
+
                     <div className="h-72 w-full">
                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={EBBINGHAUS_DATA} margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
-                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={true} />
-                             <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 10, fontWeight: 700}} dy={15} />
-                             <YAxis domain={[0, 100]} axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 10}} dx={-10} tickFormatter={(val) => `${val}%`} />
+                          <LineChart data={EBBINGHAUS_DATA} margin={{ top: 10, right: 20, bottom: 0, left: 0 }}>
+                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                             <XAxis dataKey="day" axisLine={{stroke: 'rgba(255,255,255,0.1)'}} tickLine={false} tick={{fill: '#64748b', fontSize: 11, fontWeight: 700}} dy={10} label={{value: 'Days', position: 'insideBottom', offset: -5, fill: '#64748b', fontSize: 10, fontWeight: 700}} />
+                             <YAxis domain={[0, 100]} axisLine={{stroke: 'rgba(255,255,255,0.1)'}} tickLine={false} tick={{fill: '#64748b', fontSize: 10}} dx={-5} tickFormatter={(val) => `${val}%`} label={{value: 'Retention', angle: -90, position: 'insideLeft', fill: '#64748b', fontSize: 10, fontWeight: 700}} />
                              <Tooltip 
-                                contentStyle={{ backgroundColor: '#0f0f11', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', padding: '15px' }}
-                                itemStyle={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 900, color: '#f4f1ea' }}
-                                labelStyle={{ color: '#8da290', fontWeight: 'bold' }}
-                                formatter={(value) => [`${value}%`, 'Retention']}
+                                contentStyle={{ backgroundColor: '#0f0f11', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '12px 16px' }}
+                                itemStyle={{ fontSize: '11px', fontWeight: 700 }}
+                                labelStyle={{ color: '#c5a059', fontWeight: 'bold', marginBottom: '4px' }}
+                                labelFormatter={(val) => `Day ${val}`}
                              />
-                             <Line connectNulls={false} type="monotone" dataKey="r0" stroke="#8da290" strokeWidth={3} dot={false} animationDuration={2000} />
-                             <Line connectNulls={false} type="monotone" dataKey="r1" stroke="#8da290" strokeWidth={3} dot={false} animationDuration={2500} />
-                             <Line connectNulls={false} type="monotone" dataKey="r2" stroke="#8da290" strokeWidth={3} dot={false} animationDuration={3000} />
-                             <Line connectNulls={false} type="monotone" dataKey="r3" stroke="#8da290" strokeWidth={4} dot={{r: 4, fill: '#8da290', strokeWidth: 2, stroke: '#0a0a0b'}} animationDuration={3500} />
+                             {/* No review - pure decay (thin, fading) */}
+                             <Line type="monotone" dataKey="r0" stroke="#f43f5e" strokeWidth={2} strokeOpacity={0.5} dot={false} animationDuration={2000} name="No Review" />
+                             {/* 1st review at day 1 */}
+                             <Line type="monotone" dataKey="r1" stroke="#8da290" strokeWidth={2.5} strokeOpacity={0.6} dot={false} animationDuration={2500} name="1 Review" />
+                             {/* 2nd review at day 3 */}
+                             <Line type="monotone" dataKey="r2" stroke="#8da290" strokeWidth={3} strokeOpacity={0.8} dot={false} animationDuration={3000} name="2 Reviews" />
+                             {/* 3rd review at day 6 - optimal path (bold gold) */}
+                             <Line type="monotone" dataKey="r3" stroke="#c5a059" strokeWidth={4} dot={{r: 5, fill: '#c5a059', strokeWidth: 3, stroke: '#0a0a0b'}} animationDuration={3500} name="3 Reviews (Optimal)" />
+                             
+                             {/* Review point markers - vertical dashed lines */}
                           </LineChart>
                        </ResponsiveContainer>
+                    </div>
+                    
+                    {/* Insight bar */}
+                    <div className="mt-8 flex items-center gap-6 p-5 bg-white/[0.02] rounded-2xl border border-white/5">
+                       <div className="w-10 h-10 bg-[#c5a059]/10 rounded-xl flex items-center justify-center border border-[#c5a059]/20">
+                          <Sparkles className="w-5 h-5 text-[#c5a059]" />
+                       </div>
+                       <div>
+                          <p className="text-xs font-black text-[#f4f1ea]">Spaced Repetition Active</p>
+                          <p className="text-[10px] text-slate-500 mt-0.5">Reviews at Day 1, 3, 6 maintain 92%+ retention vs 8% without review</p>
+                       </div>
                     </div>
                  </div>
               </div>
