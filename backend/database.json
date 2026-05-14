@@ -1,102 +1,12 @@
 {
   "flashcards": [
     {
-      "id": "fc_6606ed8d",
-      "topic_name": "Machine Learning",
-      "question": "What is Machine Learning?",
-      "answer": "A subset of artificial intelligence that enables systems to learn from data.",
+      "id": "fc_f2c0233b",
+      "topic_name": "Test Topic",
+      "question": "What is prior probability in the context of machine learning?",
+      "answer": "Prior probability is the general probability of an uncertain event before any new observation is seen or evidence is collected. It represents the initial belief based on historical data.",
       "source_type": "ai_ingest",
-      "created_at": 1778781066.547179,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "**Artificial intelligence enabling systems to learn from data.**",
-      "audio_ready": true
-    },
-    {
-      "id": "fc_46f2563e",
-      "topic_name": "Machine Learning",
-      "question": "How does Supervised Learning operate?",
-      "answer": "Supervised Learning uses labeled data.",
-      "source_type": "ai_ingest",
-      "created_at": 1778781066.5481796,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_5ab687f8",
-      "topic_name": "Machine Learning",
-      "question": "What kind of data does Unsupervised Learning analyze?",
-      "answer": "Unsupervised Learning finds patterns in unlabeled data.",
-      "source_type": "ai_ingest",
-      "created_at": 1778781066.5542257,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_4354b3cb",
-      "topic_name": "Machine Learning",
-      "question": "What are Neural Networks inspired by?",
-      "answer": "The human brain.",
-      "source_type": "ai_ingest",
-      "created_at": 1778781066.5602376,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_1894bb5d",
-      "topic_name": "Machine Learning",
-      "question": "Which field is Machine Learning a subset of?",
-      "answer": "Artificial Intelligence.",
-      "source_type": "ai_ingest",
-      "created_at": 1778781066.5630345,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_635d8704",
-      "topic_name": "Machine Learning",
-      "question": "What is the primary characteristic of Supervised Learning?",
-      "answer": "It learns from labeled data.",
-      "source_type": "ai_ingest",
-      "created_at": 1778781066.5726595,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_d1f490bf",
-      "topic_name": "Machine Learning",
-      "question": "What is the primary goal of Unsupervised Learning?",
-      "answer": "To find patterns in unlabeled data.",
-      "source_type": "ai_ingest",
-      "created_at": 1778781066.575447,
+      "created_at": 1778781617.6241674,
       "last_reviewed": 0,
       "stability": 24.0,
       "review_count": 0,
@@ -108,172 +18,240 @@
   ],
   "events": [
     {
-      "id": "evt_1778781066587",
-      "text": "AI Ingested: Machine Learning (7 cards)",
+      "id": "evt_1778781630545",
+      "text": "Legacy Recall: Test Topic 0%",
       "type": "info",
-      "timestamp": 1778781066.5874841
+      "timestamp": 1778781630.5457473
     },
     {
-      "id": "evt_1778781070544",
-      "text": "Legacy Recall: Machine Learning 0%",
+      "id": "evt_1778781635552",
+      "text": "Legacy Recall: Test Topic 0%",
       "type": "info",
-      "timestamp": 1778781070.544949
+      "timestamp": 1778781635.552697
     },
     {
-      "id": "evt_1778781071577",
-      "text": "Legacy Recall: Machine Learning 0%",
+      "id": "evt_1778781640536",
+      "text": "Legacy Recall: Test Topic 0%",
       "type": "info",
-      "timestamp": 1778781071.5770385
+      "timestamp": 1778781640.536586
     },
     {
-      "id": "evt_1778781072606",
-      "text": "Legacy Recall: Machine Learning 0%",
+      "id": "evt_1778781645542",
+      "text": "Legacy Recall: Test Topic 0%",
       "type": "info",
-      "timestamp": 1778781072.6062462
+      "timestamp": 1778781645.5425773
     },
     {
-      "id": "evt_1778781072853",
-      "text": "Legacy Recall: Machine Learning 0%",
+      "id": "evt_1778781650545",
+      "text": "Legacy Recall: Test Topic 0%",
       "type": "info",
-      "timestamp": 1778781072.853794
+      "timestamp": 1778781650.545829
     },
     {
-      "id": "evt_1778781072872",
-      "text": "Legacy Recall: Machine Learning 0%",
+      "id": "evt_1778781655540",
+      "text": "Legacy Recall: Test Topic 0%",
       "type": "info",
-      "timestamp": 1778781072.8724709
+      "timestamp": 1778781655.5408478
     },
     {
-      "id": "evt_1778781072896",
-      "text": "Legacy Recall: Machine Learning 0%",
+      "id": "evt_1778781660536",
+      "text": "Legacy Recall: Test Topic 0%",
       "type": "info",
-      "timestamp": 1778781072.8960786
+      "timestamp": 1778781660.536434
     },
     {
-      "id": "evt_1778781072918",
-      "text": "Legacy Recall: Machine Learning 0%",
+      "id": "evt_1778781665541",
+      "text": "Legacy Recall: Test Topic 0%",
       "type": "info",
-      "timestamp": 1778781072.9188197
+      "timestamp": 1778781665.5412734
+    },
+    {
+      "id": "evt_1778781670527",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781670.5276756
+    },
+    {
+      "id": "evt_1778781675551",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781675.5519629
+    },
+    {
+      "id": "evt_1778781680539",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781680.539728
+    },
+    {
+      "id": "evt_1778781685528",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781685.528669
+    },
+    {
+      "id": "evt_1778781690539",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781690.539205
+    },
+    {
+      "id": "evt_1778781695539",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781695.5394964
+    },
+    {
+      "id": "evt_1778781700537",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781700.5376678
+    },
+    {
+      "id": "evt_1778781705550",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781705.550176
+    },
+    {
+      "id": "evt_1778781710535",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781710.5352437
+    },
+    {
+      "id": "evt_1778781715533",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781715.5332086
+    },
+    {
+      "id": "evt_1778781720542",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781720.5428576
+    },
+    {
+      "id": "evt_1778781725539",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781725.5396256
+    },
+    {
+      "id": "evt_1778781730527",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781730.5276022
+    },
+    {
+      "id": "evt_1778781735539",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781735.5396829
+    },
+    {
+      "id": "evt_1778781740534",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781740.5344722
+    },
+    {
+      "id": "evt_1778781745527",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781745.52766
+    },
+    {
+      "id": "evt_1778781755531",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781755.5318766
+    },
+    {
+      "id": "evt_1778781760530",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781760.5300171
+    },
+    {
+      "id": "evt_1778781765536",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781765.5367546
+    },
+    {
+      "id": "evt_1778781775534",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781775.5341277
+    },
+    {
+      "id": "evt_1778781780537",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781780.5370572
+    },
+    {
+      "id": "evt_1778781785540",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781785.540906
+    },
+    {
+      "id": "evt_1778781790536",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781790.5364928
+    },
+    {
+      "id": "evt_1778781800523",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781800.5235267
+    },
+    {
+      "id": "evt_1778781805521",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781805.5216346
+    },
+    {
+      "id": "evt_1778781810540",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781810.540886
+    },
+    {
+      "id": "evt_1778781815534",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781815.534015
+    },
+    {
+      "id": "evt_1778781820528",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778781820.528359
     }
   ],
   "pending_notifications": [
     {
-      "notification_id": "notif_1778781071569",
-      "flashcard_id": "fc_46f2563e",
-      "topic_name": "Machine Learning",
-      "question": "How does Supervised Learning operate?",
+      "notification_id": "notif_1778781820515",
+      "flashcard_id": "fc_f2c0233b",
+      "topic_name": "Test Topic",
+      "question": "What is prior probability in the context of machine learning?",
       "retention_score": 0,
       "urgency_level": "critical",
       "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_46f2563e",
+      "audio_url": "http://172.20.2.68:8000/audio/fc_f2c0233b",
       "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778781071.5693674
-    },
-    {
-      "notification_id": "notif_1778781072598",
-      "flashcard_id": "fc_5ab687f8",
-      "topic_name": "Machine Learning",
-      "question": "What kind of data does Unsupervised Learning analyze?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_5ab687f8",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778781072.598739
-    },
-    {
-      "notification_id": "notif_1778781072844",
-      "flashcard_id": "fc_4354b3cb",
-      "topic_name": "Machine Learning",
-      "question": "What are Neural Networks inspired by?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_4354b3cb",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778781072.8447723
-    },
-    {
-      "notification_id": "notif_1778781072865",
-      "flashcard_id": "fc_1894bb5d",
-      "topic_name": "Machine Learning",
-      "question": "Which field is Machine Learning a subset of?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_1894bb5d",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778781072.8652275
-    },
-    {
-      "notification_id": "notif_1778781072887",
-      "flashcard_id": "fc_635d8704",
-      "topic_name": "Machine Learning",
-      "question": "What is the primary characteristic of Supervised Learning?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_635d8704",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778781072.8870811
-    },
-    {
-      "notification_id": "notif_1778781072909",
-      "flashcard_id": "fc_d1f490bf",
-      "topic_name": "Machine Learning",
-      "question": "What is the primary goal of Unsupervised Learning?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_d1f490bf",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778781072.9094412
+      "next_reminder_minutes": 998,
+      "created_at": 1778781820.5157716
     }
   ],
-  "demo_mode": true,
+  "learning_plans": [],
+  "demo_mode": false,
   "settings": {
     "compression_ratio": 1440
-  },
-  "learning_plans": [
-    {
-      "topic_id": "topic_2652a516",
-      "topic_name": "Machine Learning",
-      "created_at": 1778781066.5874841,
-      "status": "active",
-      "current_stage": 0,
-      "steps": [
-        {
-          "stage": 0,
-          "type": "audio_summary",
-          "title": "Immediate Synthesis",
-          "content": "Audio summary for Machine Learning is ready for review.",
-          "due_at": 1778781066.5874841,
-          "status": "pending"
-        },
-        {
-          "stage": 1,"type": "text_recap",
-          "title": "Synaptic Calibration",
-          "content": "Recapping Machine Learning: What is Machine Learning?",
-          "due_at": 1778784666.5874841,
-          "status": "pending"
-        },
-        {
-          "stage": 2,
-          "type": "quiz",
-          "title": "The Knowledge Litmus",
-          "content": "Final challenge for Machine Learning.",
-          "due_at": 1778867466.5874841,
-          "status": "pending"
-        }
-      ]
-    }
-  ]
-}   }
-  ]
+  }
 }

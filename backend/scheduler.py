@@ -122,14 +122,8 @@ def memory_check_job():
                 database.add_event(f"Legacy Recall: {fc['topic_name']} {score}%")
                 
             if score < 30:
-                try:
-                    # Critical local trigger for system speaker
-                    requests.post("http://127.0.0.1:8000/speak", json={
-                        "text": f"Warning! Memory decay detected: {fc.get('topic_name')}.",
-                        "urgency": "critical"
-                    }, timeout=1)
-                except Exception:
-                    pass
+                # Auto-speak disabled — user triggers audio manually via Listen button
+                pass
 
 def start_scheduler():
     scheduler = BackgroundScheduler()
