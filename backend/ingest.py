@@ -75,10 +75,35 @@ def create_chronos_plan(topic_name: str, flashcards: list):
     if flashcards:
         generate_audio(flashcards[0]["id"], flashcards[0]["question"], flashcards[0]["answer"])
 
+def _generate_topic_name(text: str) -> str:
+    """Use Gemini to generate a meaningful topic name from content."""
+    if not client:
+        return "Untitled Topic"
+    try:
+        prompt = f"""Based on this text content, generate a short, clear topic name (2-5 words max).
+Return ONLY the topic name, nothing else. No quotes, no explanation.
+
+Text: {text[:500]}"""
+        for model in [MODEL_NAME, FALLBACK_MODEL]:
+            try:
+                response = client.models.generate_content(model=model, contents=prompt)
+                name = response.text.strip().strip('"').strip("'")
+                if name and len(name) < 60:
+                    return name
+            except:
+                continue
+    except:
+        pass
+    return "Untitled Topic"
+
 def ingest_text(text: str, topic_name: str) -> list:
     if not client:
         print("Error: Gemini Client not initialized. Check GEMINI_API_KEY.")
         return []
+    
+    # Auto-generate topic name if empty or generic
+    if not topic_name or topic_name.strip() in ['', 'Untitled', 'Test', 'test']:
+        topic_name = _generate_topic_name(text)
         
     prompt = f"""You are a flashcard generator for the MemoryForge system. 
 Analyze the input text and generate 5-8 high-quality flashcards.

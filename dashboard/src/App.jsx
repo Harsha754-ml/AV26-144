@@ -124,10 +124,6 @@ function App() {
     e.preventDefault();
     
     // Validation with User Feedback
-    if (!topicName.trim()) {
-      return alert("⚠️ Identification Required: Please enter a name for this Knowledge Cluster (Topic Name).");
-    }
-    
     if (ingestType === 'text' && !textContent.trim()) {
       return alert("⚠️ Content Empty: Please paste the text you wish to analyze.");
     }
@@ -500,7 +496,7 @@ function App() {
                                 type="text" 
                                 value={topicName}
                                 onChange={(e) => setTopicName(e.target.value)}
-                                placeholder="Identify your knowledge area..."
+                                placeholder="Optional — auto-detected from content..."
                                 className="w-full bg-[#0f0f11] border border-white/5 rounded-[2.5rem] px-10 py-6 text-xl text-[#f4f1ea] placeholder-slate-700 focus:border-[#c5a059]/30 outline-none transition-all shadow-inner font-serif"
                              />
                           </div>

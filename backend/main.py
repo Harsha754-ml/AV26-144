@@ -222,11 +222,15 @@ def ingest_youtube_api(req: YoutubeIngestReq):
 @app.post("/ingest/file")
 async def ingest_file_api(
     file: Annotated[UploadFile, File(...)], 
-    topic_name: Annotated[str, Form(...)]
+    topic_name: Annotated[str, Form("")] = ""
 ):
     try:
         contents = await file.read()
         filename_lower = file.filename.lower()
+        
+        # Use filename as fallback topic name if empty
+        if not topic_name.strip():
+            topic_name = file.filename.rsplit('.', 1)[0].replace('_', ' ').replace('-', ' ').title()
         
         if filename_lower.endswith(".pdf"):
             fcs = ingest.ingest_pdf(contents, topic_name)
