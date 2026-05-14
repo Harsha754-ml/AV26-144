@@ -56,9 +56,6 @@ class YoutubeIngestReq(BaseModel):
 class ClearNotifReq(BaseModel):
     notification_id: str
 
-class DemoToggleReq(BaseModel):
-    enabled: bool
-
 class SpeakReq(BaseModel):
     text: str
     urgency: str = "critical"
@@ -359,7 +356,7 @@ def get_settings():
 
 class DemoModeReq(BaseModel):
     enabled: bool
-    compression_ratio: int
+    compression_ratio: int = 1440
 
 @app.post("/settings/demo-mode")
 def toggle_demo(req: DemoModeReq):

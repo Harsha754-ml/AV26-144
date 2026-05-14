@@ -7,9 +7,9 @@
       "answer": "It is a machine learning model that predicts memory retention.",
       "source_type": "ai_ingest",
       "created_at": 1778783672.405756,
-      "last_reviewed": 1778783672.405756,
-      "stability": 24.0,
-      "review_count": 0,
+      "last_reviewed": 1778786010.7871199,
+      "stability": 48.0,
+      "review_count": 1,
       "ignore_count": 0,
       "status": "active",
       "summary": "Half-Life Regression predicts memory retention using machine learning.",
@@ -184,6 +184,18 @@
       "text": "AI Ingested: hello (7 cards)",
       "type": "info",
       "timestamp": 1778783795.299307
+    },
+    {
+      "id": "evt_1778786010811",
+      "text": "Reviewed: Half-Life Regression (remembered)",
+      "type": "info",
+      "timestamp": 1778786010.8114026
+    },
+    {
+      "id": "evt_1778786273505",
+      "text": "Demo mode: OFF",
+      "type": "info",
+      "timestamp": 1778786273.5053837
     }
   ],
   "pending_notifications": [],
