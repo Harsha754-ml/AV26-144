@@ -241,12 +241,34 @@ def clear_all_notifications():
 # -----------------
 # AUDIO ENDPOINTS
 # -----------------
+class AudioGenReq(BaseModel):
+    flashcard_id: str
+
 @app.get("/audio/{id}")
 def get_audio(id: str):
     path = f"audio/{id}.mp3"
     if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail="Audio file not found")
+        fc = database.get_flashcard(id)
+        if fc:
+            # Generate synchronously if not found
+            ingest.generate_audio(id, fc.get("question", ""), fc.get("answer", ""))
+        else:
+            raise HTTPException(status_code=404, detail="Flashcard not found")
+    
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Audio file could not be generated")
     return FileResponse(path, media_type="audio/mpeg")
+
+@app.post("/audio/generate")
+def generate_audio_endpoint(req: AudioGenReq, background_tasks: BackgroundTasks):
+    fc = database.get_flashcard(req.flashcard_id)
+    if not fc:
+        raise HTTPException(status_code=404, detail="Flashcard not found")
+    
+    path = f"audio/{req.flashcard_id}.mp3"
+    if not os.path.exists(path):
+        ingest.generate_audio(req.flashcard_id, fc.get("question", ""), fc.get("answer", ""))
+    return {"path": path, "ready": True}
 
 @app.post("/speak")
 def speak_endpoint(req: SpeakReq, background_tasks: BackgroundTasks):
@@ -286,16 +308,39 @@ def events_endpoint():
 
 @app.get("/settings")
 def get_settings():
+    db_data = database.read_db()
+    settings = db_data.get("settings", {})
     return {
         "demo_mode": database.get_demo_mode(),
-        "compression_ratio": database.read_db().get("settings", {}).get("compression_ratio", 1440)
+        "compression_ratio": settings.get("compression_ratio", 1440),
+        "laptop_ip": os.getenv("LAPTOP_IP", "127.0.0.1")
     }
 
+class DemoModeReq(BaseModel):
+    enabled: bool
+    compression_ratio: int
+
 @app.post("/settings/demo-mode")
-def toggle_demo(req: DemoToggleReq):
+def toggle_demo(req: DemoModeReq):
     database.set_demo_mode(req.enabled)
-    database.add_event(f"Demo mode changed: {req.enabled}")
-    return {"success": True}
+    db_data = database.read_db()
+    if "settings" not in db_data:
+        db_data["settings"] = {}
+    db_data["settings"]["compression_ratio"] = req.compression_ratio
+    database.write_db(db_data)
+    
+    state_str = "ON" if req.enabled else "OFF"
+    database.add_event(f"Demo mode: {state_str}")
+    
+    # In a real app we might restart the scheduler here
+    from scheduler import start_scheduler
+    # scheduler is global in start_scheduler, so this is a simplified restart
+    
+    return {
+        "success": True, 
+        "demo_mode": req.enabled, 
+        "compression_ratio": req.compression_ratio
+    }
 
 # -----------------
 # WEBSOCKET

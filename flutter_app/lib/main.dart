@@ -88,7 +88,7 @@ class _MainScreenState extends State<MainScreen> {
     if (notification.urgencyLevel == "critical") bannerColor = Colors.red.shade900;
     if (notification.urgencyLevel == "danger") bannerColor = Colors.orange.shade900;
 
-    ScaffoldMessenger.of(context).showMaterialBanner(
+    final bannerController = ScaffoldMessenger.of(context).showMaterialBanner(
       MaterialBanner(
         content: Text(
           "Review Time: ${notification.topicName} (Retention: ${notification.retentionScore}%)",
@@ -99,6 +99,13 @@ class _MainScreenState extends State<MainScreen> {
         actions: [
           TextButton(
             onPressed: () {
+              final player = AudioPlayer();
+              player.play(UrlSource(notification.audioUrl));
+            },
+            child: const Text('PLAY AUDIO', style: TextStyle(color: Colors.white)),
+          ),
+          TextButton(
+            onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
               // Navigate based on action
               if (notification.action == 'force_quiz' || notification.action == 'open_quiz') {
@@ -107,7 +114,10 @@ class _MainScreenState extends State<MainScreen> {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => SummaryScreen(notification: notification)));
               }
             },
-            child: const Text('REVIEW NOW', style: TextStyle(color: Colors.white)),
+            child: Text(
+              (notification.action == 'force_quiz' || notification.action == 'open_quiz') ? 'TAKE QUIZ' : 'REVIEW NOW', 
+              style: const TextStyle(color: Colors.white)
+            ),
           ),
           TextButton(
             onPressed: () => ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
@@ -116,6 +126,11 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
+    
+    // Auto-close banner after 10s
+    Future.delayed(const Duration(seconds: 10), () {
+       ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+    });
   }
 
   void _showAddDialog() {
