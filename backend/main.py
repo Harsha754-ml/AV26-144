@@ -348,6 +348,13 @@ def dashboard_stats():
 def events_endpoint():
     return database.get_events(limit=50)
 
+@app.post("/events/clear")
+def clear_events():
+    data = database.read_db()
+    data["events"] = []
+    database.write_db(data)
+    return {"success": True}
+
 @app.get("/settings")
 def get_settings():
     db_data = database.read_db()

@@ -260,9 +260,17 @@ function App() {
            </button>
         </div>
 
-        <div className="px-8 flex items-center gap-2 mb-4 group cursor-default mt-4 border-t border-white/5 pt-6">
-           <Activity className="w-3 h-3 text-[#c5a059] group-hover:scale-110 transition-transform" />
+        <div className="px-8 flex items-center gap-2 mb-4 mt-4 border-t border-white/5 pt-6">
+           <Activity className="w-3 h-3 text-[#c5a059]" />
            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500">Synaptic Activity</h3>
+           <div className="ml-auto">
+             <button 
+               onClick={() => fetch(`${API_BASE}/events/clear`, { method: 'POST' }).catch(() => {})}
+               className="text-[8px] font-black text-slate-700 uppercase tracking-widest hover:text-rose-400 transition-colors"
+             >
+               Clear
+             </button>
+           </div>
         </div>
         
         <div className="flex-1 overflow-y-auto px-8 py-2 space-y-8 custom-scrollbar mb-8">
