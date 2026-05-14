@@ -3,37 +3,12 @@ import ForceGraph2D from 'react-force-graph-2d';
 
 const API_BASE = "http://127.0.0.1:8000";
 
-// Demo graph data (used when server is offline)
-const DEMO_GRAPH = {
-  nodes: [
-    { id: "Philosophy", name: "Philosophy: Stoicism", val: 12, retention: 94, cards: 3, color: "#c5a059" },
-    { id: "Quantum", name: "Quantum Mechanics", val: 8, retention: 38, cards: 2, color: "#f43f5e" },
-    { id: "React", name: "React: Performance", val: 10, retention: 72, cards: 2, color: "#f59e0b" },
-    { id: "Growth", name: "Growth Strategy", val: 9, retention: 55, cards: 2, color: "#f59e0b" },
-    { id: "Neuro", name: "Neuroscience", val: 14, retention: 88, cards: 4, color: "#c5a059" },
-    { id: "Systems", name: "Distributed Systems", val: 11, retention: 65, cards: 3, color: "#f59e0b" },
-    { id: "ML", name: "Machine Learning", val: 13, retention: 78, cards: 3, color: "#c5a059" },
-    { id: "OS", name: "Operating Systems", val: 7, retention: 45, cards: 1, color: "#f43f5e" },
-  ],
-  links: [
-    { source: "Quantum", target: "Neuro" },
-    { source: "Neuro", target: "ML" },
-    { source: "ML", target: "React" },
-    { source: "React", target: "Systems" },
-    { source: "Systems", target: "OS" },
-    { source: "Philosophy", target: "Neuro" },
-    { source: "Growth", target: "ML" },
-    { source: "Quantum", target: "ML" },
-  ]
-};
-
 const KnowledgeGraph = () => {
   const graphRef = useRef();
-  const [graphData, setGraphData] = useState(DEMO_GRAPH);
+  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [hoveredNode, setHoveredNode] = useState(null);
 
   useEffect(() => {
-    // Try to fetch from backend
     fetch(`${API_BASE}/knowledge-graph`)
       .then(r => r.json())
       .then(data => {
@@ -41,7 +16,7 @@ const KnowledgeGraph = () => {
           setGraphData(data);
         }
       })
-      .catch(() => {}); // Use demo data on failure
+      .catch(() => {});
   }, []);
 
   const paintNode = useCallback((node, ctx, globalScale) => {
