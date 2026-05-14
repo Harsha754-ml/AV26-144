@@ -90,6 +90,10 @@ def memory_check_job():
     for fc in flashcards:
         if fc.get("status") != "active":
             continue
+        
+        # Skip cards that have never been reviewed (just created)
+        if fc.get("last_reviewed", 0) == 0:
+            continue
             
         retention = curve_engine.calculate_retention(fc["last_reviewed"], fc["stability"], demo_mode)
         score = curve_engine.calculate_score(retention)

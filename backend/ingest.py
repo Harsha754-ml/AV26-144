@@ -126,7 +126,7 @@ Input Text:
                 "answer": item["answer"],
                 "source_type": "ai_ingest",
                 "created_at": time.time(),
-                "last_reviewed": 0,
+                "last_reviewed": time.time(),
                 "stability": 24.0,
                 "review_count": 0,
                 "ignore_count": 0,
