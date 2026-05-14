@@ -568,6 +568,19 @@ function App() {
                               )}
                            </div>
                            
+                           {/* Loading Progress Bar */}
+                           {ingestLoading && (
+                             <div className="w-full space-y-4 py-4">
+                               <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                                 <div className="h-full bg-gradient-to-r from-[#c5a059] to-[#8da290] rounded-full animate-pulse" style={{width: '70%', animation: 'loading 2s ease-in-out infinite'}} />
+                               </div>
+                               <div className="flex items-center justify-center gap-3">
+                                 <RefreshCw className="w-4 h-4 text-[#c5a059] animate-spin" />
+                                 <span className="text-sm font-serif italic text-[#c5a059]">Extracting content & generating flashcards via Gemini AI...</span>
+                               </div>
+                             </div>
+                           )}
+
                            <button 
                              type="submit"
                              onClick={handleIngest}
@@ -575,7 +588,10 @@ function App() {
                              className={`w-full flex items-center justify-center gap-6 px-12 py-7 rounded-[3rem] font-black text-xl tracking-[0.2em] transition-all ${ingestLoading ? 'bg-slate-900 text-slate-600 cursor-not-allowed' : 'bg-[#c5a059] text-black hover:bg-[#d8b577] hover:shadow-[0_25px_50px_rgba(197,160,89,0.3)] hover:-translate-y-1 active:scale-95'}`}
                            >
                              {ingestLoading ? (
-                                <RefreshCw className="w-7 h-7 animate-spin" />
+                                <>
+                                   <RefreshCw className="w-7 h-7 animate-spin" />
+                                   PROCESSING...
+                                </>
                              ) : (
                                 <>
                                    INITIATE LINK

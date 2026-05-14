@@ -424,11 +424,185 @@
       "text": "Legacy Recall: Test Topic 0%",
       "type": "info",
       "timestamp": 1778782057.836821
+    },
+    {
+      "id": "evt_1778782062897",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782062.8977892
+    },
+    {
+      "id": "evt_1778782067832",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782067.8326187
+    },
+    {
+      "id": "evt_1778782072829",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782072.829507
+    },
+    {
+      "id": "evt_1778782077835",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782077.8352885
+    },
+    {
+      "id": "evt_1778782082838",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782082.8384652
+    },
+    {
+      "id": "evt_1778782087824",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782087.8248582
+    },
+    {
+      "id": "evt_1778782092837",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782092.8376346
+    },
+    {
+      "id": "evt_1778782097841",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782097.8413234
+    },
+    {
+      "id": "evt_1778782102839",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782102.8392675
+    },
+    {
+      "id": "evt_1778782107851",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782107.8511992
+    },
+    {
+      "id": "evt_1778782112834",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782112.834659
+    },
+    {
+      "id": "evt_1778782117833",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782117.833258
+    },
+    {
+      "id": "evt_1778782127838",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782127.8389375
+    },
+    {
+      "id": "evt_1778782132837",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782132.8372362
+    },
+    {
+      "id": "evt_1778782137834",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782137.834681
+    },
+    {
+      "id": "evt_1778782142836",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782142.8369982
+    },
+    {
+      "id": "evt_1778782147829",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782147.8296185
+    },
+    {
+      "id": "evt_1778782152836",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782152.8364668
+    },
+    {
+      "id": "evt_1778782157841",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782157.841195
+    },
+    {
+      "id": "evt_1778782162832",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782162.8326445
+    },
+    {
+      "id": "evt_1778782167842",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782167.84222
+    },
+    {
+      "id": "evt_1778782172836",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782172.8369036
+    },
+    {
+      "id": "evt_1778782177839",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782177.8392274
+    },
+    {
+      "id": "evt_1778782182838",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782182.838871
+    },
+    {
+      "id": "evt_1778782187845",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782187.8454056
+    },
+    {
+      "id": "evt_1778782192846",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782192.846375
+    },
+    {
+      "id": "evt_1778782197850",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782197.850089
+    },
+    {
+      "id": "evt_1778782202843",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782202.843395
+    },
+    {
+      "id": "evt_1778782207847",
+      "text": "Legacy Recall: Test Topic 0%",
+      "type": "info",
+      "timestamp": 1778782207.8474948
     }
   ],
   "pending_notifications": [
     {
-      "notification_id": "notif_1778782057823",
+      "notification_id": "notif_1778782207827",
       "flashcard_id": "fc_f2c0233b",
       "topic_name": "Test Topic",
       "question": "What is prior probability in the context of machine learning?",
@@ -438,7 +612,7 @@
       "audio_url": "http://172.20.2.68:8000/audio/fc_f2c0233b",
       "summary_text": "",
       "next_reminder_minutes": 998,
-      "created_at": 1778782057.8233783
+      "created_at": 1778782207.827071
     }
   ],
   "learning_plans": [],
