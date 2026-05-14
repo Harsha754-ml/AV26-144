@@ -223,6 +223,7 @@ class _MainScreenState extends State<MainScreen> {
     final screens = [
       HomeScreen(flashcards: _flashcards, isConnected: _isConnected, onRefresh: _fetchData),
       GameScreen(flashcards: _flashcards),
+      AudioReviewScreen(flashcards: _flashcards),
       SettingsScreen()
     ];
 
@@ -237,12 +238,14 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (i) => setState(() => _currentIndex = i),
+        type: BottomNavigationBarType.fixed,
         backgroundColor: const Color(0xFF0F0F11),
         selectedItemColor: const Color(0xFFC5A059),
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.sports_esports), label: 'Games'),
+          BottomNavigationBarItem(icon: Icon(Icons.headphones), label: 'Audio'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
@@ -829,6 +832,196 @@ class QuizScreen extends StatelessWidget {
             const SizedBox(height: 40)
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ----------------------------------------------------
+// AUDIO REVIEW SCREEN - Pick a topic to listen
+// ----------------------------------------------------
+class AudioReviewScreen extends StatefulWidget {
+  final List<Topic> flashcards;
+  const AudioReviewScreen({Key? key, required this.flashcards}) : super(key: key);
+
+  @override
+  _AudioReviewScreenState createState() => _AudioReviewScreenState();
+}
+
+class _AudioReviewScreenState extends State<AudioReviewScreen> {
+  final AudioPlayer _player = AudioPlayer();
+  String? _playingId;
+
+  // Use demo data if no flashcards from server
+  static final List<Topic> _demoCards = [
+    Topic(id: "d1", topicName: "Philosophy: Stoicism", question: "What is the Dichotomy of Control?", answer: "The distinction between things within our power and things not in our power.", sourceType: "demo", retentionScore: 94, urgencyLevel: "safe", nextReminderMinutes: 480),
+    Topic(id: "d2", topicName: "Quantum Mechanics", question: "Define the Heisenberg Uncertainty Principle.", answer: "Cannot simultaneously know exact position and momentum of a particle.", sourceType: "demo", retentionScore: 38, urgencyLevel: "critical", nextReminderMinutes: 15),
+    Topic(id: "d3", topicName: "React Performance", question: "When should useMemo be preferred?", answer: "When computation is expensive and dependencies change infrequently.", sourceType: "demo", retentionScore: 72, urgencyLevel: "warning", nextReminderMinutes: 120),
+    Topic(id: "d4", topicName: "Growth Strategy", question: "Explain the AARRR framework.", answer: "Acquisition, Activation, Retention, Revenue, Referral for SaaS growth.", sourceType: "demo", retentionScore: 55, urgencyLevel: "danger", nextReminderMinutes: 30),
+    Topic(id: "d5", topicName: "Neuroscience", question: "What role does the hippocampus play?", answer: "Consolidates short-term memories into long-term memories.", sourceType: "demo", retentionScore: 88, urgencyLevel: "safe", nextReminderMinutes: 720),
+    Topic(id: "d6", topicName: "Distributed Systems", question: "What is the Saga Pattern?", answer: "Managing data consistency across microservices with compensating transactions.", sourceType: "demo", retentionScore: 65, urgencyLevel: "warning", nextReminderMinutes: 90),
+  ];
+
+  List<Topic> get _activeCards => widget.flashcards.isNotEmpty ? widget.flashcards : _demoCards;
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  void _playTopic(Topic topic) async {
+    setState(() => _playingId = topic.id);
+    try {
+      // Try backend gTTS audio
+      await _player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
+      _player.onPlayerComplete.listen((_) {
+        if (mounted) setState(() => _playingId = null);
+      });
+    } catch (e) {
+      // If backend fails, still mark as playing briefly
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted) setState(() => _playingId = null);
+      });
+    }
+  }
+
+  void _playAll() async {
+    for (final topic in _activeCards) {
+      if (!mounted) break;
+      setState(() => _playingId = topic.id);
+      try {
+        await _player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
+        // Wait for completion
+        await _player.onPlayerComplete.first;
+      } catch (e) {
+        await Future.delayed(const Duration(seconds: 2));
+      }
+    }
+    if (mounted) setState(() => _playingId = null);
+  }
+
+  void _stop() {
+    _player.stop();
+    setState(() => _playingId = null);
+  }
+
+  Color _urgencyColor(String level) {
+    switch (level) {
+      case 'critical': return Colors.redAccent;
+      case 'danger': return Colors.orange;
+      case 'warning': return Colors.amber;
+      default: return const Color(0xFF8DA290);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0A0B),
+      appBar: AppBar(
+        title: const Text("Audio Review", style: TextStyle(fontFamily: 'serif', fontWeight: FontWeight.bold, color: Color(0xFFC5A059))),
+        backgroundColor: const Color(0xFF0F0F11),
+        actions: [
+          if (_playingId != null)
+            IconButton(icon: const Icon(Icons.stop_circle, color: Colors.redAccent), onPressed: _stop),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Header
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            color: const Color(0xFF0F0F11),
+            child: Column(
+              children: [
+                const Text("Pick a topic to listen to its audio summary", style: TextStyle(color: Colors.grey, fontSize: 13, fontStyle: FontStyle.italic)),
+                const SizedBox(height: 16),
+                // Play All button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFC5A059),
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    ),
+                    onPressed: _playingId == null ? _playAll : _stop,
+                    icon: Icon(_playingId == null ? Icons.play_arrow : Icons.stop, size: 20),
+                    label: Text(_playingId == null ? "PLAY ALL TOPICS" : "STOP", style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Topic list
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _activeCards.length,
+              itemBuilder: (context, index) {
+                final topic = _activeCards[index];
+                final isPlaying = _playingId == topic.id;
+                return GestureDetector(
+                  onTap: () => _playTopic(topic),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: isPlaying ? const Color(0xFFC5A059).withAlpha(15) : const Color(0xFF0F0F11),
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(color: isPlaying ? const Color(0xFFC5A059).withAlpha(80) : Colors.white10),
+                    ),
+                    child: Row(
+                      children: [
+                        // Play icon
+                        Container(
+                          width: 44, height: 44,
+                          decoration: BoxDecoration(
+                            color: isPlaying ? const Color(0xFFC5A059) : Colors.white.withAlpha(8),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: isPlaying ? const Color(0xFFC5A059) : Colors.white10),
+                          ),
+                          child: Icon(
+                            isPlaying ? Icons.volume_up : Icons.play_arrow,
+                            color: isPlaying ? Colors.black : Colors.grey,
+                            size: 22,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        // Topic info
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(topic.topicName, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFF4F1EA))),
+                              const SizedBox(height: 4),
+                              Text(topic.question, style: const TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic), maxLines: 1, overflow: TextOverflow.ellipsis),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        // Retention badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: _urgencyColor(topic.urgencyLevel).withAlpha(20),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: _urgencyColor(topic.urgencyLevel).withAlpha(60)),
+                          ),
+                          child: Text("${topic.retentionScore}%", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: _urgencyColor(topic.urgencyLevel))),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

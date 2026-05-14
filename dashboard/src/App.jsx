@@ -94,6 +94,8 @@ function App() {
   const [ingestSuccess, setIngestSuccess] = useState(false);
   const [simulationMode, setSimulationMode] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' or 'game'
+  const [audioReviewOpen, setAudioReviewOpen] = useState(false);
+  const [audioPlaying, setAudioPlaying] = useState(null);
   
   // UI Form States
   const [topicName, setTopicName] = useState('');
@@ -274,6 +276,13 @@ function App() {
            >
              <Brain className="w-4 h-4" />
              <span className="text-xs font-black uppercase tracking-widest">Game Mode</span>
+           </button>
+           <button 
+             onClick={() => setAudioReviewOpen(true)}
+             className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all text-slate-500 hover:bg-white/5 hover:text-slate-300 border border-transparent hover:border-[#c5a059]/20"
+           >
+             <Volume2 className="w-4 h-4" />
+             <span className="text-xs font-black uppercase tracking-widest">Audio Review</span>
            </button>
         </div>
 
@@ -745,6 +754,115 @@ function App() {
            )}
         </div>
       </main>
+
+      {/* AUDIO REVIEW MODAL */}
+      {audioReviewOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => { setAudioReviewOpen(false); setAudioPlaying(null); }}>
+          <div className="bg-[#0f0f11] rounded-[3rem] border border-white/10 p-10 w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#c5a059]/10 rounded-2xl flex items-center justify-center border border-[#c5a059]/20">
+                  <Volume2 className="w-6 h-6 text-[#c5a059]" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-[#f4f1ea] font-serif">Audio Review</h3>
+                  <p className="text-slate-500 text-xs font-serif italic">Pick a topic to listen to its summary</p>
+                </div>
+              </div>
+              <button onClick={() => { setAudioReviewOpen(false); setAudioPlaying(null); }} className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-all">
+                <CloseIcon className="w-5 h-5 text-slate-400" />
+              </button>
+            </div>
+
+            {/* Play All button */}
+            <button 
+              onClick={() => {
+                const cards = activeCards;
+                let i = 0;
+                const playNext = () => {
+                  if (i >= cards.length) { setAudioPlaying(null); return; }
+                  const fc = cards[i];
+                  setAudioPlaying(fc.id);
+                  const text = fc.summary || fc.answer || fc.question;
+                  const utter = new SpeechSynthesisUtterance(`${fc.topic_name}. ${text}`);
+                  utter.rate = 0.85;
+                  utter.onend = () => { i++; playNext(); };
+                  window.speechSynthesis.speak(utter);
+                };
+                window.speechSynthesis.cancel();
+                playNext();
+              }}
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#c5a059] text-black font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-white transition-all mb-6"
+            >
+              <Volume2 className="w-4 h-4" /> Play All Topics
+            </button>
+
+            {/* Stop button */}
+            {audioPlaying && (
+              <button 
+                onClick={() => { window.speechSynthesis.cancel(); setAudioPlaying(null); }}
+                className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-rose-500/10 text-rose-400 font-black uppercase text-xs tracking-widest rounded-2xl border border-rose-500/20 hover:bg-rose-500/20 transition-all mb-6"
+              >
+                Stop Playback
+              </button>
+            )}
+
+            {/* Topic list */}
+            <div className="space-y-3">
+              {activeCards.map((fc) => (
+                <button
+                  key={fc.id}
+                  onClick={() => {
+                    window.speechSynthesis.cancel();
+                    setAudioPlaying(fc.id);
+                    // Try backend audio first
+                    const audio = new Audio(`${API_BASE}/audio/${fc.id}`);
+                    audio.onended = () => setAudioPlaying(null);
+                    audio.onerror = () => {
+                      // Fallback to browser TTS
+                      const text = fc.summary || fc.answer || fc.question;
+                      const utter = new SpeechSynthesisUtterance(`${fc.topic_name}. ${text}`);
+                      utter.rate = 0.85;
+                      utter.onend = () => setAudioPlaying(null);
+                      window.speechSynthesis.speak(utter);
+                    };
+                    audio.play().catch(() => {
+                      const text = fc.summary || fc.answer || fc.question;
+                      const utter = new SpeechSynthesisUtterance(`${fc.topic_name}. ${text}`);
+                      utter.rate = 0.85;
+                      utter.onend = () => setAudioPlaying(null);
+                      window.speechSynthesis.speak(utter);
+                    });
+                  }}
+                  className={`w-full flex items-center gap-4 p-5 rounded-2xl border transition-all text-left ${
+                    audioPlaying === fc.id 
+                      ? 'bg-[#c5a059]/10 border-[#c5a059]/30 shadow-[0_0_20px_rgba(197,160,89,0.1)]' 
+                      : 'bg-white/[0.02] border-white/5 hover:border-[#c5a059]/20 hover:bg-white/[0.04]'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${audioPlaying === fc.id ? 'bg-[#c5a059] border-[#c5a059]' : 'bg-white/5 border-white/10'}`}>
+                    {audioPlaying === fc.id 
+                      ? <Volume2 className="w-5 h-5 text-black animate-pulse" />
+                      : <Volume2 className="w-5 h-5 text-slate-500" />
+                    }
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-black text-[#f4f1ea] truncate">{fc.topic_name}</p>
+                    <p className="text-[10px] text-slate-500 truncate font-serif italic mt-1">{fc.question}</p>
+                  </div>
+                  <div className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-wider ${
+                    fc.urgency_level === 'critical' ? 'bg-rose-500/10 text-rose-400' :
+                    fc.urgency_level === 'danger' ? 'bg-orange-500/10 text-orange-400' :
+                    'bg-[#8da290]/10 text-[#8da290]'
+                  }`}>
+                    {fc.retention_score}%
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
