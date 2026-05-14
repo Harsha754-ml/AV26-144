@@ -145,11 +145,7 @@ const BiometricPanel = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <p className="text-2xl font-black text-rose-400">{Math.round(bio.bpm)}</p>
-            <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">BPM</p>
-          </div>
+        <div className="grid grid-cols-2 gap-4">
           <div className="text-center">
             <p className="text-2xl font-black" style={{color: stressColor}}>{stressLabel}</p>
             <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">STRESS</p>
