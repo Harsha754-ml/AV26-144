@@ -148,7 +148,6 @@ function App() {
         body = new FormData();
         body.append('topic_name', topicName);
         body.append('file', fileInputRef.current.files[0]);
-        // Note: fetch automatically sets multipart/form-data boundary
       } else {
         headers = { 'Content-Type': 'application/json' };
         body = JSON.stringify({ 
@@ -160,7 +159,7 @@ function App() {
       console.log(`Transmitting to ${API_BASE}${endpoint}...`);
       const response = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST',
-        headers: headers,
+        ...(ingestType !== 'file' && { headers }),
         body: body
       });
 
@@ -169,6 +168,7 @@ function App() {
       if (response.ok) {
         console.log("Ingestion successful:", responseData);
         setIngestSuccess(true);
+        alert(`✅ Success! Generated ${Array.isArray(responseData) ? responseData.length : 0} flashcards.`);
         // Clear inputs on success
         setTopicName('');
         setTextContent('');

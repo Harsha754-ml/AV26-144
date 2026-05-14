@@ -1,207 +1,27 @@
 {
   "flashcards": [
     {
-      "id": "fc_d785a1c1",
-      "topic_name": "Test",
-      "question": "What is known as the 'powerhouse of the cell'?",
-      "answer": "The mitochondria.",
+      "id": "fc_6606ed8d",
+      "topic_name": "Machine Learning",
+      "question": "What is Machine Learning?",
+      "answer": "A subset of artificial intelligence that enables systems to learn from data.",
       "source_type": "ai_ingest",
-      "created_at": 1778780347.4147682,
+      "created_at": 1778781066.547179,
       "last_reviewed": 0,
       "stability": 24.0,
       "review_count": 0,
       "ignore_count": 0,
       "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_fe0e4352",
-      "topic_name": "Test",
-      "question": "Which molecule is produced by the mitochondria?",
-      "answer": "ATP.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780347.4147682,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_76ee2fd2",
-      "topic_name": "Test",
-      "question": "Through what process do mitochondria produce ATP?",
-      "answer": "Cellular respiration.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780347.4228933,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_3c296078",
-      "topic_name": "Test",
-      "question": "What is the primary function of the mitochondria in terms of energy?",
-      "answer": "It produces ATP.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780347.4280412,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_bcc9a7fb",
-      "topic_name": "Test",
-      "question": "Which cellular process is performed by the mitochondria to generate energy?",
-      "answer": "Cellular respiration.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780347.4320617,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_b848d7e3",
-      "topic_name": "Test",
-      "question": "What does the mitochondria produce through cellular respiration?",
-      "answer": "ATP.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780347.442527,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_74a05b2e",
-      "topic_name": "Biology",
-      "question": "What cellular organelle is known as the 'powerhouse of the cell'?",
-      "answer": "The mitochondria.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780382.1688778,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_0e28368d",
-      "topic_name": "Biology",
-      "question": "What is the primary product of the mitochondria?",
-      "answer": "ATP.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780382.1694021,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_903a5ecd",
-      "topic_name": "Biology",
-      "question": "Which part of the cell produces ATP?",
-      "answer": "The mitochondria.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780382.1777725,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_1b690bf0",
-      "topic_name": "Biology",
-      "question": "The mitochondria is often referred to as the _________ of the cell.",
-      "answer": "powerhouse",
-      "source_type": "ai_ingest",
-      "created_at": 1778780382.184758,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_d04c6c55",
-      "topic_name": "Biology",
-      "question": "What does the 'powerhouse of the cell' produce?",
-      "answer": "ATP.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780382.1926541,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_09d822d7",
-      "topic_name": "Biology",
-      "question": "What is ATP produced by?",
-      "answer": "The mitochondria.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780382.1998446,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "",
-      "audio_ready": false
-    },
-    {
-      "id": "fc_5715914c",
-      "topic_name": "Biology",
-      "question": "What is the mitochondria known as?",
-      "answer": "The powerhouse of the cell.",
-      "source_type": "ai_ingest",
-      "created_at": 1778780454.994649,
-      "last_reviewed": 0,
-      "stability": 24.0,
-      "review_count": 0,
-      "ignore_count": 0,
-      "status": "active",
-      "summary": "**Mitochondria: The powerhouse of the cell.**",
+      "summary": "**Artificial intelligence enabling systems to learn from data.**",
       "audio_ready": true
     },
     {
-      "id": "fc_1694dba1",
-      "topic_name": "Biology",
-      "question": "What does the mitochondria produce?",
-      "answer": "ATP.",
+      "id": "fc_46f2563e",
+      "topic_name": "Machine Learning",
+      "question": "How does Supervised Learning operate?",
+      "answer": "Supervised Learning uses labeled data.",
       "source_type": "ai_ingest",
-      "created_at": 1778780454.9987578,
+      "created_at": 1778781066.5481796,
       "last_reviewed": 0,
       "stability": 24.0,
       "review_count": 0,
@@ -211,12 +31,12 @@
       "audio_ready": false
     },
     {
-      "id": "fc_e00d6a09",
-      "topic_name": "Biology",
-      "question": "Through what process does the mitochondria produce ATP?",
-      "answer": "Oxidative phosphorylation.",
+      "id": "fc_5ab687f8",
+      "topic_name": "Machine Learning",
+      "question": "What kind of data does Unsupervised Learning analyze?",
+      "answer": "Unsupervised Learning finds patterns in unlabeled data.",
       "source_type": "ai_ingest",
-      "created_at": 1778780455.0229087,
+      "created_at": 1778781066.5542257,
       "last_reviewed": 0,
       "stability": 24.0,
       "review_count": 0,
@@ -226,12 +46,12 @@
       "audio_ready": false
     },
     {
-      "id": "fc_056ed2dd",
-      "topic_name": "Biology",
-      "question": "Which cellular organelle is called the 'powerhouse of the cell'?",
-      "answer": "The mitochondria.",
+      "id": "fc_4354b3cb",
+      "topic_name": "Machine Learning",
+      "question": "What are Neural Networks inspired by?",
+      "answer": "The human brain.",
       "source_type": "ai_ingest",
-      "created_at": 1778780455.0426252,
+      "created_at": 1778781066.5602376,
       "last_reviewed": 0,
       "stability": 24.0,
       "review_count": 0,
@@ -241,12 +61,12 @@
       "audio_ready": false
     },
     {
-      "id": "fc_3c48d78e",
-      "topic_name": "Biology",
-      "question": "What is the primary function of the mitochondria?",
-      "answer": "It produces ATP through oxidative phosphorylation.",
+      "id": "fc_1894bb5d",
+      "topic_name": "Machine Learning",
+      "question": "Which field is Machine Learning a subset of?",
+      "answer": "Artificial Intelligence.",
       "source_type": "ai_ingest",
-      "created_at": 1778780455.0602934,
+      "created_at": 1778781066.5630345,
       "last_reviewed": 0,
       "stability": 24.0,
       "review_count": 0,
@@ -256,12 +76,12 @@
       "audio_ready": false
     },
     {
-      "id": "fc_98839374",
-      "topic_name": "Biology",
-      "question": "Which organelle performs oxidative phosphorylation?",
-      "answer": "The mitochondria.",
+      "id": "fc_635d8704",
+      "topic_name": "Machine Learning",
+      "question": "What is the primary characteristic of Supervised Learning?",
+      "answer": "It learns from labeled data.",
       "source_type": "ai_ingest",
-      "created_at": 1778780455.0791485,
+      "created_at": 1778781066.5726595,
       "last_reviewed": 0,
       "stability": 24.0,
       "review_count": 0,
@@ -271,12 +91,12 @@
       "audio_ready": false
     },
     {
-      "id": "fc_51791446",
-      "topic_name": "Biology",
-      "question": "What energy molecule is produced by oxidative phosphorylation in the mitochondria?",
-      "answer": "ATP.",
+      "id": "fc_d1f490bf",
+      "topic_name": "Machine Learning",
+      "question": "What is the primary goal of Unsupervised Learning?",
+      "answer": "To find patterns in unlabeled data.",
       "source_type": "ai_ingest",
-      "created_at": 1778780455.0973299,
+      "created_at": 1778781066.575447,
       "last_reviewed": 0,
       "stability": 24.0,
       "review_count": 0,
@@ -288,397 +108,132 @@
   ],
   "events": [
     {
-      "id": "evt_1774637388182",
-      "text": "Demo mode: ON",
+      "id": "evt_1778781066587",
+      "text": "AI Ingested: Machine Learning (7 cards)",
       "type": "info",
-      "timestamp": 1774637388.1825535
+      "timestamp": 1778781066.5874841
     },
     {
-      "id": "evt_1774637468803",
-      "text": "Demo mode: ON",
+      "id": "evt_1778781070544",
+      "text": "Legacy Recall: Machine Learning 0%",
       "type": "info",
-      "timestamp": 1774637468.8039982
+      "timestamp": 1778781070.544949
     },
     {
-      "id": "evt_1778780347453",
-      "text": "AI Ingested: Test (6 cards)",
+      "id": "evt_1778781071577",
+      "text": "Legacy Recall: Machine Learning 0%",
       "type": "info",
-      "timestamp": 1778780347.4532537
+      "timestamp": 1778781071.5770385
     },
     {
-      "id": "evt_1778780348405",
-      "text": "Legacy Recall: Test 0%",
+      "id": "evt_1778781072606",
+      "text": "Legacy Recall: Machine Learning 0%",
       "type": "info",
-      "timestamp": 1778780348.4052305
+      "timestamp": 1778781072.6062462
     },
     {
-      "id": "evt_1778780348433",
-      "text": "Legacy Recall: Test 0%",
+      "id": "evt_1778781072853",
+      "text": "Legacy Recall: Machine Learning 0%",
       "type": "info",
-      "timestamp": 1778780348.4338443
+      "timestamp": 1778781072.853794
     },
     {
-      "id": "evt_1778780348450",
-      "text": "Legacy Recall: Test 0%",
+      "id": "evt_1778781072872",
+      "text": "Legacy Recall: Machine Learning 0%",
       "type": "info",
-      "timestamp": 1778780348.4509807
+      "timestamp": 1778781072.8724709
     },
     {
-      "id": "evt_1778780348471",
-      "text": "Legacy Recall: Test 0%",
+      "id": "evt_1778781072896",
+      "text": "Legacy Recall: Machine Learning 0%",
       "type": "info",
-      "timestamp": 1778780348.471519
+      "timestamp": 1778781072.8960786
     },
     {
-      "id": "evt_1778780348501",
-      "text": "Legacy Recall: Test 0%",
+      "id": "evt_1778781072918",
+      "text": "Legacy Recall: Machine Learning 0%",
       "type": "info",
-      "timestamp": 1778780348.5015874
-    },
-    {
-      "id": "evt_1778780348523",
-      "text": "Legacy Recall: Test 0%",
-      "type": "info",
-      "timestamp": 1778780348.5231721
-    },
-    {
-      "id": "evt_1778780382214",
-      "text": "AI Ingested: Biology (6 cards)",
-      "type": "info",
-      "timestamp": 1778780382.2141695
-    },
-    {
-      "id": "evt_1778780383431",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780383.4312215
-    },
-    {
-      "id": "evt_1778780383469",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780383.4696257
-    },
-    {
-      "id": "evt_1778780383491",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780383.4918993
-    },
-    {
-      "id": "evt_1778780383514",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780383.51412
-    },
-    {
-      "id": "evt_1778780383538",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780383.538062
-    },
-    {
-      "id": "evt_1778780383572",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780383.572631
-    },
-    {
-      "id": "evt_1778780455132",
-      "text": "AI Ingested: Biology (7 cards)",
-      "type": "info",
-      "timestamp": 1778780455.132709
-    },
-    {
-      "id": "evt_1778780458487",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780458.487176
-    },
-    {
-      "id": "evt_1778780458516",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780458.51672
-    },
-    {
-      "id": "evt_1778780458546",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780458.5469098
-    },
-    {
-      "id": "evt_1778780458574",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780458.5748672
-    },
-    {
-      "id": "evt_1778780458599",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780458.5997694
-    },
-    {
-      "id": "evt_1778780458623",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780458.6232717
-    },
-    {
-      "id": "evt_1778780458662",
-      "text": "Legacy Recall: Biology 0%",
-      "type": "info",
-      "timestamp": 1778780458.662474
+      "timestamp": 1778781072.9188197
     }
   ],
   "pending_notifications": [
     {
-      "notification_id": "notif_1778780348392",
-      "flashcard_id": "fc_d785a1c1",
-      "topic_name": "Test",
-      "question": "What is known as the 'powerhouse of the cell'?",
+      "notification_id": "notif_1778781071569",
+      "flashcard_id": "fc_46f2563e",
+      "topic_name": "Machine Learning",
+      "question": "How does Supervised Learning operate?",
       "retention_score": 0,
       "urgency_level": "critical",
       "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_d785a1c1",
+      "audio_url": "http://172.20.2.68:8000/audio/fc_46f2563e",
       "summary_text": "",
       "next_reminder_minutes": 0,
-      "created_at": 1778780348.392732
+      "created_at": 1778781071.5693674
     },
     {
-      "notification_id": "notif_1778780348426",
-      "flashcard_id": "fc_fe0e4352",
-      "topic_name": "Test",
-      "question": "Which molecule is produced by the mitochondria?",
+      "notification_id": "notif_1778781072598",
+      "flashcard_id": "fc_5ab687f8",
+      "topic_name": "Machine Learning",
+      "question": "What kind of data does Unsupervised Learning analyze?",
       "retention_score": 0,
       "urgency_level": "critical",
       "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_fe0e4352",
+      "audio_url": "http://172.20.2.68:8000/audio/fc_5ab687f8",
       "summary_text": "",
       "next_reminder_minutes": 0,
-      "created_at": 1778780348.4263349
+      "created_at": 1778781072.598739
     },
     {
-      "notification_id": "notif_1778780348443",
-      "flashcard_id": "fc_76ee2fd2",
-      "topic_name": "Test",
-      "question": "Through what process do mitochondria produce ATP?",
+      "notification_id": "notif_1778781072844",
+      "flashcard_id": "fc_4354b3cb",
+      "topic_name": "Machine Learning",
+      "question": "What are Neural Networks inspired by?",
       "retention_score": 0,
       "urgency_level": "critical",
       "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_76ee2fd2",
+      "audio_url": "http://172.20.2.68:8000/audio/fc_4354b3cb",
       "summary_text": "",
       "next_reminder_minutes": 0,
-      "created_at": 1778780348.4430947
+      "created_at": 1778781072.8447723
     },
     {
-      "notification_id": "notif_1778780348463",
-      "flashcard_id": "fc_3c296078",
-      "topic_name": "Test",
-      "question": "What is the primary function of the mitochondria in terms of energy?",
+      "notification_id": "notif_1778781072865",
+      "flashcard_id": "fc_1894bb5d",
+      "topic_name": "Machine Learning",
+      "question": "Which field is Machine Learning a subset of?",
       "retention_score": 0,
       "urgency_level": "critical",
       "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_3c296078",
+      "audio_url": "http://172.20.2.68:8000/audio/fc_1894bb5d",
       "summary_text": "",
       "next_reminder_minutes": 0,
-      "created_at": 1778780348.4638898
+      "created_at": 1778781072.8652275
     },
     {
-      "notification_id": "notif_1778780348493",
-      "flashcard_id": "fc_bcc9a7fb",
-      "topic_name": "Test",
-      "question": "Which cellular process is performed by the mitochondria to generate energy?",
+      "notification_id": "notif_1778781072887",
+      "flashcard_id": "fc_635d8704",
+      "topic_name": "Machine Learning",
+      "question": "What is the primary characteristic of Supervised Learning?",
       "retention_score": 0,
       "urgency_level": "critical",
       "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_bcc9a7fb",
+      "audio_url": "http://172.20.2.68:8000/audio/fc_635d8704",
       "summary_text": "",
       "next_reminder_minutes": 0,
-      "created_at": 1778780348.4933298
+      "created_at": 1778781072.8870811
     },
     {
-      "notification_id": "notif_1778780348514",
-      "flashcard_id": "fc_b848d7e3",
-      "topic_name": "Test",
-      "question": "What does the mitochondria produce through cellular respiration?",
+      "notification_id": "notif_1778781072909",
+      "flashcard_id": "fc_d1f490bf",
+      "topic_name": "Machine Learning",
+      "question": "What is the primary goal of Unsupervised Learning?",
       "retention_score": 0,
       "urgency_level": "critical",
       "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_b848d7e3",
+      "audio_url": "http://172.20.2.68:8000/audio/fc_d1f490bf",
       "summary_text": "",
       "next_reminder_minutes": 0,
-      "created_at": 1778780348.5146577
-    },
-    {
-      "notification_id": "notif_1778780383422",
-      "flashcard_id": "fc_74a05b2e",
-      "topic_name": "Biology",
-      "question": "What cellular organelle is known as the 'powerhouse of the cell'?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_74a05b2e",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780383.422526
-    },
-    {
-      "notification_id": "notif_1778780383460",
-      "flashcard_id": "fc_0e28368d",
-      "topic_name": "Biology",
-      "question": "What is the primary product of the mitochondria?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_0e28368d",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780383.4600837
-    },
-    {
-      "notification_id": "notif_1778780383481",
-      "flashcard_id": "fc_903a5ecd",
-      "topic_name": "Biology",
-      "question": "Which part of the cell produces ATP?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_903a5ecd",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780383.48173
-    },
-    {
-      "notification_id": "notif_1778780383504",
-      "flashcard_id": "fc_1b690bf0",
-      "topic_name": "Biology",
-      "question": "The mitochondria is often referred to as the _________ of the cell.",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_1b690bf0",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780383.5042262
-    },
-    {
-      "notification_id": "notif_1778780383528",
-      "flashcard_id": "fc_d04c6c55",
-      "topic_name": "Biology",
-      "question": "What does the 'powerhouse of the cell' produce?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_d04c6c55",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780383.528535
-    },
-    {
-      "notification_id": "notif_1778780383561",
-      "flashcard_id": "fc_09d822d7",
-      "topic_name": "Biology",
-      "question": "What is ATP produced by?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_09d822d7",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780383.5616074
-    },
-    {
-      "notification_id": "notif_1778780458473",
-      "flashcard_id": "fc_5715914c",
-      "topic_name": "Biology",
-      "question": "What is the mitochondria known as?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_5715914c",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780458.4739225
-    },
-    {
-      "notification_id": "notif_1778780458504",
-      "flashcard_id": "fc_1694dba1",
-      "topic_name": "Biology",
-      "question": "What does the mitochondria produce?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_1694dba1",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780458.504858
-    },
-    {
-      "notification_id": "notif_1778780458532",
-      "flashcard_id": "fc_e00d6a09",
-      "topic_name": "Biology",
-      "question": "Through what process does the mitochondria produce ATP?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_e00d6a09",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780458.5323584
-    },
-    {
-      "notification_id": "notif_1778780458562",
-      "flashcard_id": "fc_056ed2dd",
-      "topic_name": "Biology",
-      "question": "Which cellular organelle is called the 'powerhouse of the cell'?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_056ed2dd",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780458.562414
-    },
-    {
-      "notification_id": "notif_1778780458589",
-      "flashcard_id": "fc_3c48d78e",
-      "topic_name": "Biology",
-      "question": "What is the primary function of the mitochondria?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_3c48d78e",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780458.5892422
-    },
-    {
-      "notification_id": "notif_1778780458613",
-      "flashcard_id": "fc_98839374",
-      "topic_name": "Biology",
-      "question": "Which organelle performs oxidative phosphorylation?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_98839374",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780458.6133838
-    },
-    {
-      "notification_id": "notif_1778780458653",
-      "flashcard_id": "fc_51791446",
-      "topic_name": "Biology",
-      "question": "What energy molecule is produced by oxidative phosphorylation in the mitochondria?",
-      "retention_score": 0,
-      "urgency_level": "critical",
-      "action": "force_quiz",
-      "audio_url": "http://172.20.2.68:8000/audio/fc_51791446",
-      "summary_text": "",
-      "next_reminder_minutes": 0,
-      "created_at": 1778780458.6532664
+      "created_at": 1778781072.9094412
     }
   ],
   "demo_mode": true,
@@ -687,9 +242,9 @@
   },
   "learning_plans": [
     {
-      "topic_id": "topic_45b83ff9",
-      "topic_name": "Biology",
-      "created_at": 1778780455.132709,
+      "topic_id": "topic_2652a516",
+      "topic_name": "Machine Learning",
+      "created_at": 1778781066.5874841,
       "status": "active",
       "current_stage": 0,
       "steps": [
@@ -697,27 +252,28 @@
           "stage": 0,
           "type": "audio_summary",
           "title": "Immediate Synthesis",
-          "content": "Audio summary for Biology is ready for review.",
-          "due_at": 1778780455.132709,
+          "content": "Audio summary for Machine Learning is ready for review.",
+          "due_at": 1778781066.5874841,
           "status": "pending"
         },
         {
-          "stage": 1,
-          "type": "text_recap",
+          "stage": 1,"type": "text_recap",
           "title": "Synaptic Calibration",
-          "content": "Recapping Biology: What is the mitochondria known as?",
-          "due_at": 1778784055.132709,
+          "content": "Recapping Machine Learning: What is Machine Learning?",
+          "due_at": 1778784666.5874841,
           "status": "pending"
         },
         {
           "stage": 2,
           "type": "quiz",
           "title": "The Knowledge Litmus",
-          "content": "Final challenge for Biology.",
-          "due_at": 1778866855.132709,
+          "content": "Final challenge for Machine Learning.",
+          "due_at": 1778867466.5874841,
           "status": "pending"
         }
       ]
     }
+  ]
+}   }
   ]
 }
