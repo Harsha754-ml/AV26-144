@@ -13,12 +13,14 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterL
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher');
-  const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      macOS: null,
-      iOS: null);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  try {
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  } catch (e) {
+    debugPrint("Notification init failed: $e");
+  }
   runApp(const MemoryForgeApp());
 }
 
@@ -131,12 +133,16 @@ class _MainScreenState extends State<MainScreen> {
       ticker: 'ticker',
     );
     const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      notification.notificationId.hashCode,
-      'Memory Decay: ${notification.topicName}',
-      'Retention dropped to ${notification.retentionScore}%! Review now.',
-      platformChannelSpecifics,
-    );
+    try {
+      await flutterLocalNotificationsPlugin.show(
+        notification.notificationId.hashCode,
+        'Memory Decay: ${notification.topicName}',
+        'Retention dropped to ${notification.retentionScore}%! Review now.',
+        platformChannelSpecifics,
+      );
+    } catch (e) {
+      debugPrint("Notification show failed: $e");
+    }
   }
 
   void _showBanner(NotificationDetail notification) {
@@ -243,8 +249,19 @@ class _MainScreenState extends State<MainScreen> {
 }
 
 // ----------------------------------------------------
-// HOME SCREEN
+// HOME SCREEN - Rich Dashboard with Demo Data
 // ----------------------------------------------------
+
+// Mock data matching the web dashboard
+final List<Topic> _mockFlashcards = [
+  Topic(id: "m1", topicName: "Philosophy: Stoicism", question: "What is the 'Dichotomy of Control' as defined by Epictetus?", answer: "The distinction between things within our power and things not.", sourceType: "ai_ingest", retentionScore: 94, urgencyLevel: "safe", nextReminderMinutes: 480),
+  Topic(id: "m2", topicName: "Quantum Mechanics", question: "Define the Heisenberg Uncertainty Principle in terms of position and momentum.", answer: "Cannot know both position and momentum simultaneously.", sourceType: "ai_ingest", retentionScore: 38, urgencyLevel: "critical", nextReminderMinutes: 15),
+  Topic(id: "m3", topicName: "React: Performance", question: "When should useMemo be favored over simple memoization?", answer: "When computation is expensive and deps change infrequently.", sourceType: "ai_ingest", retentionScore: 72, urgencyLevel: "warning", nextReminderMinutes: 120),
+  Topic(id: "m4", topicName: "Growth Strategy", question: "Explain the AARRR (Pirate Metrics) framework for SaaS.", answer: "Acquisition, Activation, Retention, Revenue, Referral.", sourceType: "ai_ingest", retentionScore: 55, urgencyLevel: "danger", nextReminderMinutes: 30),
+  Topic(id: "m5", topicName: "Neuroscience", question: "What role does the hippocampus play in memory consolidation?", answer: "Consolidates short-term to long-term memories.", sourceType: "ai_ingest", retentionScore: 88, urgencyLevel: "safe", nextReminderMinutes: 720),
+  Topic(id: "m6", topicName: "Microservices", question: "What is the Saga Pattern used for in distributed systems?", answer: "Managing data consistency across microservices.", sourceType: "ai_ingest", retentionScore: 65, urgencyLevel: "warning", nextReminderMinutes: 90),
+];
+
 class HomeScreen extends StatelessWidget {
   final List<Topic> flashcards;
   final bool isConnected;
@@ -252,80 +269,269 @@ class HomeScreen extends StatelessWidget {
 
   const HomeScreen({Key? key, required this.flashcards, required this.isConnected, required this.onRefresh}) : super(key: key);
 
+  List<Topic> get _activeCards => flashcards.isNotEmpty ? flashcards : _mockFlashcards;
+  bool get _isDemo => flashcards.isEmpty;
+
   @override
   Widget build(BuildContext context) {
+    final cards = _activeCards;
+    final criticalCount = cards.where((c) => c.urgencyLevel == 'critical').length;
+    final warningCount = cards.where((c) => c.urgencyLevel == 'warning' || c.urgencyLevel == 'danger').length;
+    final avgRetention = cards.isNotEmpty ? (cards.map((c) => c.retentionScore).reduce((a, b) => a + b) / cards.length).round() : 0;
+
     return RefreshIndicator(
       onRefresh: () async => onRefresh(),
+      color: const Color(0xFFC5A059),
       child: CustomScrollView(
         slivers: [
+          // App Bar
           SliverAppBar(
-            title: Row(
-              children: [
-                const Text("MemoryForge", style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(width: 10),
-                Tooltip(
-                  message: isConnected ? "Connected to Server" : "Disconnected",
-                  child: Container(
-                    width: 12,
-                    height: 12,
+            expandedHeight: 120,
+            floating: true,
+            pinned: true,
+            backgroundColor: const Color(0xFF0F0F11),
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
+              title: Row(
+                children: [
+                  Container(
+                    width: 28, height: 28,
                     decoration: BoxDecoration(
-                      color: isConnected ? Colors.greenAccent : Colors.redAccent,
+                      color: const Color(0xFFC5A059),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.psychology, size: 16, color: Colors.black),
+                  ),
+                  const SizedBox(width: 10),
+                  const Text("MemoryForge", style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'serif', fontSize: 18, color: Color(0xFFC5A059))),
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 8, height: 8,
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: isConnected ? Colors.greenAccent.withOpacity(0.5) : Colors.redAccent.withOpacity(0.5),
-                          blurRadius: 4,
-                          spreadRadius: 1,
-                        )
-                      ],
+                      color: isConnected ? const Color(0xFF8DA290) : Colors.redAccent,
+                      boxShadow: [BoxShadow(color: (isConnected ? const Color(0xFF8DA290) : Colors.redAccent).withAlpha(128), blurRadius: 4)],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            floating: true,
           ),
-          if (flashcards.isEmpty)
-            const SliverFillRemaining(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+
+          // Demo Mode Banner
+          if (_isDemo)
+            SliverToBoxAdapter(
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC5A059).withAlpha(20),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFC5A059).withAlpha(60)),
+                ),
+                child: Row(
                   children: [
-                    Icon(Icons.psychology, size: 80, color: Color(0xFF8DA290)),
-                    SizedBox(height: 16),
-                    Text("Awaiting Synaptic Data", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'serif', color: Color(0xFFF4F1EA))),
-                    SizedBox(height: 8),
-                    Text("Upload a resource to begin.", style: TextStyle(color: Colors.white54)),
+                    Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFFC5A059), boxShadow: [BoxShadow(color: const Color(0xFFC5A059).withAlpha(128), blurRadius: 4)])),
+                    const SizedBox(width: 10),
+                    const Text("SIMULATION MODE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2, color: Color(0xFFC5A059))),
+                    const Spacer(),
+                    const Text("Demo data active", style: TextStyle(fontSize: 10, color: Colors.grey)),
                   ],
                 ),
               ),
-            )
-          else
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final fc = flashcards[index];
-                  Color scoreColor = Colors.greenAccent;
-                  if (fc.retentionScore < 50) scoreColor = Colors.orange;
-                  if (fc.retentionScore < 30) scoreColor = Colors.redAccent;
+            ),
 
-                  return Card(
-                    color: const Color(0xFF1E293B),
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: ListTile(
-                      title: Text(fc.topicName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text("Next Ping: ${fc.nextReminderMinutes}m", style: const TextStyle(color: Colors.grey)),
-                      trailing: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(color: scoreColor.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
-                        child: Text("${fc.retentionScore}%", style: TextStyle(color: scoreColor, fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                  );
-                },
-                childCount: flashcards.length,
+          // Status Cards Row
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(child: _StatusCard(label: "NODES", value: "${cards.length}", icon: Icons.layers, color: const Color(0xFFC5A059))),
+                  const SizedBox(width: 10),
+                  Expanded(child: _StatusCard(label: "CRITICAL", value: "$criticalCount", icon: Icons.warning_amber, color: Colors.redAccent)),
+                  const SizedBox(width: 10),
+                  Expanded(child: _StatusCard(label: "RETENTION", value: "$avgRetention%", icon: Icons.shield, color: const Color(0xFF8DA290))),
+                ],
               ),
             ),
+          ),
+
+          // Section Header
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+              child: Row(
+                children: [
+                  Container(width: 3, height: 16, decoration: BoxDecoration(color: const Color(0xFFC5A059), borderRadius: BorderRadius.circular(2))),
+                  const SizedBox(width: 10),
+                  const Text("KNOWLEDGE CLUSTERS", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 2, color: Colors.grey)),
+                  const Spacer(),
+                  Text("${cards.length} active", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                ],
+              ),
+            ),
+          ),
+
+          // Flashcard List - Rich Cards
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final fc = cards[index];
+                return _FlashcardTile(topic: fc);
+              },
+              childCount: cards.length,
+            ),
+          ),
+
+          // Bottom padding
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      ),
+    );
+  }
+}
+
+// Rich Status Card Widget
+class _StatusCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+  const _StatusCard({required this.label, required this.value, required this.icon, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F0F11),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withAlpha(20),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 18, color: color),
+          ),
+          const SizedBox(height: 12),
+          Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.grey)),
+        ],
+      ),
+    );
+  }
+}
+
+// Rich Flashcard Tile
+class _FlashcardTile extends StatelessWidget {
+  final Topic topic;
+  const _FlashcardTile({required this.topic});
+
+  Color get _urgencyColor {
+    switch (topic.urgencyLevel) {
+      case 'critical': return Colors.redAccent;
+      case 'danger': return Colors.orange;
+      case 'warning': return Colors.amber;
+      default: return const Color(0xFF8DA290);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F0F11),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: topic.urgencyLevel == 'critical' ? Colors.redAccent.withAlpha(60) : Colors.white10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top row: topic name + urgency badge
+          Row(
+            children: [
+              Expanded(
+                child: Text(topic.topicName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFF4F1EA), fontFamily: 'serif')),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: _urgencyColor.withAlpha(25),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: _urgencyColor.withAlpha(80)),
+                ),
+                child: Text(topic.urgencyLevel.toUpperCase(), style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1, color: _urgencyColor)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          // Question preview
+          Text(
+            '"${topic.question}"',
+            style: const TextStyle(fontSize: 13, color: Colors.grey, fontStyle: FontStyle.italic, fontFamily: 'serif', height: 1.4),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 14),
+
+          // Bottom row: retention score + next reminder
+          Row(
+            children: [
+              // Retention score bar
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text("${topic.retentionScore}%", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _urgencyColor)),
+                        const SizedBox(width: 8),
+                        const Text("retention", style: TextStyle(fontSize: 10, color: Colors.grey)),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(3),
+                      child: LinearProgressIndicator(
+                        value: topic.retentionScore / 100,
+                        backgroundColor: Colors.white10,
+                        valueColor: AlwaysStoppedAnimation(_urgencyColor),
+                        minHeight: 4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Next reminder
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withAlpha(5),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white10),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.timer_outlined, size: 14, color: Color(0xFFC5A059)),
+                    const SizedBox(width: 6),
+                    Text("${topic.nextReminderMinutes}m", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFC5A059))),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
