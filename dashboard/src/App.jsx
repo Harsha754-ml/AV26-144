@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
-import { Activity, Brain, Server, RefreshCw, Layers, ShieldCheck, Zap, AlertTriangle, Terminal, Upload, Link, Type, Send, CheckCircle2, X as CloseIcon, Clock, Sparkles, User, Database, Globe, Cpu } from 'lucide-react';
+import { Activity, Brain, Server, RefreshCw, Layers, ShieldCheck, Zap, AlertTriangle, Terminal, Upload, Link, Type, Send, CheckCircle2, X as CloseIcon, Clock, Sparkles, User, Database, Globe, Cpu, Volume2 } from 'lucide-react';
 import SynapticMatchGame, { syncQueue } from './SynapticMatchGame';
 
 const API_BASE = "http://127.0.0.1:8000";
@@ -637,9 +637,34 @@ function App() {
                          </div>
                       </div>
                       
-                      <p className="text-slate-400 text-xl leading-relaxed mb-12 font-serif italic opacity-70 group-hover:opacity-100 transition-opacity flex-1 line-clamp-5">
+                      <p className="text-slate-400 text-xl leading-relaxed mb-8 font-serif italic opacity-70 group-hover:opacity-100 transition-opacity flex-1 line-clamp-5">
                          "{fc.question}"
                       </p>
+
+                      {/* AUDIO PLAYBACK */}
+                      <div className="mb-8 flex items-center gap-4">
+                         <button 
+                            onClick={() => {
+                              // Try backend audio first, fallback to browser TTS
+                              const audio = new Audio(`${API_BASE}/audio/${fc.id}`);
+                              audio.play().catch(() => {
+                                // Fallback: use browser speech synthesis
+                                const text = fc.summary || fc.answer || fc.question;
+                                playAudioSummary(text);
+                              });
+                            }}
+                            className="flex items-center gap-3 px-6 py-3 bg-[#c5a059]/10 border border-[#c5a059]/20 rounded-2xl hover:bg-[#c5a059]/20 transition-all group/audio"
+                         >
+                            <Volume2 className="w-4 h-4 text-[#c5a059] group-hover/audio:scale-110 transition-transform" />
+                            <span className="text-[10px] font-black text-[#c5a059] uppercase tracking-widest">Listen</span>
+                         </button>
+                         <button 
+                            onClick={() => playAudioSummary(fc.question)}
+                            className="flex items-center gap-3 px-5 py-3 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/[0.06] transition-all"
+                         >
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Read Question</span>
+                         </button>
+                      </div>
 
                       {/* CHRONOS PLAN PROGRESS */}
                       <div className="mb-12 bg-[#0a0a0b] rounded-3xl p-6 border border-white/5">

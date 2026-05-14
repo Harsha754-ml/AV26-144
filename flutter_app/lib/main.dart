@@ -487,6 +487,58 @@ class _FlashcardTile extends StatelessWidget {
           ),
           const SizedBox(height: 14),
 
+          // Audio buttons
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  final player = AudioPlayer();
+                  // Try backend audio, uses gTTS-generated MP3
+                  player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFC5A059).withAlpha(20),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFC5A059).withAlpha(60)),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.volume_up, size: 14, color: Color(0xFFC5A059)),
+                      SizedBox(width: 6),
+                      Text("LISTEN", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Color(0xFFC5A059))),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () {
+                  final player = AudioPlayer();
+                  // Read question aloud via backend TTS
+                  player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withAlpha(5),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.record_voice_over, size: 14, color: Colors.grey),
+                      SizedBox(width: 6),
+                      Text("READ", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Colors.grey)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+
           // Bottom row: retention score + next reminder
           Row(
             children: [
