@@ -356,7 +356,8 @@ function App() {
               />
            </div>
 
-           {/* PRIMARY ANALYTICS GRID */}
+           {/* PRIMARY ANALYTICS GRID - only show when data exists */}
+           {activeCards.length > 0 && (
            <div className="grid grid-cols-1 xl:grid-cols-3 gap-10 mb-20 animate-in fade-in slide-in-from-bottom-5 duration-700">
               
               {/* LARGE TREND CHART */}
@@ -479,6 +480,7 @@ function App() {
                  </div>
               </div>
            </div>
+           )}
            {/* NEURAL INGEST - THE ARCHIVE LINK */}
            <section className="mb-24 scroll-mt-20" id="ingest">
               <div className="bg-[#0f0f11] rounded-[3.5rem] p-1.5 border border-white/5 shadow-[0_50px_100px_rgba(0,0,0,0.6)] relative overflow-hidden group">
