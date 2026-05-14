@@ -12,3 +12,5 @@ requests
 aiofiles
 python-dotenv
 websockets
+torch
+crewai
