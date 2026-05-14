@@ -288,23 +288,41 @@ class _AddBottomSheetState extends State<AddBottomSheet> with SingleTickerProvid
 
   void _submitText() async {
     setState(() => _isLoading = true);
-    await ApiService.ingestText(_topicCtrl.text, _textCtrl.text);
-    Navigator.pop(context);
+    try {
+      await ApiService.ingestText(_topicCtrl.text, _textCtrl.text);
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   void _submitYoutube() async {
     setState(() => _isLoading = true);
-    await ApiService.ingestYoutube(_topicCtrl.text, _ytCtrl.text);
-    Navigator.pop(context);
+    try {
+      await ApiService.ingestYoutube(_topicCtrl.text, _ytCtrl.text);
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   void _pickAndUploadFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf', 'txt']);
     if (result != null && result.files.single.path != null) {
       setState(() => _isLoading = true);
-      File file = File(result.files.single.path!);
-      await ApiService.ingestFile(_topicCtrl.text, file);
-      Navigator.pop(context);
+      try {
+        File file = File(result.files.single.path!);
+        await ApiService.ingestFile(_topicCtrl.text, file);
+        if (mounted) Navigator.pop(context);
+      } catch (e) {
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Upload Error: $e")));
+      } finally {
+        if (mounted) setState(() => _isLoading = false);
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine, Scatter } from 'recharts';
-import { Activity, Brain, Layers, ShieldCheck, Zap, AlertTriangle, Upload, Globe, Type, Send, Clock, Sparkles, User, Database, Play, Square, FileText, Youtube, RefreshCw, X as CloseIcon, PlusCircle } from 'lucide-react';
+import { Activity, Brain, Layers, ShieldCheck, Zap, AlertTriangle, Upload, Globe, Type, Send, Clock, Sparkles, User, Database, Play, Square, FileText, Video, RefreshCw, X as CloseIcon, PlusCircle } from 'lucide-react';
 
 const API_BASE = "http://127.0.0.1:8000";
 const WS_URL = "ws://127.0.0.1:8000/ws";
@@ -31,7 +31,7 @@ const MOCK_FLASHCARDS = [
   },
   { 
     id: "m2", topic_name: "Quantum Mechanics", urgency_level: "critical", retention_score: 38, stability: 12, next_reminder_minutes: 15,
-    question: "Define the Heisenberg Uncertainty Principle in terms of position and momentum.", source_type: "youtube",
+    question: "Define the Heisenberg Uncertainty Principle in terms of position and momentum.", source_type: "video",
     curve_points: Array.from({length: 10}, (_, i) => ({ day: i, score: 80 - (i * 12) }))
   },
   { 
@@ -323,7 +323,7 @@ function App() {
                         
                         <div className="mb-4">
                            <span className="text-xs text-slate-500 flex items-center gap-2">
-                              {fc.source_type === 'youtube' ? <Youtube className="w-3 h-3"/> : fc.source_type === 'pdf' ? <FileText className="w-3 h-3"/> : <Type className="w-3 h-3"/>}
+                              {fc.source_type === 'video' ? <Video className="w-3 h-3"/> : fc.source_type === 'pdf' ? <FileText className="w-3 h-3"/> : <Type className="w-3 h-3"/>}
                               {fc.source_type || 'manual'}
                            </span>
                         </div>
