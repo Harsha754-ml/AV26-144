@@ -1,8 +1,155 @@
 {
-  "flashcards": [],
-  "events": [],
+  "flashcards": [
+    {
+      "id": "fc_e3577870",
+      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
+      "question": "What is the primary purpose of a Half-Life Regression Model?",
+      "answer": "A Half-Life Regression Model is used to measure and predict how something decreases or loses value over time using exponential decay.",
+      "source_type": "ai_ingest",
+      "created_at": 1778783230.219747,
+      "last_reviewed": 1778783230.219747,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "It measures and predicts the exponential decay of value over time.",
+      "audio_ready": true
+    },
+    {
+      "id": "fc_5a30dac0",
+      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
+      "question": "In the context of the Half-Life Regression Model, what does \"half-life\" refer to?",
+      "answer": "Half-life is the amount of time required for a value to reduce to half of its current amount.",
+      "source_type": "ai_ingest",
+      "created_at": 1778783230.2235003,
+      "last_reviewed": 1778783230.2235003,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_e5e79f43",
+      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
+      "question": "State the main formula for the Half-Life Regression Model to calculate the value at time (t), and identify its components.",
+      "answer": "The main formula is (N(t)=N_0\\left(\\frac12\\right)^{t/T}).\nWhere: (N(t)) = value at time (t), (N_0) = initial value, (T) = half-life, (t) = time.",
+      "source_type": "ai_ingest",
+      "created_at": 1778783230.231932,
+      "last_reviewed": 1778783230.231932,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_84929905",
+      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
+      "question": "What is the general exponential decay form, and how can half-life (T_{1/2}) be calculated from the decay rate (b) in this form?",
+      "answer": "The general exponential decay form is (y = ae^{-bx}). Half-life (T_{1/2}) can be calculated using (T_{1/2}=\\frac{\\ln 2}{b}).",
+      "source_type": "ai_ingest",
+      "created_at": 1778783230.2501814,
+      "last_reviewed": 1778783230.2501814,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_eb6e8746",
+      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
+      "question": "What is the significance of \"regression\" in the Half-Life Regression Model, and what does the model learn through this process?",
+      "answer": "Regression is used to fit real-world data and estimate how fast the decay happens. The model learns the decay rate, future values, and effective half-life.",
+      "source_type": "ai_ingest",
+      "created_at": 1778783230.262321,
+      "last_reviewed": 1778783230.262321,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_ed2433a8",
+      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
+      "question": "Name at least three distinct real-world applications where Half-Life Regression Models are useful.",
+      "answer": "Finance (e.g., signal decay), Marketing (e.g., ad effectiveness over time), Machine Learning (e.g., giving more importance to recent data), Biology/Physics (e.g., radioactive decay), and Psychology (e.g., memory retention decline).",
+      "source_type": "ai_ingest",
+      "created_at": 1778783230.2804961,
+      "last_reviewed": 1778783230.2804961,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_c17753f5",
+      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
+      "question": "What is the key insight for determining when Half-Life Regression Models are useful?",
+      "answer": "Half-life models are useful whenever importance fades with time, old data becomes less useful, or systems naturally decay. They model \"How quickly does something lose value over time?\"",
+      "source_type": "ai_ingest",
+      "created_at": 1778783230.2924545,
+      "last_reviewed": 1778783230.2924545,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    }
+  ],
+  "events": [
+    {
+      "id": "evt_1778783230326",
+      "text": "AI Ingested: # Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d (7 cards)",
+      "type": "info",
+      "timestamp": 1778783230.326817
+    }
+  ],
   "pending_notifications": [],
-  "learning_plans": [],
+  "learning_plans": [
+    {
+      "topic_id": "topic_63d76890",
+      "topic_name": "# Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d",
+      "created_at": 1778783230.3289034,
+      "status": "active",
+      "current_stage": 0,
+      "steps": [
+        {
+          "stage": 0,
+          "type": "audio_summary",
+          "title": "Immediate Synthesis",
+          "content": "Audio summary for # Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d is ready for review.",
+          "due_at": 1778783230.3289034,
+          "status": "pending"
+        },
+        {
+          "stage": 1,
+          "type": "text_recap",
+          "title": "Synaptic Calibration",
+          "content": "Recapping # Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d: What is the primary purpose of a Half-Life Regression Model?",
+          "due_at": 1778786830.3289034,
+          "status": "pending"
+        },
+        {
+          "stage": 2,
+          "type": "quiz",
+          "title": "The Knowledge Litmus",
+          "content": "Final challenge for # Half-Life Regression Model  A half-life regression model is used to measure and predict how something decreases or loses value over time using exponential decay.  ## Core Concept  Half-life = the amount of time required for a value to reduce to half of its current amount.  Example:  * Start: 100 * After 1 half-life: 50 * After 2 half-lives: 25 * After 3 half-lives: 12.5  This creates exponential decay behavior.  ## Main Formula  [ N(t)=N_0\\left(\\frac12\\right)^{t/T} ]  Where:  * (N(t)) = value at time (t) * (N_0) = initial value * (T) = half-life * (t) = time  ---  ## Exponential Decay Form  [ y = ae^{-bx} ]  Where:  * (a) = starting value * (b) = decay rate  Half-life can be calculated using:  [ T_{1/2}=\\frac{\\ln 2}{b} ]  ---  ## What Regression Means Here  Regression is used to fit real-world data and estimate how fast the decay happens.  The model learns:  * decay rate * future values * effective half-life  ---  ## Real-World Uses  ### Finance  * Signal decay * Market trend weakening  ### Marketing  * Ad effectiveness over time * Engagement decay  ### Machine Learning  * Giving more importance to recent data * Reducing weight of old data  ### Biology / Physics  * Radioactive decay * Drug concentration reduction  ### Psychology  * Memory retention decline  ---  ## Example  | Day | Users | | --- | ----- | | 0   | 10000 | | 5   | 5000  | | 10  | 2500  |  Estimated half-life:  * 5 days  Meaning: every 5 days the user count becomes half.  ---  ## Key Insight  Half-life models are useful whenever:  * importance fades with time * old data becomes less useful * systems naturally decay  It models: \u201cHow quickly does something lose value over time?\u201d.",
+          "due_at": 1778869630.3289034,
+          "status": "pending"
+        }
+      ]
+    }
+  ],
   "demo_mode": false,
   "settings": {
     "compression_ratio": 1440

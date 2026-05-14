@@ -625,12 +625,27 @@ function App() {
                                 </span>
                             </div>
                          </div>
-                         <div className={`px-5 py-2.5 rounded-2xl text-[9px] font-black uppercase tracking-[0.3em] border shadow-2xl backdrop-blur-md ${
-                            fc.urgency_level === 'critical' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' :
-                            fc.urgency_level === 'danger' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
-                            'bg-[#8da290]/10 text-[#8da290] border-[#8da290]/20'
-                         }`}>
-                            {fc.urgency_level}
+                         <div className="flex items-center gap-3">
+                            <div className={`px-5 py-2.5 rounded-2xl text-[9px] font-black uppercase tracking-[0.3em] border shadow-2xl backdrop-blur-md ${
+                               fc.urgency_level === 'critical' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' :
+                               fc.urgency_level === 'danger' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
+                               'bg-[#8da290]/10 text-[#8da290] border-[#8da290]/20'
+                            }`}>
+                               {fc.urgency_level}
+                            </div>
+                            <button
+                               onClick={() => {
+                                 if (confirm(`Delete "${fc.topic_name}"?`)) {
+                                   fetch(`${API_BASE}/flashcard/${fc.id}`, { method: 'DELETE' })
+                                     .then(() => {})
+                                     .catch(() => {});
+                                 }
+                               }}
+                               className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-rose-500/10 hover:border-rose-500/20 transition-all opacity-0 group-hover:opacity-100"
+                               title="Delete"
+                            >
+                               <CloseIcon className="w-4 h-4 text-slate-600 hover:text-rose-400" />
+                            </button>
                          </div>
                       </div>
                       
