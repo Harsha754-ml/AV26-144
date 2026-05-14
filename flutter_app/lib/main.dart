@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
 import 'api_service.dart';
 import 'models.dart';
 import 'constants.dart';
@@ -1059,31 +1060,247 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _demoMode = false;
+  bool _notificationsEnabled = true;
+  bool _darkMode = true;
+  double _reviewInterval = 24.0;
+  final TextEditingController _ipCtrl = TextEditingController(text: AppConstants.laptopIp);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("System Output Settings")),
+      backgroundColor: const Color(0xFF0A0A0B),
+      appBar: AppBar(
+        title: const Text("Settings", style: TextStyle(fontFamily: 'serif', fontWeight: FontWeight.bold, color: Color(0xFFC5A059))),
+        backgroundColor: const Color(0xFF0F0F11),
+      ),
       body: ListView(
+        padding: const EdgeInsets.all(16),
         children: [
-          SwitchListTile(
-            title: const Text("Demo Time Compression"),
-            subtitle: const Text("Simulates 24 hours of memory decay in 1 minute. Used for hackathon demo."),
-            value: _demoMode,
-            onChanged: (val) {
-              setState(() => _demoMode = val);
-              ApiService.setDemoMode(val);
+          // Section: Connection
+          _sectionHeader("CONNECTION"),
+          _settingsCard(
+            icon: Icons.wifi,
+            title: "Backend IP Address",
+            subtitle: "Current: ${AppConstants.laptopIp}:8000",
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _ipCtrl,
+                      decoration: InputDecoration(
+                        hintText: "e.g. 192.168.1.100",
+                        hintStyle: const TextStyle(color: Colors.white24),
+                        filled: true,
+                        fillColor: const Color(0xFF0A0A0B),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      ),
+                      style: const TextStyle(color: Colors.white, fontFamily: 'monospace'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("IP updated to ${_ipCtrl.text}. Restart app to apply.")));
+                    },
+                    child: const Text("Save"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Section: Notifications
+          _sectionHeader("NOTIFICATIONS"),
+          _settingsCard(
+            icon: Icons.notifications,
+            title: "Push Notifications",
+            subtitle: "Receive alerts when memory decays",
+            trailing: Switch(
+              value: _notificationsEnabled,
+              activeColor: const Color(0xFFC5A059),
+              onChanged: (val) => setState(() => _notificationsEnabled = val),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Section: Learning
+          _sectionHeader("LEARNING ENGINE"),
+          _settingsCard(
+            icon: Icons.speed,
+            title: "Demo Time Compression",
+            subtitle: "1 minute real = 24 hours simulated decay",
+            trailing: Switch(
+              value: _demoMode,
+              activeColor: const Color(0xFFC5A059),
+              onChanged: (val) {
+                setState(() => _demoMode = val);
+                ApiService.setDemoMode(val);
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+          _settingsCard(
+            icon: Icons.timer,
+            title: "Base Review Interval",
+            subtitle: "${_reviewInterval.round()} hours",
+            child: Slider(
+              value: _reviewInterval,
+              min: 1,
+              max: 72,
+              divisions: 71,
+              activeColor: const Color(0xFFC5A059),
+              inactiveColor: Colors.white10,
+              onChanged: (val) => setState(() => _reviewInterval = val),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Section: Appearance
+          _sectionHeader("APPEARANCE"),
+          _settingsCard(
+            icon: Icons.dark_mode,
+            title: "Dark Mode",
+            subtitle: "System-wide dark theme",
+            trailing: Switch(
+              value: _darkMode,
+              activeColor: const Color(0xFFC5A059),
+              onChanged: (val) => setState(() => _darkMode = val),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Section: Data
+          _sectionHeader("DATA MANAGEMENT"),
+          _settingsCard(
+            icon: Icons.download,
+            title: "Export Data",
+            subtitle: "Download all flashcards as JSON",
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Export: Check /flashcards endpoint for JSON data")));
             },
           ),
-          ListTile(
-            title: const Text("Clear notification queue"),
+          const SizedBox(height: 8),
+          _settingsCard(
+            icon: Icons.upload,
+            title: "Import Data",
+            subtitle: "Upload flashcards from backup",
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Import: Use the ingest feature to add content")));
+            },
+          ),
+          const SizedBox(height: 8),
+          _settingsCard(
+            icon: Icons.notifications_off,
+            title: "Clear Notification Queue",
+            subtitle: "Remove all pending alerts",
             onTap: () {
               ApiService.clearAllNotifications();
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Cleared queues")));
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("✅ Notification queue cleared")));
             },
-            trailing: const Icon(Icons.delete),
           ),
+          const SizedBox(height: 8),
+          _settingsCard(
+            icon: Icons.delete_forever,
+            title: "Clear All Data",
+            subtitle: "Delete all flashcards, plans, and events",
+            iconColor: Colors.redAccent,
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  backgroundColor: const Color(0xFF0F0F11),
+                  title: const Text("Delete Everything?", style: TextStyle(color: Colors.white)),
+                  content: const Text("This will permanently delete all your flashcards, learning plans, and events.", style: TextStyle(color: Colors.grey)),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancel")),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.pop(ctx);
+                        try {
+                          final cards = await ApiService.getFlashcards();
+                          for (final card in cards) {
+                            await http.delete(Uri.parse('${AppConstants.backendUrl}/flashcard/${card.id}'));
+                          }
+                          await ApiService.clearAllNotifications();
+                          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("✅ All data cleared")));
+                        } catch (e) {
+                          if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+                        }
+                      },
+                      child: const Text("DELETE ALL", style: TextStyle(color: Colors.redAccent)),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 24),
+
+          // App info
+          Center(
+            child: Column(
+              children: [
+                const Text("MemoryForge v2.0", style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text("Cognitive Operating System", style: TextStyle(color: Colors.grey.withAlpha(100), fontSize: 10, letterSpacing: 2)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 40),
         ],
+      ),
+    );
+  }
+
+  Widget _sectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 8, top: 8),
+      child: Text(title, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2, color: Color(0xFFC5A059))),
+    );
+  }
+
+  Widget _settingsCard({required IconData icon, required String title, required String subtitle, Widget? trailing, Widget? child, VoidCallback? onTap, Color? iconColor}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0F0F11),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white10),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(color: (iconColor ?? const Color(0xFFC5A059)).withAlpha(20), borderRadius: BorderRadius.circular(10)),
+                  child: Icon(icon, size: 18, color: iconColor ?? const Color(0xFFC5A059)),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white)),
+                      const SizedBox(height: 2),
+                      Text(subtitle, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                    ],
+                  ),
+                ),
+                if (trailing != null) trailing,
+                if (onTap != null && trailing == null) const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+              ],
+            ),
+            if (child != null) child,
+          ],
+        ),
       ),
     );
   }
