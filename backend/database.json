@@ -66,11 +66,23 @@
       "text": "Demo mode: ON",
       "type": "info",
       "timestamp": 1778793524.196631
+    },
+    {
+      "id": "evt_1778793706172",
+      "text": "Demo mode: ON",
+      "type": "info",
+      "timestamp": 1778793706.17297
+    },
+    {
+      "id": "evt_1778793709413",
+      "text": "Demo mode: OFF",
+      "type": "info",
+      "timestamp": 1778793709.413435
     }
   ],
   "pending_notifications": [],
   "learning_plans": [],
-  "demo_mode": true,
+  "demo_mode": false,
   "settings": {
     "compression_ratio": 1440
   }

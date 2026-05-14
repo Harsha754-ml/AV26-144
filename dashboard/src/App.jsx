@@ -3,6 +3,7 @@ import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveCont
 import { Activity, Brain, Server, RefreshCw, Layers, ShieldCheck, Zap, AlertTriangle, Terminal, Upload, Link, Type, Send, CheckCircle2, X as CloseIcon, Clock, Sparkles, User, Database, Globe, Cpu, Volume2 } from 'lucide-react';
 import SynapticMatchGame, { syncQueue } from './SynapticMatchGame';
 import KnowledgeGraph from './KnowledgeGraph';
+import NeuralGraph3D from './NeuralGraph3D';
 import BiometricPanel from './BiometricPanel';
 import LearningFlow from './LearningFlow';
 import SplashScreen from './SplashScreen';
@@ -777,7 +778,7 @@ function App() {
                 </div>
                 <h2 className="text-5xl font-black text-[#f4f1ea] font-serif tracking-tighter mb-8">Neural <span className="text-[#8da290] italic">Graph.</span></h2>
                 <div className="h-[600px] bg-[#0f0f11] rounded-[3rem] border border-white/5 overflow-hidden">
-                  <KnowledgeGraph />
+                  <NeuralGraph3D />
                 </div>
              </div>
            ) : activeTab === 'ml' ? (
