@@ -155,6 +155,17 @@ const LoginPage = ({ onLogin }) => {
               {isRegister ? 'Already have an account? Sign In' : "Don't have an account? Register"}
             </button>
           </div>
+
+          {/* Skip login */}
+          <div className="mt-6 pt-6 border-t border-white/5 text-center">
+            <button
+              onClick={() => onLogin({ role: 'independent', user: { username: 'learner', name: 'Independent Learner' } })}
+              className="text-xs text-[#8da290] hover:text-[#c5a059] transition-colors font-bold"
+            >
+              Continue as Independent Learner →
+            </button>
+            <p className="text-[9px] text-slate-600 mt-2">No account needed. Your data stays local.</p>
+          </div>
         </div>
       </div>
     </div>
