@@ -90,11 +90,24 @@ Input Text:
     try:
         import time
         time.sleep(1) # Simple throttle to help with quota
-        # New SDK syntax
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=prompt
-        )
+        # New SDK syntax - try primary model, fallback if unavailable
+        response = None
+        for model in [MODEL_NAME, FALLBACK_MODEL]:
+            try:
+                response = client.models.generate_content(
+                    model=model,
+                    contents=prompt
+                )
+                break
+            except Exception as model_err:
+                if '503' in str(model_err) or 'UNAVAILABLE' in str(model_err):
+                    print(f"⚠️ {model} unavailable, trying fallback...")
+                    continue
+                raise model_err
+        
+        if not response:
+            print("All models unavailable")
+            return []
         
         text_resp = response.text
         # Robust JSON cleaning
@@ -139,12 +152,33 @@ Input Text:
 
 def ingest_youtube(url: str, topic_name: str) -> list:
     try:
-        video_id = url.split("v=")[1].split("&")[0]
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
-        text = " ".join([t["text"] for t in transcript])
+        # Handle various YouTube URL formats
+        video_id = None
+        if "v=" in url:
+            video_id = url.split("v=")[1].split("&")[0]
+        elif "youtu.be/" in url:
+            video_id = url.split("youtu.be/")[1].split("?")[0]
+        elif "/shorts/" in url:
+            video_id = url.split("/shorts/")[1].split("?")[0]
+        
+        if not video_id:
+            print(f"Could not extract video ID from: {url}")
+            return []
+        
+        # New API (v1.x): instance method .fetch()
+        api = YouTubeTranscriptApi()
+        transcript = api.fetch(video_id)
+        text = " ".join([snippet.text for snippet in transcript.snippets])
+        
+        if not text.strip():
+            print("Transcript is empty")
+            return []
+            
         return ingest_text(text[:4000], topic_name)
     except Exception as e:
         print(f"YouTube Ingest Error: {e}")
+        import traceback
+        traceback.print_exc()
         return []
 
 def ingest_pdf(file_bytes: bytes, topic_name: str) -> list:
