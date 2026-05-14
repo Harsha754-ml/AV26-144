@@ -1,63 +1,91 @@
-# Project Name
+# 🧠 MemoryForge V2
 
-> A brief description of what this project does and who it's for.
+> An adaptive "Memory-as-a-Service" platform that uses AI and the Ebbinghaus Forgetting Curve to ensure you never forget critical knowledge.
 
 ## Table of Contents
-
-- [Features](#features)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Architecture & Tech Stack](#architecture--tech-stack)
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+- [Installation & Setup](#installation--setup)
+  - [1. Backend (FastAPI)](#1-backend-fastapi)
+  - [2. Dashboard (React)](#2-dashboard-react)
+  - [3. Mobile App (Flutter)](#3-mobile-app-flutter)
 
-## Features
+---
 
-- Feature 1
-- Feature 2
-- Feature 3
+## Overview
+MemoryForge ingests content (PDFs, text, YouTube summaries), processes it using Google Gemini AI to generate smart flashcards, and tracks your retention over time. As your memory decays, it escalates reminders from passive dashboard warnings to active mobile push notifications.
+
+---
+
+## Key Features
+- **AI-Powered Ingestion**: Automatically summarize and extract flashcards using Google Gemini.
+- **Ebbinghaus Curve Engine**: Calculates exact `retention_score` to alert you precisely when you are about to forget.
+- **Audio Overviews**: Generate and play MP3 audio summaries of your notes directly in the dashboard.
+- **Real-Time Telemetry**: Watch memory decay live on the dashboard with Recharts and WebSockets.
+- **Cross-Platform Escalation**: 
+  - `Safe` (>70% retention)
+  - `Warning` (Dashboard alerts)
+  - `Danger` (Flutter Mobile App Native Banners)
+
+---
+
+## Architecture & Tech Stack
+
+| Module | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Backend** | Python, FastAPI, gTTS, Gemini | The "Brain": AI processing, audio generation, and math engine. |
+| **Dashboard**| React 19, Vite, Tailwind CSS | Admin visualizer and control panel. |
+| **Mobile** | Flutter (Dart) | The "Edge": Quick ingestion and mobile alerts via 5s polling. |
+| **Database** | JSON | Flat-file storage for maximum portability. |
+
+---
 
 ## Prerequisites
+Ensure you have the following installed before starting:
+- **Python 3.10+** (For Backend)
+- **Node.js LTS** (For Dashboard)
+- **Flutter SDK** (For Mobile App)
+- A valid **Google Gemini API Key**
 
-List any prerequisites, libraries, or tools needed before installing.
+---
 
-- Node.js (v14+)
-- Python (3.8+)
-- etc.
+## Installation & Setup
 
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/project-name.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd project-name
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-## Usage
-
-Provide instructions and examples on how to use the project.
-
+### 1. Backend (FastAPI)
+The core intelligence engine.
 ```bash
-npm start
+cd backend
+pip install -r requirements.txt
+```
+Create a `.env` file in the `backend/` directory:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+Run the server:
+```bash
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-## Contributing
+### 2. Dashboard (React)
+The visual command center.
+```bash
+cd dashboard
+npm install
+npm run dev
+```
 
-Contributions are always welcome!
+### 3. Mobile App (Flutter)
+The alert delivery system.
+1. Open `flutter_app/lib/constants.dart`.
+2. Update the `laptopIp` variable to match your computer's local IP address (find using `ipconfig` or `ifconfig`).
+3. Run the app:
+```bash
+cd flutter_app
+flutter pub get
+flutter run
+```
 
-1. Fork the project.
-2. Create a feature branch.
-3. Commit your changes.
-4. Push to the branch.
-5. Open a Pull Request.
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
+---
+*Developed for the MemoryForge ecosystem.*

@@ -13,6 +13,8 @@ import curve_engine
 import ingest
 from scheduler import start_scheduler
 
+import pyttsx3
+
 app = FastAPI(title="MemoryForge API")
 
 app.add_middleware(
@@ -54,6 +56,10 @@ class ClearNotifReq(BaseModel):
 
 class DemoToggleReq(BaseModel):
     enabled: bool
+
+class SpeakReq(BaseModel):
+    text: str
+    urgency: str = "critical"
 
 # -----------------
 # FLASHCARD ENDPOINTS
@@ -109,6 +115,16 @@ def get_flashcard(id: str):
             return c
     raise HTTPException(status_code=404, detail="Flashcard not found")
 
+@app.get("/flashcard/{id}/status")
+def get_flashcard_status(id: str):
+    c = get_flashcard(id)
+    return {
+        "id": c["id"],
+        "retention_score": c["retention_score"],
+        "urgency_level": c["urgency_level"],
+        "next_reminder_minutes": c["next_reminder_minutes"]
+    }
+
 @app.post("/flashcard/review")
 def review_flashcard(req: ReviewReq):
     fc = database.get_flashcard(req.flashcard_id)
@@ -146,7 +162,6 @@ def delete_flashcard(id: str):
 @app.post("/ingest/text")
 def ingest_text_api(req: TextIngestReq):
     try:
-        # ingest_text now handles Chronos Plan creation internally
         fcs = ingest.ingest_text(req.text, req.topic_name)
         if not fcs:
             raise HTTPException(status_code=500, detail="Gemini failed or returned empty")
@@ -233,6 +248,20 @@ def get_audio(id: str):
         raise HTTPException(status_code=404, detail="Audio file not found")
     return FileResponse(path, media_type="audio/mpeg")
 
+@app.post("/speak")
+def speak_endpoint(req: SpeakReq, background_tasks: BackgroundTasks):
+    def run_tts(text: str):
+        try:
+            engine = pyttsx3.init()
+            engine.setProperty('rate', 150)
+            engine.say(text)
+            engine.runAndWait()
+        except Exception as e:
+            print(f"TTS Error: {e}")
+            
+    background_tasks.add_task(run_tts, req.text)
+    return {"success": True, "message": "Speaking..."}
+
 # -----------------
 # SETTINGS
 # -----------------
@@ -254,6 +283,13 @@ def dashboard_stats():
 @app.get("/events")
 def events_endpoint():
     return database.get_events(limit=50)
+
+@app.get("/settings")
+def get_settings():
+    return {
+        "demo_mode": database.get_demo_mode(),
+        "compression_ratio": database.read_db().get("settings", {}).get("compression_ratio", 1440)
+    }
 
 @app.post("/settings/demo-mode")
 def toggle_demo(req: DemoToggleReq):

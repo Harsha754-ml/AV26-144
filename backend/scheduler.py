@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+LAPTOP_IP = os.getenv("LAPTOP_IP", "127.0.0.1")
 N8N_WEBHOOK_URL = os.getenv("N8N_WEBHOOK_URL", "")
 
 def trigger_n8n_webhook(payload):
