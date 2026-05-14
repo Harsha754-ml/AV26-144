@@ -1,0 +1,31 @@
+# OS & Editors
+.DS_Store
+.vscode/
+.idea/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Dashboard (Node.js/Next.js/React)
+node_modules/
+.next/
+dist/
+build/
+npm-debug.log*
+
+# Backend (Python)
+__pycache__/
+venv/
+.venv/
+*.pyc
+
+# Flutter App
+.dart_tool/
+.pub-cache/
+.pub/
+build/
+**/ios/Pods/
+**/ios/.symlinks/
+**/*.keystore
