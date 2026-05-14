@@ -97,10 +97,10 @@ const BiometricPanel = () => {
 
         {/* Webcam Feed + Controls */}
         <div className="flex gap-4 mb-6">
-          <div className="relative w-40 h-30 rounded-2xl overflow-hidden border border-white/10 bg-black flex-shrink-0">
+          <div className="relative w-48 h-36 rounded-2xl overflow-hidden border border-white/10 bg-black flex-shrink-0">
             {cameraActive ? (
               <>
-                <video ref={videoRef} autoPlay muted playsInline className="w-full h-full object-cover" />
+                <video ref={videoRef} autoPlay muted playsInline className="w-full h-full object-cover" style={{transform: 'scaleX(-1)'}} />
                 <div className="absolute inset-0 border-2 border-[#c5a059]/30 rounded-2xl pointer-events-none" />
                 <div className="absolute top-1 left-1 px-2 py-0.5 bg-rose-500/80 rounded text-[7px] font-black text-white">REC</div>
                 {/* Face detection overlay */}

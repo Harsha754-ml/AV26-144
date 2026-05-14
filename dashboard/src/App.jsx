@@ -6,6 +6,7 @@ import KnowledgeGraph from './KnowledgeGraph';
 import NeuralGraph3D from './NeuralGraph3D';
 import BiometricPanel from './BiometricPanel';
 import LearningFlow from './LearningFlow';
+import CameraWidget from './CameraWidget';
 import SplashScreen from './SplashScreen';
 import LoginPage from './LoginPage';
 
@@ -817,6 +818,9 @@ function App() {
       {learningCard && (
         <LearningFlow flashcard={learningCard} onClose={() => setLearningCard(null)} />
       )}
+
+      {/* CAMERA WIDGET - Active during games and learning */}
+      <CameraWidget active={activeTab === 'game' || learningCard !== null} />
 
       {/* AUDIO REVIEW MODAL */}
       {audioReviewOpen && (
