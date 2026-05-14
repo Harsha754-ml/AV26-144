@@ -15,6 +15,7 @@ from scheduler import start_scheduler
 from hlr_model import get_engine as get_hlr_engine
 import socratic_swarm
 import auth
+import email_service
 
 import pyttsx3
 
@@ -602,3 +603,23 @@ def teacher_alerts():
 def teacher_student_stats():
     """Get student performance overview for teacher dashboard."""
     return auth.get_student_stats()
+
+
+# -----------------
+# DAILY EMAIL SUMMARY
+# -----------------
+class EmailReq(BaseModel):
+    email: str = ""
+
+@app.get("/daily-summary")
+def get_daily_summary():
+    """Get today's summary (completed, pending, critical)."""
+    return email_service.generate_daily_summary()
+
+@app.post("/send-daily-email")
+def send_email(req: EmailReq):
+    """Send daily summary email to specified address."""
+    result = email_service.send_daily_email(req.email if req.email else None)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result

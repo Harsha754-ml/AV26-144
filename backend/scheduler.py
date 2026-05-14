@@ -129,8 +129,19 @@ def memory_check_job():
                 # Auto-speak disabled — user triggers audio manually via Listen button
                 pass
 
+def _daily_email_job():
+    """Send daily summary email at end of day."""
+    try:
+        import email_service
+        email_service.send_daily_email()
+        print("✅ Daily summary email sent")
+    except Exception as e:
+        print(f"⚠️ Daily email failed: {e}")
+
 def start_scheduler():
     scheduler = BackgroundScheduler()
     # Checking every 5 seconds for responsive learning plans
     scheduler.add_job(memory_check_job, 'interval', seconds=5)
+    # Daily email at 9 PM
+    scheduler.add_job(_daily_email_job, 'cron', hour=21, minute=0)
     scheduler.start()
