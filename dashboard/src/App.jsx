@@ -80,6 +80,9 @@ function App() {
   const [ingestSuccess, setIngestSuccess] = useState(false);
   const [simulationMode, setSimulationMode] = useState(false);
   
+  const [playingAudioId, setPlayingAudioId] = useState(null);
+  const audioRef = useRef(null);
+  
   // UI Form States
   const [topicName, setTopicName] = useState('');
   const [textContent, setTextContent] = useState('');
@@ -113,12 +116,29 @@ function App() {
      return (data.learning_plans || []).find(p => p.topic_id === topicId);
   };
 
-  const playAudioSummary = (text) => {
-     if (!text) return;
-     const utter = new SpeechSynthesisUtterance(text);
-     utter.rate = 0.9;
-     utter.pitch = 1.0;
-     window.speechSynthesis.speak(utter);
+  const toggleAudio = (fcId) => {
+    if (playingAudioId === fcId) {
+       audioRef.current?.pause();
+       setPlayingAudioId(null);
+    } else {
+       if (audioRef.current) {
+          audioRef.current.pause();
+       }
+       // Only use the real backend endpoint if we are not in simulation mode
+       const audioUrl = simulationMode 
+           ? 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' // Dummy audio for demo
+           : `${API_BASE}/audio/${fcId}`;
+           
+       const newAudio = new Audio(audioUrl);
+       newAudio.onended = () => setPlayingAudioId(null);
+       newAudio.play().catch(e => {
+           console.error("Audio not ready or failed", e);
+           setPlayingAudioId(null);
+           alert("Audio overview is still generating or not available.");
+       });
+       audioRef.current = newAudio;
+       setPlayingAudioId(fcId);
+    }
   };
 
   const activeCards = useMemo(() => {
@@ -576,8 +596,24 @@ function App() {
                                    {fc.retention_score}<span className="text-lg opacity-40 ml-1">%</span>
                                 </span>
                              </div>
-                             <div className={`w-16 h-16 rounded-[1.5rem] bg-[#0f0f11] border-2 flex items-center justify-center transition-colors shadow-inner ${fc.retention_score < 50 ? 'border-rose-500/20' : 'border-[#8da290]/20'}`}>
-                                <Activity className={`w-7 h-7 ${fc.retention_score < 50 ? 'text-rose-500 animate-pulse' : 'text-[#8da290] opacity-50'}`} />
+                             <div className="flex items-center gap-4">
+                                <button 
+                                   onClick={(e) => { e.stopPropagation(); toggleAudio(fc.id); }}
+                                   className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all shadow-inner border-2 
+                                      ${playingAudioId === fc.id 
+                                         ? 'bg-rose-500/20 border-rose-500 text-rose-500 animate-pulse' 
+                                         : 'bg-[#c5a059]/10 border-[#c5a059]/30 text-[#c5a059] hover:bg-[#c5a059]/20'}`}
+                                   title="Play Audio Overview"
+                                >
+                                   {playingAudioId === fc.id ? (
+                                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                                   ) : (
+                                      <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                   )}
+                                </button>
+                                <div className={`w-16 h-16 rounded-[1.5rem] bg-[#0f0f11] border-2 flex items-center justify-center transition-colors shadow-inner ${fc.retention_score < 50 ? 'border-rose-500/20' : 'border-[#8da290]/20'}`}>
+                                   <Activity className={`w-7 h-7 ${fc.retention_score < 50 ? 'text-rose-500 animate-pulse' : 'text-[#8da290] opacity-50'}`} />
+                                </div>
                              </div>
                           </div>
                       </div>
