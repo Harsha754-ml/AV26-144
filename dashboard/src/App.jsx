@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { Activity, Brain, Server, RefreshCw, Layers, ShieldCheck, Zap, AlertTriangle, Terminal, Upload, Link, Type, Send, CheckCircle2, X as CloseIcon, Clock, Sparkles, User, Database, Globe, Cpu } from 'lucide-react';
+import SynapticMatchGame from './SynapticMatchGame';
 
 const API_BASE = "http://127.0.0.1:8000";
 const WS_URL = "ws://127.0.0.1:8000/ws";
@@ -612,6 +613,11 @@ function App() {
               ))}
            </div>
            
+           {/* GAME MODE OVERLAY */}
+           {activeCards.length > 0 && (
+             <SynapticMatchGame flashcards={activeCards} />
+           )}
+
            {/* EMPTY STATE */}
            {activeCards.length === 0 && (
                <div className="mt-20 py-48 border-2 border-dashed border-white/5 rounded-[4.5rem] flex flex-col items-center justify-center gap-10 bg-white/[0.01] backdrop-blur-sm">

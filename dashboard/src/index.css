@@ -81,3 +81,8 @@ h1, h2, h3, .font-serif {
 .text-gold { color: var(--accent-gold); }
 .text-sage { color: var(--accent-sage); }
 .text-rose { color: var(--accent-rose); }
+
+.perspective-1000 { perspective: 1000px; }
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+
