@@ -7,6 +7,7 @@ import 'api_service.dart';
 import 'models.dart';
 import 'constants.dart';
 import 'game_screen.dart';
+import 'knowledge_graph_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -223,6 +224,7 @@ class _MainScreenState extends State<MainScreen> {
     final screens = [
       HomeScreen(flashcards: _flashcards, isConnected: _isConnected, onRefresh: _fetchData),
       GameScreen(flashcards: _flashcards),
+      const KnowledgeGraphScreen(),
       AudioReviewScreen(flashcards: _flashcards),
       SettingsScreen()
     ];
@@ -242,9 +244,12 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: const Color(0xFF0F0F11),
         selectedItemColor: const Color(0xFFC5A059),
         unselectedItemColor: Colors.grey,
+        selectedFontSize: 10,
+        unselectedFontSize: 10,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.sports_esports), label: 'Games'),
+          BottomNavigationBarItem(icon: Icon(Icons.hub), label: 'Graph'),
           BottomNavigationBarItem(icon: Icon(Icons.headphones), label: 'Audio'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
