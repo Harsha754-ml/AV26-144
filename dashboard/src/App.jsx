@@ -95,6 +95,7 @@ function App() {
   const [topicName, setTopicName] = useState('');
   const [textContent, setTextContent] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [selectedFileName, setSelectedFileName] = useState('');
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -209,6 +210,7 @@ function App() {
         setTopicName('');
         setTextContent('');
         setYoutubeUrl('');
+        setSelectedFileName('');
         if (fileInputRef.current) fileInputRef.current.value = '';
         
         // Disable simulation once real data is present
@@ -497,15 +499,24 @@ function App() {
                               {ingestType === 'file' && (
                                  <div 
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="h-full flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-[2.5rem] hover:border-[#c5a059]/30 hover:bg-white/[0.01] cursor-pointer transition-all gap-6"
+                                    className={`h-full flex flex-col items-center justify-center border-2 border-dashed ${selectedFileName ? 'border-[#c5a059] bg-[#c5a059]/5' : 'border-white/5 hover:border-[#c5a059]/30 hover:bg-white/[0.01]'} rounded-[2.5rem] cursor-pointer transition-all gap-6`}
                                  >
-                                    <input type="file" hidden ref={fileInputRef} accept=".pdf,.txt" />
-                                    <div className="p-8 bg-[#c5a059]/10 rounded-full border border-[#c5a059]/20 group-hover:scale-110 transition-transform shadow-2xl">
-                                       <Upload className="w-10 h-10 text-[#c5a059]" />
+                                    <input 
+                                       type="file" 
+                                       hidden 
+                                       ref={fileInputRef} 
+                                       accept=".pdf,.txt" 
+                                       onChange={(e) => setSelectedFileName(e.target.files?.[0]?.name || '')}
+                                    />
+                                    <div className={`p-8 rounded-full border transition-transform shadow-2xl ${selectedFileName ? 'bg-[#c5a059] border-[#c5a059]' : 'bg-[#c5a059]/10 border-[#c5a059]/20 group-hover:scale-110'}`}>
+                                       {selectedFileName ? <CheckCircle2 className="w-10 h-10 text-black" /> : <Upload className="w-10 h-10 text-[#c5a059]" />}
                                     </div>
-                                    <div className="text-center">
-                                       <p className="text-[#f4f1ea] font-black text-sm tracking-widest uppercase">Select Source Document</p>
-                                       <p className="text-[10px] text-slate-600 uppercase tracking-[0.3em] mt-3 font-mono">Payload Limit: 10MB</p>
+                                    <div className="text-center px-4">
+                                       <p className="text-[#f4f1ea] font-black text-sm tracking-widest uppercase truncate max-w-[250px]">
+                                          {selectedFileName || "Select Source Document"}
+                                       </p>
+                                       {!selectedFileName && <p className="text-[10px] text-slate-600 uppercase tracking-[0.3em] mt-3 font-mono">Payload Limit: 10MB</p>}
+                                       {selectedFileName && <p className="text-[10px] text-[#c5a059] uppercase tracking-[0.3em] mt-3 font-mono">Ready to Transmit</p>}
                                     </div>
                                  </div>
                               )}
