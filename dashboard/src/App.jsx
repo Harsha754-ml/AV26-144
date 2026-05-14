@@ -609,6 +609,23 @@ function App() {
            </section>
 
            {/* KNOWLEDGE CLUSTERS */}
+           {activeCards.length > 0 && (
+             <div className="flex items-center justify-between mb-8">
+               <h3 className="text-sm font-black text-slate-500 uppercase tracking-widest">Knowledge Clusters ({activeCards.length})</h3>
+               <button
+                 onClick={() => {
+                   if (confirm(`Delete ALL ${activeCards.length} flashcards? This cannot be undone.`)) {
+                     Promise.all(activeCards.map(fc => fetch(`${API_BASE}/flashcard/${fc.id}`, { method: 'DELETE' })))
+                       .then(() => alert('All cards deleted.'));
+                   }
+                 }}
+                 className="flex items-center gap-2 px-5 py-2.5 bg-rose-500/10 border border-rose-500/20 rounded-2xl hover:bg-rose-500/20 transition-all"
+               >
+                 <CloseIcon className="w-3.5 h-3.5 text-rose-400" />
+                 <span className="text-[10px] font-black text-rose-400 uppercase tracking-widest">Delete All</span>
+               </button>
+             </div>
+           )}
            <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-16">
               {activeCards.map((fc) => (
                 <div key={fc.id} className="relative group">
