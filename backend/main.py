@@ -94,16 +94,33 @@ def get_flashcards():
     flashcards = database.get_all_flashcards()
     demo_mode = database.get_demo_mode()
     
+    # Try to use HLR model for predictions
+    hlr = None
+    try:
+        hlr = get_hlr_engine()
+    except Exception:
+        pass
+    
     enriched = []
     for fc in flashcards:
-        retention = curve_engine.calculate_retention(fc["last_reviewed"], fc["stability"], demo_mode)
-        score = curve_engine.calculate_score(retention)
-        urgency = curve_engine.get_urgency(score)
-        
         fc_enriched = dict(fc)
-        fc_enriched["retention_score"] = score
-        fc_enriched["urgency_level"] = urgency
-        fc_enriched["next_reminder_minutes"] = curve_engine.get_next_reminder_minutes(fc["stability"], demo_mode)
+        
+        if hlr:
+            # Use ML model for prediction
+            prediction = hlr.predict_recall(fc, demo_mode=demo_mode)
+            fc_enriched["retention_score"] = prediction["predicted_score"]
+            fc_enriched["urgency_level"] = prediction["urgency"]
+            fc_enriched["next_reminder_minutes"] = prediction["next_review_minutes"]
+            fc_enriched["half_life_hours"] = prediction["half_life_hours"]
+            fc_enriched["ml_confidence"] = prediction["confidence"]
+        else:
+            # Fallback to basic curve engine
+            retention = curve_engine.calculate_retention(fc["last_reviewed"], fc["stability"], demo_mode)
+            score = curve_engine.calculate_score(retention)
+            fc_enriched["retention_score"] = score
+            fc_enriched["urgency_level"] = curve_engine.get_urgency(score)
+            fc_enriched["next_reminder_minutes"] = curve_engine.get_next_reminder_minutes(fc["stability"], demo_mode)
+        
         fc_enriched["curve_points"] = curve_engine.get_curve_points(fc["last_reviewed"], fc["stability"], demo_mode)
         enriched.append(fc_enriched)
         
@@ -498,7 +515,8 @@ def update_biometrics(req: BiometricUpdate):
 @app.get("/knowledge-graph")
 def knowledge_graph():
     """Generate knowledge graph data from flashcards for visualization."""
-    flashcards = database.get_all_flashcards()
+    # Use enriched flashcards (with HLR predictions) for accurate retention
+    flashcards = get_flashcards()
     
     # Build nodes (topics) and edges (shared concepts)
     topics = {}
@@ -508,14 +526,10 @@ def knowledge_graph():
             topics[topic] = {
                 "id": topic,
                 "cards": 0,
-                "avg_retention": 0,
                 "total_retention": 0,
             }
         topics[topic]["cards"] += 1
-        demo_mode = database.get_demo_mode()
-        retention = curve_engine.calculate_retention(fc["last_reviewed"], fc["stability"], demo_mode)
-        score = curve_engine.calculate_score(retention)
-        topics[topic]["total_retention"] += score
+        topics[topic]["total_retention"] += fc.get("retention_score", 50)
     
     nodes = []
     for topic, data in topics.items():
