@@ -91,6 +91,7 @@ function App() {
   const [ingestLoading, setIngestLoading] = useState(false);
   const [ingestSuccess, setIngestSuccess] = useState(false);
   const [simulationMode, setSimulationMode] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' or 'game'
   
   // UI Form States
   const [topicName, setTopicName] = useState('');
@@ -257,7 +258,24 @@ function App() {
            </div>
         </div>
 
-        <div className="px-8 flex items-center gap-2 mb-4 group cursor-default">
+        <div className="px-8 space-y-2 mb-6">
+           <button 
+             onClick={() => setActiveTab('dashboard')}
+             className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all ${activeTab === 'dashboard' ? 'bg-[#c5a059]/10 text-[#c5a059] border border-[#c5a059]/20' : 'text-slate-500 hover:bg-white/5 hover:text-slate-300 border border-transparent'}`}
+           >
+             <Activity className="w-4 h-4" />
+             <span className="text-xs font-black uppercase tracking-widest">Neural Matrix</span>
+           </button>
+           <button 
+             onClick={() => setActiveTab('game')}
+             className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all ${activeTab === 'game' ? 'bg-[#c5a059]/10 text-[#c5a059] border border-[#c5a059]/20' : 'text-slate-500 hover:bg-white/5 hover:text-slate-300 border border-transparent'}`}
+           >
+             <Brain className="w-4 h-4" />
+             <span className="text-xs font-black uppercase tracking-widest">Synaptic Match</span>
+           </button>
+        </div>
+
+        <div className="px-8 flex items-center gap-2 mb-4 group cursor-default mt-4 border-t border-white/5 pt-6">
            <Activity className="w-3 h-3 text-[#c5a059] group-hover:scale-110 transition-transform" />
            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500">Synaptic Activity</h3>
         </div>
@@ -289,7 +307,8 @@ function App() {
         <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-[#8da290]/[0.02] rounded-full blur-[140px] pointer-events-none" />
 
         <div className="p-10 lg:p-20 relative z-10">
-           
+           {activeTab === 'dashboard' ? (
+           <>
            {/* HEADER SECTION */}
            <header className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/5 pb-10 mb-12 gap-10">
               <div className="space-y-4">
@@ -613,11 +632,6 @@ function App() {
               ))}
            </div>
            
-           {/* GAME MODE OVERLAY */}
-           {activeCards.length > 0 && (
-             <SynapticMatchGame flashcards={activeCards} />
-           )}
-
            {/* EMPTY STATE */}
            {activeCards.length === 0 && (
                <div className="mt-20 py-48 border-2 border-dashed border-white/5 rounded-[4.5rem] flex flex-col items-center justify-center gap-10 bg-white/[0.01] backdrop-blur-sm">
@@ -636,6 +650,26 @@ function App() {
                       Ignite Simulation
                    </button>
                </div>
+           )}
+           </>
+           ) : (
+             <div className="pt-10 h-full">
+                {activeCards.length > 0 ? (
+                  <SynapticMatchGame flashcards={activeCards} />
+                ) : (
+                  <div className="py-48 border-2 border-dashed border-white/5 rounded-[4.5rem] flex flex-col items-center justify-center gap-10 bg-white/[0.01] backdrop-blur-sm">
+                    <Brain className="w-12 h-12 text-slate-800" />
+                    <h3 className="text-4xl font-black text-[#f4f1ea] font-serif">No Neural Data</h3>
+                    <p className="text-[#8da290] font-serif italic">Return to the Neural Matrix and upload a resource first to play Synaptic Match.</p>
+                    <button 
+                      onClick={() => setActiveTab('dashboard')} 
+                      className="px-12 py-5 bg-[#c5a059] text-black font-black uppercase text-xs tracking-[0.3em] rounded-full hover:bg-white transition-all"
+                    >
+                      Back to Matrix
+                    </button>
+                  </div>
+                )}
+             </div>
            )}
         </div>
       </main>

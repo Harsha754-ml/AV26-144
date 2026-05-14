@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'api_service.dart';
 import 'models.dart';
 import 'constants.dart';
+import 'game_screen.dart';
 
 void main() {
   runApp(const MemoryForgeApp());
@@ -175,6 +176,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final screens = [
       HomeScreen(flashcards: _flashcards, isConnected: _isConnected, onRefresh: _fetchData),
+      GameScreen(flashcards: _flashcards),
       SettingsScreen()
     ];
 
@@ -194,6 +196,7 @@ class _MainScreenState extends State<MainScreen> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.psychology), label: 'Match'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
