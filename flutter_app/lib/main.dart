@@ -40,6 +40,7 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   List<Topic> _flashcards = [];
   Timer? _pollingTimer;
+  bool _isConnected = false;
 
   @override
   void initState() {
@@ -62,8 +63,12 @@ class _MainScreenState extends State<MainScreen> {
       final cards = await ApiService.getFlashcards();
       setState(() {
         _flashcards = cards;
+        _isConnected = true;
       });
     } catch (e) {
+      setState(() {
+        _isConnected = false;
+      });
       debugPrint("Failed to fetch flashcards: $e");
     }
   }
@@ -71,12 +76,15 @@ class _MainScreenState extends State<MainScreen> {
   Future<void> _pollNotifications() async {
     try {
       final notifications = await ApiService.getPendingNotifications();
+      setState(() { _isConnected = true; });
       if (notifications.isNotEmpty) {
         for (var n in notifications) {
           _showBanner(n);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      setState(() { _isConnected = false; });
+    }
   }
 
   void _showBanner(NotificationDetail notification) {
@@ -148,7 +156,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      HomeScreen(flashcards: _flashcards, onRefresh: _fetchData),
+      HomeScreen(flashcards: _flashcards, isConnected: _isConnected, onRefresh: _fetchData),
       SettingsScreen()
     ];
 
@@ -180,9 +188,10 @@ class _MainScreenState extends State<MainScreen> {
 // ----------------------------------------------------
 class HomeScreen extends StatelessWidget {
   final List<Topic> flashcards;
+  final bool isConnected;
   final VoidCallback onRefresh;
 
-  const HomeScreen({Key? key, required this.flashcards, required this.onRefresh}) : super(key: key);
+  const HomeScreen({Key? key, required this.flashcards, required this.isConnected, required this.onRefresh}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -190,8 +199,31 @@ class HomeScreen extends StatelessWidget {
       onRefresh: () async => onRefresh(),
       child: CustomScrollView(
         slivers: [
-          const SliverAppBar(
-            title: Text("MemoryForge", style: TextStyle(fontWeight: FontWeight.bold)),
+          SliverAppBar(
+            title: Row(
+              children: [
+                const Text("MemoryForge", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(width: 10),
+                Tooltip(
+                  message: isConnected ? "Connected to Server" : "Disconnected",
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: isConnected ? Colors.greenAccent : Colors.redAccent,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: isConnected ? Colors.greenAccent.withOpacity(0.5) : Colors.redAccent.withOpacity(0.5),
+                          blurRadius: 4,
+                          spreadRadius: 1,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
             floating: true,
           ),
           if (flashcards.isEmpty)
