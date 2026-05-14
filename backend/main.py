@@ -222,7 +222,7 @@ def ingest_youtube_api(req: YoutubeIngestReq):
 @app.post("/ingest/file")
 async def ingest_file_api(
     file: Annotated[UploadFile, File(...)], 
-    topic_name: Annotated[str, Form("")] = ""
+    topic_name: str = Form("")
 ):
     try:
         contents = await file.read()
