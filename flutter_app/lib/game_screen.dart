@@ -121,49 +121,88 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0B),
-      appBar: AppBar(
-        title: const Text("Game Mode", style: TextStyle(fontFamily: 'serif', fontWeight: FontWeight.bold, color: Color(0xFFC5A059))),
-        backgroundColor: const Color(0xFF0F0F11),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: const Color(0xFFC5A059),
-          labelColor: const Color(0xFFC5A059),
-          unselectedLabelColor: Colors.grey,
-          isScrollable: true,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 1.2),
-          tabs: const [
-            Tab(icon: Icon(Icons.psychology, size: 20), text: "MATCH"),
-            Tab(icon: Icon(Icons.bolt, size: 20), text: "SPEED"),
-            Tab(icon: Icon(Icons.keyboard, size: 20), text: "TYPE"),
-            Tab(icon: Icon(Icons.favorite, size: 20), text: "SURVIVAL"),
-          ],
-        ),
-      ),
       body: Column(
         children: [
-          // Data source indicator
+          // Premium Header
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            color: const Color(0xFF0F0F11),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 16, left: 20, right: 20, bottom: 12),
+            decoration: const BoxDecoration(
+              color: Color(0xFF0F0F11),
+              border: Border(bottom: BorderSide(color: Colors.white10)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 8, height: 8,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: widget.flashcards.isNotEmpty ? const Color(0xFF8DA290) : const Color(0xFFC5A059),
-                    boxShadow: [BoxShadow(color: (widget.flashcards.isNotEmpty ? const Color(0xFF8DA290) : const Color(0xFFC5A059)).withAlpha(150), blurRadius: 6)],
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC5A059).withAlpha(20),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFFC5A059).withAlpha(60)),
+                      ),
+                      child: const Icon(Icons.sports_esports, size: 22, color: Color(0xFFC5A059)),
+                    ),
+                    const SizedBox(width: 14),
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Cognitive Arena", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFFF4F1EA), fontFamily: 'serif')),
+                        SizedBox(height: 2),
+                        Text("REINFORCE NEURAL PATHWAYS", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 2, color: Color(0xFF8DA290))),
+                      ],
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: widget.flashcards.isNotEmpty ? const Color(0xFF8DA290).withAlpha(20) : const Color(0xFFC5A059).withAlpha(20),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: widget.flashcards.isNotEmpty ? const Color(0xFF8DA290).withAlpha(60) : const Color(0xFFC5A059).withAlpha(60)),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: widget.flashcards.isNotEmpty ? const Color(0xFF8DA290) : const Color(0xFFC5A059))),
+                          const SizedBox(width: 6),
+                          Text(widget.flashcards.isNotEmpty ? "LIVE" : "DEMO", style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: widget.flashcards.isNotEmpty ? const Color(0xFF8DA290) : const Color(0xFFC5A059))),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  widget.flashcards.isNotEmpty ? "LIVE DATA • Scores affect revisions" : "DEMO MODE • Scores affect revisions",
-                  style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.grey),
+                const SizedBox(height: 16),
+                // Game Tabs
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0A0A0B),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: TabBar(
+                    controller: _tabController,
+                    indicator: BoxDecoration(
+                      color: const Color(0xFFC5A059),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey,
+                    labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1),
+                    dividerHeight: 0,
+                    tabs: const [
+                      Tab(height: 42, child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.psychology, size: 16), SizedBox(width: 4), Text("MATCH")])),
+                      Tab(height: 42, child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.bolt, size: 16), SizedBox(width: 4), Text("SPEED")])),
+                      Tab(height: 42, child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.keyboard, size: 16), SizedBox(width: 4), Text("TYPE")])),
+                      Tab(height: 42, child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.favorite, size: 16), SizedBox(width: 4), Text("SURVIVE")])),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
+          // Game Content
           Expanded(
             child: TabBarView(
               controller: _tabController,
