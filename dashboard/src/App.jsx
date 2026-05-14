@@ -271,7 +271,7 @@ function App() {
              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all ${activeTab === 'game' ? 'bg-[#c5a059]/10 text-[#c5a059] border border-[#c5a059]/20' : 'text-slate-500 hover:bg-white/5 hover:text-slate-300 border border-transparent'}`}
            >
              <Brain className="w-4 h-4" />
-             <span className="text-xs font-black uppercase tracking-widest">Synaptic Match</span>
+             <span className="text-xs font-black uppercase tracking-widest">Game Mode</span>
            </button>
         </div>
 

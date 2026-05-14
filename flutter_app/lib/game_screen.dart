@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'models.dart';
+import 'api_service.dart';
 
 // ============================================================
 // DEMO DATA - Always available for showcase
@@ -16,8 +17,17 @@ final List<Topic> _demoFlashcards = [
   Topic(id: "d8", topicName: "Operating Systems", question: "What is a deadlock?", answer: "A state where two or more processes are blocked forever, each waiting for a resource held by the other, forming a circular dependency.", sourceType: "demo"),
 ];
 
+/// Send game results to backend to affect notifications/revisions
+Future<void> _sendGameResults(List<Map<String, String>> results) async {
+  for (final r in results) {
+    try {
+      await ApiService.reviewFlashcard(r['id']!, r['result']!);
+    } catch (_) {}
+  }
+}
+
 // ============================================================
-// MAIN GAME SCREEN - Tab between Match & Speed Recall
+// MAIN GAME SCREEN - 4 Games with Tab Navigation
 // ============================================================
 class GameScreen extends StatefulWidget {
   final List<Topic> flashcards;
@@ -36,7 +46,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -50,17 +60,20 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0B),
       appBar: AppBar(
-        title: const Text("Cognitive Arena", style: TextStyle(fontFamily: 'serif', fontWeight: FontWeight.bold, color: Color(0xFFC5A059))),
+        title: const Text("Game Mode", style: TextStyle(fontFamily: 'serif', fontWeight: FontWeight.bold, color: Color(0xFFC5A059))),
         backgroundColor: const Color(0xFF0F0F11),
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: const Color(0xFFC5A059),
           labelColor: const Color(0xFFC5A059),
           unselectedLabelColor: Colors.grey,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.5),
+          isScrollable: true,
+          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 1.2),
           tabs: const [
-            Tab(icon: Icon(Icons.psychology), text: "MATCH"),
-            Tab(icon: Icon(Icons.bolt), text: "SPEED RECALL"),
+            Tab(icon: Icon(Icons.psychology, size: 20), text: "MATCH"),
+            Tab(icon: Icon(Icons.bolt, size: 20), text: "SPEED"),
+            Tab(icon: Icon(Icons.keyboard, size: 20), text: "TYPE"),
+            Tab(icon: Icon(Icons.favorite, size: 20), text: "SURVIVAL"),
           ],
         ),
       ),
@@ -78,13 +91,13 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: widget.flashcards.isNotEmpty ? const Color(0xFF8DA290) : const Color(0xFFC5A059),
-                    boxShadow: [BoxShadow(color: widget.flashcards.isNotEmpty ? const Color(0xFF8DA290) : const Color(0xFFC5A059), blurRadius: 6)],
+                    boxShadow: [BoxShadow(color: (widget.flashcards.isNotEmpty ? const Color(0xFF8DA290) : const Color(0xFFC5A059)).withAlpha(150), blurRadius: 6)],
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  widget.flashcards.isNotEmpty ? "LIVE DATA ACTIVE" : "DEMO MODE",
-                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2, color: Colors.grey),
+                  widget.flashcards.isNotEmpty ? "LIVE DATA • Scores affect revisions" : "DEMO MODE • Scores affect revisions",
+                  style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.grey),
                 ),
               ],
             ),
@@ -95,6 +108,8 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
               children: [
                 _MatchGame(flashcards: _activeCards),
                 _SpeedRecallGame(flashcards: _activeCards),
+                _TypeChallengeGame(flashcards: _activeCards),
+                _SurvivalGame(flashcards: _activeCards),
               ],
             ),
           ),
@@ -104,8 +119,9 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   }
 }
 
+
 // ============================================================
-// GAME 1: SYNAPTIC MATCH (Memory Card Matching)
+// GAME 1: MATCH (Card Matching)
 // ============================================================
 class _MatchGame extends StatefulWidget {
   final List<Topic> flashcards;
@@ -123,7 +139,6 @@ class _MatchGameState extends State<_MatchGame> {
   int _timer = 0;
   Timer? _timerRef;
   bool _isRunning = false;
-  int? _bestScore;
 
   @override
   void initState() {
@@ -137,21 +152,13 @@ class _MatchGameState extends State<_MatchGame> {
     super.dispose();
   }
 
-  @override
-  void didUpdateWidget(_MatchGame oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.flashcards != oldWidget.flashcards) {
-      _initGame();
-    }
-  }
-
   void _initGame() {
     _timerRef?.cancel();
     final selected = widget.flashcards.take(6).toList();
     List<Map<String, dynamic>> newCards = [];
     for (var fc in selected) {
       newCards.add({'id': fc.id, 'type': 'q', 'text': fc.question});
-      newCards.add({'id': fc.id, 'type': 'a', 'text': fc.answer.isEmpty ? 'Hidden Answer...' : fc.answer});
+      newCards.add({'id': fc.id, 'type': 'a', 'text': fc.answer.isEmpty ? 'Hidden...' : fc.answer});
     }
     newCards.shuffle();
     setState(() {
@@ -176,7 +183,6 @@ class _MatchGameState extends State<_MatchGame> {
   void _handleCardTap(int index) {
     if (_flippedIndices.contains(index) || _matchedIds.contains(_cards[index]['id']) || _flippedIndices.length == 2) return;
     _startTimer();
-
     setState(() => _flippedIndices.add(index));
 
     if (_flippedIndices.length == 2) {
@@ -191,14 +197,13 @@ class _MatchGameState extends State<_MatchGame> {
               _matchedIds.add(first['id']);
               _flippedIndices.clear();
             });
-            // Check completion
             final targetCount = widget.flashcards.length > 6 ? 6 : widget.flashcards.length;
             if (_matchedIds.length == targetCount) {
               _timerRef?.cancel();
               _isRunning = false;
-              if (_bestScore == null || _moves < _bestScore!) {
-                _bestScore = _moves;
-              }
+              // All matched = remembered
+              final results = _matchedIds.map((id) => {'id': id, 'result': 'remembered'}).toList();
+              _sendGameResults(results);
             }
           }
         });
@@ -210,131 +215,65 @@ class _MatchGameState extends State<_MatchGame> {
     }
   }
 
-  String _formatTime(int s) => '${(s ~/ 60).toString().padLeft(1, '0')}:${(s % 60).toString().padLeft(2, '0')}';
+  String _formatTime(int s) => '${(s ~/ 60)}:${(s % 60).toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
     final targetCount = widget.flashcards.length > 6 ? 6 : widget.flashcards.length;
-    final isComplete = _matchedIds.length == targetCount;
+    final isComplete = _matchedIds.length == targetCount && targetCount > 0;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       child: Column(
         children: [
-          // Stats bar
+          // Stats
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0F0F11),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white10),
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(color: const Color(0xFF0F0F11), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white10)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(children: [
-                  const Icon(Icons.timer, size: 18, color: Color(0xFFC5A059)),
-                  const SizedBox(width: 8),
-                  Text(_formatTime(_timer), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'monospace', color: Colors.white)),
-                ]),
-                Row(children: [
-                  const Icon(Icons.touch_app, size: 18, color: Color(0xFF8DA290)),
-                  const SizedBox(width: 8),
-                  Text("$_moves moves", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white)),
-                ]),
-                if (_bestScore != null)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFC5A059).withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFC5A059).withOpacity(0.3)),
-                    ),
-                    child: Text("Best: $_bestScore", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFC5A059))),
-                  ),
-                IconButton(icon: const Icon(Icons.refresh, color: Colors.grey), onPressed: _initGame, iconSize: 20),
+                Row(children: [const Icon(Icons.timer, size: 16, color: Color(0xFFC5A059)), const SizedBox(width: 6), Text(_formatTime(_timer), style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'monospace', color: Colors.white))]),
+                Text("$_moves moves", style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                IconButton(icon: const Icon(Icons.refresh, color: Colors.grey, size: 20), onPressed: _initGame),
               ],
             ),
           ),
-          const SizedBox(height: 16),
-
+          const SizedBox(height: 12),
           if (isComplete)
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 100, height: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFFC5A059).withOpacity(0.2),
-                        border: Border.all(color: const Color(0xFFC5A059).withOpacity(0.5), width: 2),
-                      ),
-                      child: const Icon(Icons.check_circle_outline, size: 60, color: Color(0xFFC5A059)),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text("Neural Link Established", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
-                    const SizedBox(height: 8),
-                    Text("$_moves moves • ${_formatTime(_timer)}", style: const TextStyle(color: Colors.grey, fontSize: 16)),
-                    const SizedBox(height: 30),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-                      onPressed: _initGame,
-                      icon: const Icon(Icons.refresh),
-                      label: const Text("PLAY AGAIN", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-                    ),
-                  ],
-                ),
-              ),
-            )
+            Expanded(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const Icon(Icons.check_circle_outline, size: 80, color: Color(0xFFC5A059)),
+              const SizedBox(height: 16),
+              const Text("Neural Link Established", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
+              Text("$_moves moves • ${_formatTime(_timer)}", style: const TextStyle(color: Colors.grey)),
+              const SizedBox(height: 8),
+              const Text("All cards marked remembered — stability boosted.", style: TextStyle(color: Colors.grey, fontSize: 12)),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))), onPressed: _initGame, icon: const Icon(Icons.refresh), label: const Text("PLAY AGAIN", style: TextStyle(fontWeight: FontWeight.bold))),
+            ])))
           else
             Expanded(
               child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 0.7,
-                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 8, mainAxisSpacing: 8, childAspectRatio: 0.7),
                 itemCount: _cards.length,
                 itemBuilder: (context, index) {
                   final card = _cards[index];
                   final isFlipped = _flippedIndices.contains(index) || _matchedIds.contains(card['id']);
                   final isMatched = _matchedIds.contains(card['id']);
-
                   return GestureDetector(
                     onTap: () => _handleCardTap(index),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       decoration: BoxDecoration(
-                        color: isFlipped
-                            ? (isMatched ? const Color(0xFFC5A059).withOpacity(0.15) : const Color(0xFF1A1A1C))
-                            : const Color(0xFF0F0F11),
-                        border: Border.all(
-                          color: isFlipped
-                              ? (isMatched ? const Color(0xFFC5A059) : const Color(0xFF8DA290).withOpacity(0.5))
-                              : Colors.white10,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: isMatched ? [BoxShadow(color: const Color(0xFFC5A059).withOpacity(0.3), blurRadius: 12, spreadRadius: -4)] : [],
+                        color: isFlipped ? (isMatched ? const Color(0xFFC5A059).withAlpha(40) : const Color(0xFF1A1A1C)) : const Color(0xFF0F0F11),
+                        border: Border.all(color: isFlipped ? (isMatched ? const Color(0xFFC5A059) : const Color(0xFF8DA290).withAlpha(128)) : Colors.white10, width: 2),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       alignment: Alignment.center,
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(8),
                       child: isFlipped
-                          ? SingleChildScrollView(
-                              child: Text(
-                                card['text'],
-                                style: TextStyle(
-                                  color: isMatched ? const Color(0xFFC5A059) : Colors.white,
-                                  fontSize: 11,
-                                  fontFamily: 'serif',
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                          : const Icon(Icons.psychology, size: 32, color: Colors.white12),
+                          ? SingleChildScrollView(child: Text(card['text'], style: TextStyle(color: isMatched ? const Color(0xFFC5A059) : Colors.white, fontSize: 10, fontFamily: 'serif'), textAlign: TextAlign.center))
+                          : const Icon(Icons.psychology, size: 28, color: Colors.white12),
                     ),
                   );
                 },
@@ -346,8 +285,9 @@ class _MatchGameState extends State<_MatchGame> {
   }
 }
 
+
 // ============================================================
-// GAME 2: SPEED RECALL (Timed Quiz)
+// GAME 2: SPEED RECALL
 // ============================================================
 class _SpeedRecallGame extends StatefulWidget {
   final List<Topic> flashcards;
@@ -368,310 +308,403 @@ class _SpeedRecallGameState extends State<_SpeedRecallGame> {
   bool _isComplete = false;
   int _streak = 0;
   int _maxStreak = 0;
+  List<Map<String, String>> _results = [];
 
   @override
-  void dispose() {
-    _timerRef?.cancel();
-    super.dispose();
-  }
+  void dispose() { _timerRef?.cancel(); super.dispose(); }
 
   void _startGame() {
     _timerRef?.cancel();
-    setState(() {
-      _currentIndex = 0;
-      _showAnswer = false;
-      _remembered = 0;
-      _forgot = 0;
-      _timer = 0;
-      _isRunning = true;
-      _isComplete = false;
-      _streak = 0;
-      _maxStreak = 0;
-    });
-    _timerRef = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) setState(() => _timer++);
-    });
+    setState(() { _currentIndex = 0; _showAnswer = false; _remembered = 0; _forgot = 0; _timer = 0; _isRunning = true; _isComplete = false; _streak = 0; _maxStreak = 0; _results = []; });
+    _timerRef = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() => _timer++); });
   }
 
   void _handleResult(String result) {
-    if (result == 'remembered') {
-      _remembered++;
-      _streak++;
-      if (_streak > _maxStreak) _maxStreak = _streak;
-    } else {
-      _forgot++;
-      _streak = 0;
-    }
+    final current = widget.flashcards[_currentIndex];
+    _results.add({'id': current.id, 'result': result});
+    if (result == 'remembered') { _remembered++; _streak++; if (_streak > _maxStreak) _maxStreak = _streak; }
+    else { _forgot++; _streak = 0; }
 
     if (_currentIndex + 1 >= widget.flashcards.length) {
       _timerRef?.cancel();
-      setState(() {
-        _isComplete = true;
-        _isRunning = false;
-      });
+      setState(() { _isComplete = true; _isRunning = false; });
+      _sendGameResults(_results);
     } else {
-      setState(() {
-        _currentIndex++;
-        _showAnswer = false;
-      });
+      setState(() { _currentIndex++; _showAnswer = false; });
     }
   }
 
-  String _formatTime(int s) => '${(s ~/ 60).toString().padLeft(1, '0')}:${(s % 60).toString().padLeft(2, '0')}';
+  String _formatTime(int s) => '${(s ~/ 60)}:${(s % 60).toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
-    // Start screen
     if (!_isRunning && !_isComplete) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 80, height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFFC5A059).withOpacity(0.15),
-                  border: Border.all(color: const Color(0xFFC5A059).withOpacity(0.3)),
-                ),
-                child: const Icon(Icons.bolt, size: 40, color: Color(0xFFC5A059)),
-              ),
-              const SizedBox(height: 24),
-              const Text("Speed Recall", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
-              const SizedBox(height: 8),
-              const Text("Test your memory under pressure.", style: TextStyle(color: Color(0xFF8DA290), fontStyle: FontStyle.italic, fontSize: 16)),
-              const SizedBox(height: 16),
-              Text("${widget.flashcards.length} cards • Timed", style: const TextStyle(color: Colors.grey, fontSize: 14)),
-              const SizedBox(height: 40),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFC5A059),
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                ),
-                onPressed: _startGame,
-                icon: const Icon(Icons.bolt),
-                label: const Text("BEGIN PROTOCOL", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-              ),
-            ],
-          ),
-        ),
-      );
+      return Center(child: Padding(padding: const EdgeInsets.all(32), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Container(width: 70, height: 70, decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFFC5A059).withAlpha(30), border: Border.all(color: const Color(0xFFC5A059).withAlpha(80))), child: const Icon(Icons.bolt, size: 36, color: Color(0xFFC5A059))),
+        const SizedBox(height: 20),
+        const Text("Speed Recall", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
+        const SizedBox(height: 8),
+        const Text("Rate your recall honestly. Failed cards trigger revision.", style: TextStyle(color: Colors.grey, fontSize: 13), textAlign: TextAlign.center),
+        const SizedBox(height: 30),
+        ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))), onPressed: _startGame, icon: const Icon(Icons.bolt), label: const Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5))),
+      ])));
     }
 
-    // Complete screen
     if (_isComplete) {
       final accuracy = (_remembered + _forgot) > 0 ? ((_remembered / (_remembered + _forgot)) * 100).round() : 0;
-      return Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 100, height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFFC5A059).withOpacity(0.2),
-                  border: Border.all(color: const Color(0xFFC5A059).withOpacity(0.5), width: 2),
-                ),
-                child: const Icon(Icons.emoji_events, size: 50, color: Color(0xFFC5A059)),
-              ),
-              const SizedBox(height: 20),
-              const Text("Protocol Complete", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
-              const SizedBox(height: 8),
-              Text("Finished in ${_formatTime(_timer)}", style: const TextStyle(color: Color(0xFF8DA290), fontStyle: FontStyle.italic, fontSize: 16)),
-              const SizedBox(height: 30),
-              // Stats
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _StatBox(label: "Accuracy", value: "$accuracy%", color: const Color(0xFF8DA290)),
-                  _StatBox(label: "Streak", value: "$_maxStreak", color: const Color(0xFFC5A059)),
-                  _StatBox(label: "Time", value: _formatTime(_timer), color: Colors.white),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(width: 10, height: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF8DA290))),
-                  const SizedBox(width: 6),
-                  Text("Remembered: $_remembered", style: const TextStyle(color: Colors.grey)),
-                  const SizedBox(width: 20),
-                  Container(width: 10, height: 10, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red.shade400)),
-                  const SizedBox(width: 6),
-                  Text("Forgot: $_forgot", style: const TextStyle(color: Colors.grey)),
-                ],
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-                onPressed: _startGame,
-                icon: const Icon(Icons.refresh),
-                label: const Text("TRY AGAIN", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-              ),
-            ],
-          ),
-        ),
-      );
+      return Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Icon(Icons.emoji_events, size: 60, color: Color(0xFFC5A059)),
+        const SizedBox(height: 16),
+        const Text("Complete!", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
+        Text(_forgot > 0 ? "$_forgot card(s) flagged for revision." : "Perfect! Stability boosted.", style: const TextStyle(color: Colors.grey)),
+        const SizedBox(height: 20),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          _StatChip("$accuracy%", "Accuracy"),
+          _StatChip("$_maxStreak", "Streak"),
+          _StatChip(_formatTime(_timer), "Time"),
+        ]),
+        const SizedBox(height: 24),
+        ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))), onPressed: _startGame, icon: const Icon(Icons.refresh), label: const Text("AGAIN")),
+      ])));
     }
 
-    // Active game
     final current = widget.flashcards[_currentIndex];
-    final progress = (_currentIndex) / widget.flashcards.length;
-
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // Top bar
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0F0F11),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white10),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(children: [
-                  const Icon(Icons.timer, size: 16, color: Color(0xFFC5A059)),
-                  const SizedBox(width: 6),
-                  Text(_formatTime(_timer), style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'monospace', color: Colors.white)),
-                ]),
-                if (_streak > 1)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.orange.withOpacity(0.3)),
-                    ),
-                    child: Row(children: [
-                      const Icon(Icons.local_fire_department, size: 14, color: Colors.orange),
-                      const SizedBox(width: 4),
-                      Text("$_streak", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.orange)),
-                    ]),
-                  ),
-                Text("${_currentIndex + 1}/${widget.flashcards.length}", style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Progress bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: Colors.white10,
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFC5A059)),
-              minHeight: 6,
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Card
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(28),
-              decoration: BoxDecoration(
-                color: const Color(0xFF0F0F11),
-                borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: Colors.white10),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(current.topicName, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 2, color: Color(0xFFC5A059))),
-                  const SizedBox(height: 20),
-                  Text(current.question, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20, fontFamily: 'serif', color: Colors.white, height: 1.4)),
-                  const SizedBox(height: 30),
-
-                  if (_showAnswer) ...[
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF8DA290).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: const Color(0xFF8DA290).withOpacity(0.3)),
-                      ),
-                      child: Text(current.answer, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontFamily: 'serif', fontStyle: FontStyle.italic, color: Color(0xFF8DA290), height: 1.4)),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8DA290), foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                            onPressed: () => _handleResult('remembered'),
-                            icon: const Icon(Icons.check_circle, size: 18),
-                            label: const Text("GOT IT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade700, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                            onPressed: () => _handleResult('forgot'),
-                            icon: const Icon(Icons.close, size: 18),
-                            label: const Text("FORGOT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ] else
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFC5A059),
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                      ),
-                      onPressed: () => setState(() => _showAnswer = true),
-                      child: const Text("REVEAL ANSWER", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1)),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ],
+    return Padding(padding: const EdgeInsets.all(16), child: Column(children: [
+      // Top bar
+      Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8), decoration: BoxDecoration(color: const Color(0xFF0F0F11), borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.white10)),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(_formatTime(_timer), style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'monospace', color: Colors.white)),
+          if (_streak > 1) Row(children: [const Icon(Icons.local_fire_department, size: 14, color: Colors.orange), Text(" $_streak", style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12))]),
+          Text("${_currentIndex + 1}/${widget.flashcards.length}", style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+        ]),
       ),
-    );
+      const SizedBox(height: 10),
+      LinearProgressIndicator(value: _currentIndex / widget.flashcards.length, backgroundColor: Colors.white10, valueColor: const AlwaysStoppedAnimation(Color(0xFFC5A059)), minHeight: 4),
+      const SizedBox(height: 20),
+      Expanded(child: Container(width: double.infinity, padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: const Color(0xFF0F0F11), borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.white10)),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(current.topicName, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2, color: Color(0xFFC5A059))),
+          const SizedBox(height: 16),
+          Text(current.question, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontFamily: 'serif', color: Colors.white, height: 1.4)),
+          const SizedBox(height: 24),
+          if (_showAnswer) ...[
+            Container(width: double.infinity, padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: const Color(0xFF8DA290).withAlpha(25), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF8DA290).withAlpha(80))),
+              child: Text(current.answer, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontFamily: 'serif', fontStyle: FontStyle.italic, color: Color(0xFF8DA290)))),
+            const SizedBox(height: 20),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              Expanded(child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8DA290), foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))), onPressed: () => _handleResult('remembered'), child: const Text("GOT IT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)))),
+              const SizedBox(width: 10),
+              Expanded(child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade700, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))), onPressed: () => _handleResult('forgot'), child: const Text("FORGOT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)))),
+            ]),
+          ] else
+            ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))), onPressed: () => setState(() => _showAnswer = true), child: const Text("REVEAL", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1))),
+        ]),
+      )),
+    ]));
   }
 }
 
-// Helper widget for stats display
-class _StatBox extends StatelessWidget {
-  final String label;
+
+// ============================================================
+// GAME 3: TYPE CHALLENGE
+// ============================================================
+class _TypeChallengeGame extends StatefulWidget {
+  final List<Topic> flashcards;
+  const _TypeChallengeGame({Key? key, required this.flashcards}) : super(key: key);
+
+  @override
+  _TypeChallengeGameState createState() => _TypeChallengeGameState();
+}
+
+class _TypeChallengeGameState extends State<_TypeChallengeGame> {
+  int _currentIndex = 0;
+  final TextEditingController _inputCtrl = TextEditingController();
+  bool _isRunning = false;
+  bool _isComplete = false;
+  int _timer = 0;
+  Timer? _timerRef;
+  List<Map<String, dynamic>> _scores = [];
+  List<Map<String, String>> _results = [];
+  Map<String, dynamic>? _feedback;
+
+  @override
+  void dispose() { _timerRef?.cancel(); _inputCtrl.dispose(); super.dispose(); }
+
+  void _startGame() {
+    _timerRef?.cancel();
+    _inputCtrl.clear();
+    setState(() { _currentIndex = 0; _isRunning = true; _isComplete = false; _timer = 0; _scores = []; _results = []; _feedback = null; });
+    _timerRef = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() => _timer++); });
+  }
+
+  int _calcSimilarity(String input, String answer) {
+    final aWords = input.toLowerCase().trim().split(RegExp(r'\s+')).toSet();
+    final bWords = answer.toLowerCase().trim().split(RegExp(r'\s+')).toSet();
+    if (aWords.isEmpty || bWords.isEmpty) return 0;
+    int matches = aWords.intersection(bWords).length;
+    return ((matches / bWords.length) * 100).round();
+  }
+
+  void _submit() {
+    final current = widget.flashcards[_currentIndex];
+    final similarity = _calcSimilarity(_inputCtrl.text, current.answer);
+    final passed = similarity >= 40;
+    final result = passed ? 'remembered' : 'forgot';
+    _scores.add({'similarity': similarity, 'passed': passed});
+    _results.add({'id': current.id, 'result': result});
+    setState(() => _feedback = {'similarity': similarity, 'passed': passed, 'answer': current.answer});
+
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      if (!mounted) return;
+      if (_currentIndex + 1 >= widget.flashcards.length) {
+        _timerRef?.cancel();
+        setState(() { _isComplete = true; _isRunning = false; });
+        _sendGameResults(_results);
+      } else {
+        _inputCtrl.clear();
+        setState(() { _currentIndex++; _feedback = null; });
+      }
+    });
+  }
+
+  void _skip() {
+    final current = widget.flashcards[_currentIndex];
+    _scores.add({'similarity': 0, 'passed': false});
+    _results.add({'id': current.id, 'result': 'forgot'});
+    if (_currentIndex + 1 >= widget.flashcards.length) {
+      _timerRef?.cancel();
+      setState(() { _isComplete = true; _isRunning = false; });
+      _sendGameResults(_results);
+    } else {
+      _inputCtrl.clear();
+      setState(() { _currentIndex++; _feedback = null; });
+    }
+  }
+
+  String _formatTime(int s) => '${(s ~/ 60)}:${(s % 60).toString().padLeft(2, '0')}';
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_isRunning && !_isComplete) {
+      return Center(child: Padding(padding: const EdgeInsets.all(32), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Container(width: 70, height: 70, decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFFC5A059).withAlpha(30), border: Border.all(color: const Color(0xFFC5A059).withAlpha(80))), child: const Icon(Icons.keyboard, size: 36, color: Color(0xFFC5A059))),
+        const SizedBox(height: 20),
+        const Text("Type Challenge", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
+        const SizedBox(height: 8),
+        const Text("Type your answer from memory. 40%+ keyword match = pass.", style: TextStyle(color: Colors.grey, fontSize: 13), textAlign: TextAlign.center),
+        const SizedBox(height: 30),
+        ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))), onPressed: _startGame, icon: const Icon(Icons.keyboard), label: const Text("START", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5))),
+      ])));
+    }
+
+    if (_isComplete) {
+      final passed = _scores.where((s) => s['passed'] == true).length;
+      final avgSim = _scores.isNotEmpty ? (_scores.map((s) => s['similarity'] as int).reduce((a, b) => a + b) / _scores.length).round() : 0;
+      return Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Icon(Icons.workspace_premium, size: 60, color: Color(0xFFC5A059)),
+        const SizedBox(height: 16),
+        const Text("Challenge Done!", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
+        Text("${_scores.length - passed} failed — revision triggered.", style: const TextStyle(color: Colors.grey)),
+        const SizedBox(height: 20),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          _StatChip("$passed/${widget.flashcards.length}", "Passed"),
+          _StatChip("$avgSim%", "Avg Match"),
+          _StatChip(_formatTime(_timer), "Time"),
+        ]),
+        const SizedBox(height: 24),
+        ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))), onPressed: _startGame, icon: const Icon(Icons.refresh), label: const Text("AGAIN")),
+      ])));
+    }
+
+    final current = widget.flashcards[_currentIndex];
+    return Padding(padding: const EdgeInsets.all(16), child: Column(children: [
+      Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8), decoration: BoxDecoration(color: const Color(0xFF0F0F11), borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.white10)),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(_formatTime(_timer), style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'monospace', color: Colors.white)),
+          Text("${_currentIndex + 1}/${widget.flashcards.length}", style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+        ]),
+      ),
+      const SizedBox(height: 10),
+      LinearProgressIndicator(value: _currentIndex / widget.flashcards.length, backgroundColor: Colors.white10, valueColor: const AlwaysStoppedAnimation(Color(0xFFC5A059)), minHeight: 4),
+      const SizedBox(height: 16),
+      Text(current.topicName, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2, color: Color(0xFFC5A059))),
+      const SizedBox(height: 12),
+      Text(current.question, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontFamily: 'serif', color: Colors.white)),
+      const SizedBox(height: 20),
+      if (_feedback != null)
+        Container(width: double.infinity, padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: (_feedback!['passed'] as bool) ? const Color(0xFF8DA290).withAlpha(25) : Colors.red.withAlpha(25), borderRadius: BorderRadius.circular(14), border: Border.all(color: (_feedback!['passed'] as bool) ? const Color(0xFF8DA290) : Colors.red)),
+          child: Column(children: [
+            Text("${_feedback!['similarity']}% Match", style: TextStyle(fontWeight: FontWeight.bold, color: (_feedback!['passed'] as bool) ? const Color(0xFF8DA290) : Colors.red)),
+            const SizedBox(height: 6),
+            Text(_feedback!['answer'], style: const TextStyle(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic)),
+          ]))
+      else ...[
+        Expanded(child: TextField(controller: _inputCtrl, maxLines: 4, decoration: InputDecoration(hintText: "Type from memory...", hintStyle: const TextStyle(color: Colors.white24), filled: true, fillColor: const Color(0xFF0F0F11), border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none)))),
+        const SizedBox(height: 12),
+        Row(children: [
+          Expanded(child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))), onPressed: _inputCtrl.text.trim().isNotEmpty ? _submit : null, child: const Text("SUBMIT", style: TextStyle(fontWeight: FontWeight.bold)))),
+          const SizedBox(width: 10),
+          ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.white10, foregroundColor: Colors.grey, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))), onPressed: _skip, child: const Text("SKIP")),
+        ]),
+      ],
+    ]));
+  }
+}
+
+
+// ============================================================
+// GAME 4: SURVIVAL MODE (3 lives, endless)
+// ============================================================
+class _SurvivalGame extends StatefulWidget {
+  final List<Topic> flashcards;
+  const _SurvivalGame({Key? key, required this.flashcards}) : super(key: key);
+
+  @override
+  _SurvivalGameState createState() => _SurvivalGameState();
+}
+
+class _SurvivalGameState extends State<_SurvivalGame> {
+  List<Topic> _shuffled = [];
+  int _currentIndex = 0;
+  bool _showAnswer = false;
+  int _lives = 3;
+  int _score = 0;
+  bool _isRunning = false;
+  bool _isComplete = false;
+  int _timer = 0;
+  Timer? _timerRef;
+  int _streak = 0;
+  int _highScore = 0;
+  List<Map<String, String>> _results = [];
+
+  @override
+  void dispose() { _timerRef?.cancel(); super.dispose(); }
+
+  void _startGame() {
+    _timerRef?.cancel();
+    final doubled = [...widget.flashcards, ...widget.flashcards, ...widget.flashcards]..shuffle();
+    setState(() { _shuffled = doubled; _currentIndex = 0; _showAnswer = false; _lives = 3; _score = 0; _isRunning = true; _isComplete = false; _timer = 0; _streak = 0; _results = []; });
+    _timerRef = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() => _timer++); });
+  }
+
+  void _handleResult(String result) {
+    final current = _shuffled[_currentIndex];
+    _results.add({'id': current.id, 'result': result});
+
+    if (result == 'remembered') {
+      _score += 1 + (_streak ~/ 3);
+      _streak++;
+    } else {
+      _lives--;
+      _streak = 0;
+      if (_lives <= 0) {
+        _timerRef?.cancel();
+        if (_score > _highScore) _highScore = _score;
+        setState(() { _isComplete = true; _isRunning = false; });
+        _sendGameResults(_results);
+        return;
+      }
+    }
+
+    if (_currentIndex + 1 >= _shuffled.length) {
+      final doubled = [...widget.flashcards, ...widget.flashcards, ...widget.flashcards]..shuffle();
+      setState(() { _shuffled = doubled; _currentIndex = 0; _showAnswer = false; });
+    } else {
+      setState(() { _currentIndex++; _showAnswer = false; });
+    }
+  }
+
+  String _formatTime(int s) => '${(s ~/ 60)}:${(s % 60).toString().padLeft(2, '0')}';
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_isRunning && !_isComplete) {
+      return Center(child: Padding(padding: const EdgeInsets.all(32), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Container(width: 70, height: 70, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red.withAlpha(30), border: Border.all(color: Colors.red.withAlpha(80))), child: const Icon(Icons.favorite, size: 36, color: Colors.redAccent)),
+        const SizedBox(height: 20),
+        const Text("Survival Mode", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
+        const SizedBox(height: 8),
+        const Text("3 lives. Each 'forgot' costs one. Failed cards get flagged.", style: TextStyle(color: Colors.grey, fontSize: 13), textAlign: TextAlign.center),
+        const SizedBox(height: 16),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: List.generate(3, (_) => const Padding(padding: EdgeInsets.symmetric(horizontal: 4), child: Icon(Icons.favorite, color: Colors.redAccent, size: 28)))),
+        if (_highScore > 0) ...[const SizedBox(height: 12), Text("High Score: $_highScore", style: const TextStyle(color: Color(0xFFC5A059), fontWeight: FontWeight.bold))],
+        const SizedBox(height: 30),
+        ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))), onPressed: _startGame, icon: const Icon(Icons.favorite), label: const Text("ENTER ARENA", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5))),
+      ])));
+    }
+
+    if (_isComplete) {
+      final forgot = _results.where((r) => r['result'] == 'forgot').length;
+      return Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Icon(Icons.heart_broken, size: 60, color: Colors.redAccent),
+        const SizedBox(height: 16),
+        const Text("Game Over", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
+        Text("$forgot card(s) flagged for revision.", style: const TextStyle(color: Colors.grey)),
+        const SizedBox(height: 20),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          _StatChip("$_score", "Score"),
+          _StatChip("${_results.where((r) => r['result'] == 'remembered').length}", "Recalled"),
+          _StatChip(_formatTime(_timer), "Survived"),
+        ]),
+        const SizedBox(height: 24),
+        ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))), onPressed: _startGame, icon: const Icon(Icons.refresh), label: const Text("TRY AGAIN")),
+      ])));
+    }
+
+    if (_currentIndex >= _shuffled.length) return const SizedBox();
+    final current = _shuffled[_currentIndex];
+
+    return Padding(padding: const EdgeInsets.all(16), child: Column(children: [
+      Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8), decoration: BoxDecoration(color: const Color(0xFF0F0F11), borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.white10)),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Row(children: List.generate(3, (i) => Padding(padding: const EdgeInsets.only(right: 4), child: Icon(Icons.favorite, size: 18, color: i < _lives ? Colors.redAccent : Colors.white10)))),
+          Row(children: [const Icon(Icons.star, size: 16, color: Color(0xFFC5A059)), const SizedBox(width: 4), Text("$_score", style: const TextStyle(color: Color(0xFFC5A059), fontWeight: FontWeight.bold))]),
+          if (_streak > 2) Row(children: [const Icon(Icons.local_fire_department, size: 14, color: Colors.orange), Text(" x${1 + _streak ~/ 3}", style: const TextStyle(color: Colors.orange, fontSize: 11, fontWeight: FontWeight.bold))]),
+          Text(_formatTime(_timer), style: const TextStyle(color: Colors.grey, fontFamily: 'monospace', fontWeight: FontWeight.bold)),
+        ]),
+      ),
+      const SizedBox(height: 20),
+      Expanded(child: Container(width: double.infinity, padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: const Color(0xFF0F0F11), borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.white10)),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(current.topicName, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2, color: Color(0xFFC5A059))),
+          const SizedBox(height: 16),
+          Text(current.question, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontFamily: 'serif', color: Colors.white, height: 1.4)),
+          const SizedBox(height: 24),
+          if (_showAnswer) ...[
+            Container(width: double.infinity, padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: const Color(0xFF8DA290).withAlpha(25), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF8DA290).withAlpha(80))),
+              child: Text(current.answer, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontFamily: 'serif', fontStyle: FontStyle.italic, color: Color(0xFF8DA290)))),
+            const SizedBox(height: 20),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              Expanded(child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8DA290), foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))), onPressed: () => _handleResult('remembered'), child: const Text("GOT IT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)))),
+              const SizedBox(width: 10),
+              Expanded(child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade700, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))), onPressed: () => _handleResult('forgot'), child: const Text("-1 LIFE", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)))),
+            ]),
+          ] else
+            ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))), onPressed: () => setState(() => _showAnswer = true), child: const Text("REVEAL", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1))),
+        ]),
+      )),
+    ]));
+  }
+}
+
+// ============================================================
+// HELPER WIDGET
+// ============================================================
+class _StatChip extends StatelessWidget {
   final String value;
-  final Color color;
-  const _StatBox({required this.label, required this.value, required this.color});
+  final String label;
+  const _StatChip(this.value, this.label);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0F0F11),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white10),
-      ),
-      child: Column(
-        children: [
-          Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color, fontFamily: 'monospace')),
-          const SizedBox(height: 4),
-          Text(label, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.grey)),
-        ],
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(color: const Color(0xFF0F0F11), borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.white10)),
+      child: Column(children: [
+        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFC5A059), fontFamily: 'monospace')),
+        const SizedBox(height: 2),
+        Text(label, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1, color: Colors.grey)),
+      ]),
     );
   }
 }
