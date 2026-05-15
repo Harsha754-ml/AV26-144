@@ -2,28 +2,10 @@
   "flashcards": [],
   "events": [
     {
-      "id": "evt_1778802828982",
-      "text": "Daily email sent to harsha54k@gmail.com",
+      "id": "evt_1778809760379",
+      "text": "Daily email sent to test@test.com",
       "type": "info",
-      "timestamp": 1778802828.9824307
-    },
-    {
-      "id": "evt_1778803299112",
-      "text": "Daily email sent to harsha54k@gmail.com",
-      "type": "info",
-      "timestamp": 1778803299.1125662
-    },
-    {
-      "id": "evt_1778806473908",
-      "text": "AI Ingested: Photo (0 cards)",
-      "type": "info",
-      "timestamp": 1778806473.9081888
-    },
-    {
-      "id": "evt_1778806545242",
-      "text": "AI Ingested: ml (8 cards)",
-      "type": "info",
-      "timestamp": 1778806545.2423947
+      "timestamp": 1778809760.379683
     }
   ],
   "pending_notifications": [],
@@ -98,5 +80,30 @@
   "demo_mode": false,
   "settings": {
     "compression_ratio": 1440
+  },
+  "users": {
+    "students": {
+      "audit_test": {
+        "username": "audit_test",
+        "password": "pass",
+        "name": "Audit",
+        "email": "",
+        "role": "student",
+        "created_at": 1778809755.1544306,
+        "last_active": 1778809755.1831589
+      }
+    },
+    "teachers": {
+      "harsha": {
+        "username": "harsha",
+        "password": "123754",
+        "name": "harsha",
+        "email": "harsha@gmail.com",
+        "role": "teacher",
+        "created_at": 1778810049.9314396,
+        "last_active": 1778810049.9314396,
+        "students": []
+      }
+    }
   }
 }

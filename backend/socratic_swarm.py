@@ -136,20 +136,20 @@ Example: ["Mnemonic 1", "Mnemonic 2"]"""
         "agents": [
             {
                 "role": "interrogator",
-                "name": "The Socratic Interrogator",
-                "icon": "🔍",
+                "name": "Athena (The Questioner)",
+                "icon": "🦉",
                 "response": interrogator_response
             },
             {
                 "role": "advocate", 
-                "name": "The Devil's Advocate",
-                "icon": "😈",
+                "name": "Prometheus (The Challenger)",
+                "icon": "🔥",
                 "response": advocate_response
             },
             {
                 "role": "synthesizer",
-                "name": "The Bridge Synthesizer", 
-                "icon": "🌉",
+                "name": "Hermes (The Connector)", 
+                "icon": "⚡",
                 "response": synthesizer_response
             },
         ],
