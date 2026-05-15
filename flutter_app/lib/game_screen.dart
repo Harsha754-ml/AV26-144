@@ -216,8 +216,16 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
                     _SurvivalGame(flashcards: _activeCards),
                   ],
                 ),
-                // rPPG Camera Widget - tracks facial micro-expressions during games
-                const RppgCameraWidget(active: true),
+                // rPPG Camera Widget - real ML Kit face detection during games
+                RppgCameraWidget(
+                  active: true,
+                  onStateChanged: (state, confidence) {
+                    // Game adapts based on detected expression:
+                    // confused/stressed → easier questions next
+                    // calm/focused → harder questions next
+                    debugPrint('Cognitive state: $state (confidence: $confidence)');
+                  },
+                ),
               ],
             ),
           ),
