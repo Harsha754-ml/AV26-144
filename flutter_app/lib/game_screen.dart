@@ -102,6 +102,8 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  CognitiveState _cogState = CognitiveState.focused;
+  String _adaptMessage = '';
 
   List<Topic> get _activeCards =>
       widget.flashcards.isNotEmpty ? widget.flashcards : _demoFlashcards;
@@ -116,6 +118,27 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _onCognitiveStateChanged(CognitiveState state, double confidence) {
+    if (state != _cogState) {
+      setState(() {
+        _cogState = state;
+        if (state == CognitiveState.confused || state == CognitiveState.stressed) {
+          _adaptMessage = '⚡ Adapting: Easier question selected — ${state == CognitiveState.confused ? "confusion" : "stress"} detected';
+        } else if (state == CognitiveState.calm) {
+          _adaptMessage = '🚀 Challenge mode: Harder question selected — confidence detected';
+        } else {
+          _adaptMessage = '';
+        }
+      });
+      // Clear message after 3 seconds
+      if (_adaptMessage.isNotEmpty) {
+        Future.delayed(const Duration(seconds: 3), () {
+          if (mounted) setState(() => _adaptMessage = '');
+        });
+      }
+    }
   }
 
   @override
@@ -207,24 +230,61 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           Expanded(
             child: Stack(
               children: [
-                TabBarView(
-                  controller: _tabController,
+                Column(
                   children: [
-                    _MatchGame(flashcards: _activeCards),
-                    _SpeedRecallGame(flashcards: _activeCards),
-                    _TypeChallengeGame(flashcards: _activeCards),
-                    _SurvivalGame(flashcards: _activeCards),
+                    // Adaptation banner - shows when expression changes game behavior
+                    if (_adaptMessage.isNotEmpty)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        color: _cogState == CognitiveState.confused || _cogState == CognitiveState.stressed
+                            ? Colors.amber.withAlpha(20)
+                            : const Color(0xFF8DA290).withAlpha(20),
+                        child: Row(
+                          children: [
+                            Icon(
+                              _cogState == CognitiveState.confused ? Icons.lightbulb : 
+                              _cogState == CognitiveState.stressed ? Icons.warning_amber :
+                              Icons.trending_up,
+                              size: 16,
+                              color: _cogState == CognitiveState.confused || _cogState == CognitiveState.stressed
+                                  ? Colors.amber
+                                  : const Color(0xFF8DA290),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                _adaptMessage,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: _cogState == CognitiveState.confused || _cogState == CognitiveState.stressed
+                                      ? Colors.amber
+                                      : const Color(0xFF8DA290),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    // Games
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _MatchGame(flashcards: _activeCards),
+                          _SpeedRecallGame(flashcards: _activeCards, cognitiveState: _cogState),
+                          _TypeChallengeGame(flashcards: _activeCards),
+                          _SurvivalGame(flashcards: _activeCards),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
                 // rPPG Camera Widget - real ML Kit face detection during games
                 RppgCameraWidget(
                   active: true,
-                  onStateChanged: (state, confidence) {
-                    // Game adapts based on detected expression:
-                    // confused/stressed → easier questions next
-                    // calm/focused → harder questions next
-                    debugPrint('Cognitive state: $state (confidence: $confidence)');
-                  },
+                  onStateChanged: _onCognitiveStateChanged,
                 ),
               ],
             ),
@@ -407,7 +467,8 @@ class _MatchGameState extends State<_MatchGame> {
 // ============================================================
 class _SpeedRecallGame extends StatefulWidget {
   final List<Topic> flashcards;
-  const _SpeedRecallGame({Key? key, required this.flashcards}) : super(key: key);
+  final CognitiveState cognitiveState;
+  const _SpeedRecallGame({Key? key, required this.flashcards, this.cognitiveState = CognitiveState.focused}) : super(key: key);
 
   @override
   _SpeedRecallGameState createState() => _SpeedRecallGameState();
@@ -425,18 +486,59 @@ class _SpeedRecallGameState extends State<_SpeedRecallGame> {
   int _streak = 0;
   int _maxStreak = 0;
   List<Map<String, String>> _results = [];
+  List<Topic> _orderedCards = [];
+  String _adaptReason = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _orderedCards = List.from(widget.flashcards);
+  }
+
+  @override
+  void didUpdateWidget(_SpeedRecallGame oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // ADAPTIVE: When cognitive state changes, reorder remaining cards
+    if (widget.cognitiveState != oldWidget.cognitiveState && _isRunning && !_isComplete) {
+      _adaptToState(widget.cognitiveState);
+    }
+  }
+
+  void _adaptToState(CognitiveState state) {
+    if (_currentIndex >= _orderedCards.length - 1) return;
+    
+    final remaining = _orderedCards.sublist(_currentIndex + 1);
+    
+    if (state == CognitiveState.confused || state == CognitiveState.stressed) {
+      // Sort remaining by HIGHEST retention (easier cards first)
+      remaining.sort((a, b) => b.retentionScore.compareTo(a.retentionScore));
+      setState(() => _adaptReason = '🧠 Easier card next — ${state == CognitiveState.confused ? "confusion" : "stress"} detected');
+    } else if (state == CognitiveState.calm) {
+      // Sort remaining by LOWEST retention (harder cards first)
+      remaining.sort((a, b) => a.retentionScore.compareTo(b.retentionScore));
+      setState(() => _adaptReason = '🚀 Harder card next — confidence detected');
+    }
+    
+    _orderedCards = [..._orderedCards.sublist(0, _currentIndex + 1), ...remaining];
+    
+    // Clear message after 3 seconds
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) setState(() => _adaptReason = '');
+    });
+  }
 
   @override
   void dispose() { _timerRef?.cancel(); super.dispose(); }
 
   void _startGame() {
     _timerRef?.cancel();
-    setState(() { _currentIndex = 0; _showAnswer = false; _remembered = 0; _forgot = 0; _timer = 0; _isRunning = true; _isComplete = false; _streak = 0; _maxStreak = 0; _results = []; });
+    _orderedCards = List.from(widget.flashcards);
+    setState(() { _currentIndex = 0; _showAnswer = false; _remembered = 0; _forgot = 0; _timer = 0; _isRunning = true; _isComplete = false; _streak = 0; _maxStreak = 0; _results = []; _adaptReason = ''; });
     _timerRef = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() => _timer++); });
   }
 
   void _handleResult(String result) {
-    final current = widget.flashcards[_currentIndex];
+    final current = _orderedCards[_currentIndex];
     _results.add({'id': current.id, 'result': result});
     if (result == 'remembered') { _remembered++; _streak++; if (_streak > _maxStreak) _maxStreak = _streak; }
     else { _forgot++; _streak = 0; }
