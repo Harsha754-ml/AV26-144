@@ -5,6 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'api_service.dart';
+import 'audio_service.dart';
 import 'models.dart';
 import 'constants.dart';
 import 'game_screen.dart';
@@ -559,8 +560,7 @@ class _FlashcardTile extends StatelessWidget {
                 const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
-                    final player = AudioPlayer();
-                    player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
+                    AudioService().playForCard(topic.id, fallbackText: '${topic.topicName}. ${topic.answer}');
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -898,16 +898,17 @@ class _AudioReviewScreenState extends State<AudioReviewScreen> {
   void _playTopic(Topic topic) async {
     setState(() => _playingId = topic.id);
     try {
-      // Try backend gTTS audio
-      await _player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
+      await AudioService().playForCard(topic.id, fallbackText: '${topic.topicName}. ${topic.answer}');
+      // Wait a bit then mark as done
       _player.onPlayerComplete.listen((_) {
         if (mounted) setState(() => _playingId = null);
       });
-    } catch (e) {
-      // If backend fails, still mark as playing briefly
-      Future.delayed(const Duration(seconds: 3), () {
-        if (mounted) setState(() => _playingId = null);
+      // Fallback timeout in case onComplete doesn't fire
+      Future.delayed(const Duration(seconds: 10), () {
+        if (mounted && _playingId == topic.id) setState(() => _playingId = null);
       });
+    } catch (e) {
+      if (mounted) setState(() => _playingId = null);
     }
   }
 
@@ -916,11 +917,10 @@ class _AudioReviewScreenState extends State<AudioReviewScreen> {
       if (!mounted) break;
       setState(() => _playingId = topic.id);
       try {
-        await _player.play(UrlSource('${AppConstants.backendUrl}/audio/${topic.id}'));
-        // Wait for completion
-        await _player.onPlayerComplete.first;
+        await AudioService().speakText('${topic.topicName}. ${topic.answer}');
+        await Future.delayed(const Duration(seconds: 1));
       } catch (e) {
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 1));
       }
     }
     if (mounted) setState(() => _playingId = null);
