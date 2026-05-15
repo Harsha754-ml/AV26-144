@@ -671,7 +671,10 @@ async def extract_file(file: UploadFile = File(...)):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Extraction failed: {str(e)}")
+        print(f"⚠️ EXTRACT ERROR: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Extraction failed: {type(e).__name__}: {str(e)}")
 
 class GenerateFromTextReq(BaseModel):
     text: str
