@@ -341,6 +341,32 @@ class HomeScreen extends StatelessWidget {
             pinned: true,
             backgroundColor: const Color(0xFF0F0F11),
             actions: [
+              // Demo notification trigger
+              IconButton(
+                icon: const Icon(Icons.send, color: Color(0xFF8DA290), size: 20),
+                tooltip: 'Demo: Trigger Notification',
+                onPressed: () async {
+                  // Fire a real push notification instantly
+                  const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+                    'memory_forge_demo',
+                    'Demo Alerts',
+                    channelDescription: 'Demo notification for jury',
+                    importance: Importance.max,
+                    priority: Priority.high,
+                    ticker: 'MemoryForge Alert',
+                  );
+                  const NotificationDetails details = NotificationDetails(android: androidDetails);
+                  await flutterLocalNotificationsPlugin.show(
+                    DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                    '⚠️ Memory Decay Alert',
+                    'Retention dropping! "Quantum Mechanics" at 28% — Review now before it\'s lost.',
+                    details,
+                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("📱 Push notification sent!")));
+                  }
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.notifications_active, color: Color(0xFFC5A059)),
                 onPressed: () async {
