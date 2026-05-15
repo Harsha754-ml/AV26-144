@@ -218,7 +218,7 @@ class RppgCameraWidgetState extends State<RppgCameraWidget> {
     if (!widget.active || !_initialized || _controller == null) return const SizedBox();
 
     return Positioned(
-      bottom: 80,
+      bottom: 140,
       right: 12,
       child: Container(
         decoration: BoxDecoration(
