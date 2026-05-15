@@ -624,3 +624,60 @@ def send_email(req: EmailReq):
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
     return result
+
+
+# -----------------
+# TWO-STEP INGESTION (Extract first, then AI)
+# -----------------
+@app.post("/extract/file")
+async def extract_file(file: UploadFile = File(...)):
+    """Step 1: Extract text from PDF/TXT — NO AI needed."""
+    try:
+        contents = await file.read()
+        filename = file.filename.lower()
+        
+        if filename.endswith(".pdf"):
+            import PyPDF2
+            import io
+            pdf_reader = PyPDF2.PdfReader(io.BytesIO(contents))
+            text = ""
+            for page in pdf_reader.pages[:20]:
+                text += page.extract_text() or ""
+            text = text.strip()
+        elif filename.endswith(".txt"):
+            text = contents.decode('utf-8', errors='ignore').strip()
+        else:
+            raise HTTPException(status_code=400, detail="Only PDF and TXT supported")
+        
+        if not text:
+            raise HTTPException(status_code=400, detail="Could not extract any text from file")
+        
+        # Return extracted text + metadata (no AI call)
+        word_count = len(text.split())
+        return {
+            "success": True,
+            "filename": file.filename,
+            "text": text[:10000],  # Cap at 10k chars
+            "word_count": word_count,
+            "pages": len(pdf_reader.pages) if filename.endswith(".pdf") else 1,
+            "preview": text[:500],
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Extraction failed: {str(e)}")
+
+class GenerateFromTextReq(BaseModel):
+    text: str
+    topic_name: str = ""
+
+@app.post("/generate/flashcards")
+def generate_flashcards_from_text(req: GenerateFromTextReq):
+    """Step 2: Generate flashcards from extracted text — uses AI."""
+    try:
+        fcs = ingest.ingest_text(req.text, req.topic_name)
+        if not fcs:
+            raise HTTPException(status_code=500, detail="AI generation failed. Try again in a few seconds (rate limit).")
+        return fcs
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
