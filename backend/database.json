@@ -1,11 +1,150 @@
 {
-  "flashcards": [],
+  "flashcards": [
+    {
+      "id": "fc_f967ecf5",
+      "topic_name": "Biotechnology Definition",
+      "question": "What is the general definition of biotechnology?",
+      "answer": "Biotechnology deals with techniques of using live organisms or enzymes from organisms to produce products and processes useful to humans.",
+      "source_type": "ai_ingest",
+      "created_at": 1778818723.228192,
+      "last_reviewed": 1778818723.228192,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "Biotechnology harnesses living organisms or their enzymes to create useful products and processes for humans.",
+      "audio_ready": true
+    },
+    {
+      "id": "fc_a698d6c8",
+      "topic_name": "Biotechnology Definition",
+      "question": "How is biotechnology used in a restricted sense today?",
+      "answer": "Today, biotechnology commonly refers to processes that use genetically modified organisms to achieve desired outcomes on a larger scale.",
+      "source_type": "ai_ingest",
+      "created_at": 1778818723.228192,
+      "last_reviewed": 1778818723.228192,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_d34403ba",
+      "topic_name": "Biotechnology Definition",
+      "question": "What is the definition of biotechnology given by the European Federation of Biotechnology (EFB)?",
+      "answer": "The integration of natural science and organisms, cells, parts thereof, and molecular analogues for products and services.",
+      "source_type": "ai_ingest",
+      "created_at": 1778818723.235783,
+      "last_reviewed": 1778818723.235783,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_4b14bfd1",
+      "topic_name": "Biotechnology Definition",
+      "question": "What are the two core techniques that enabled the birth of modern biotechnology?",
+      "answer": "1. Genetic engineering\n2. Bioprocess engineering",
+      "source_type": "ai_ingest",
+      "created_at": 1778818723.2407877,
+      "last_reviewed": 1778818723.2407877,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_063eb332",
+      "topic_name": "Biotechnology Definition",
+      "question": "Define Genetic Engineering.",
+      "answer": "Genetic engineering involves techniques to alter the chemistry of genetic material (DNA and RNA), introduce these into host organisms, and thus change the phenotype of the host organism.",
+      "source_type": "ai_ingest",
+      "created_at": 1778818723.2475555,
+      "last_reviewed": 1778818723.2475555,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_3cefafa6",
+      "topic_name": "Biotechnology Definition",
+      "question": "Define Bioprocess Engineering.",
+      "answer": "Bioprocess engineering is the maintenance of sterile (microbial contamination-free) ambience in chemical engineering processes to enable growth of only the desired microbe/eukaryotic cell in large quantities for the manufacture of biotechnological products.",
+      "source_type": "ai_ingest",
+      "created_at": 1778818723.2530658,
+      "last_reviewed": 1778818723.2530658,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_46eb8de9",
+      "topic_name": "Biotechnology Definition",
+      "question": "What is required for an alien piece of DNA to multiply itself in an organism?",
+      "answer": "For an alien piece of DNA to multiply, it needs to be part of a chromosome that has a specific DNA sequence known as the 'origin of replication'. This allows it to replicate and be inherited along with the host DNA.",
+      "source_type": "ai_ingest",
+      "created_at": 1778818723.2585201,
+      "last_reviewed": 1778818723.2585201,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    },
+    {
+      "id": "fc_29752b02",
+      "topic_name": "Biotechnology Definition",
+      "question": "Who constructed the first artificial recombinant DNA molecule and in what year?",
+      "answer": "Stanley Cohen and Herbert Boyer accomplished this in 1972.",
+      "source_type": "ai_ingest",
+      "created_at": 1778818723.2645278,
+      "last_reviewed": 1778818723.2645278,
+      "stability": 24.0,
+      "review_count": 0,
+      "ignore_count": 0,
+      "status": "active",
+      "summary": "",
+      "audio_ready": false
+    }
+  ],
   "events": [
     {
       "id": "evt_1778809760379",
       "text": "Daily email sent to test@test.com",
       "type": "info",
       "timestamp": 1778809760.379683
+    },
+    {
+      "id": "evt_1778817580740",
+      "text": "AI Ingested: Lebo109 3 4 (8 cards)",
+      "type": "info",
+      "timestamp": 1778817580.7409816
+    },
+    {
+      "id": "evt_1778818408486",
+      "text": "AI Ingested: Biotechnology Definition (8 cards)",
+      "type": "info",
+      "timestamp": 1778818408.4865072
+    },
+    {
+      "id": "evt_1778818723277",
+      "text": "AI Ingested: Biotechnology Definition (8 cards)",
+      "type": "info",
+      "timestamp": 1778818723.2775557
     }
   ],
   "pending_notifications": [],
@@ -72,6 +211,105 @@
           "title": "The Knowledge Litmus",
           "content": "Final challenge for ml.",
           "due_at": 1778892945.243001,
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "topic_id": "topic_e79a2d02",
+      "topic_name": "Lebo109 3 4",
+      "created_at": 1778817580.7409816,
+      "status": "active",
+      "current_stage": 0,
+      "steps": [
+        {
+          "stage": 0,
+          "type": "audio_summary",
+          "title": "Immediate Synthesis",
+          "content": "Audio summary for Lebo109 3 4 is ready for review.",
+          "due_at": 1778817580.7409816,
+          "status": "pending"
+        },
+        {
+          "stage": 1,
+          "type": "text_recap",
+          "title": "Synaptic Calibration",
+          "content": "Recapping Lebo109 3 4: What is biotechnology in its broad sense?",
+          "due_at": 1778821180.7409816,
+          "status": "pending"
+        },
+        {
+          "stage": 2,
+          "type": "quiz",
+          "title": "The Knowledge Litmus",
+          "content": "Final challenge for Lebo109 3 4.",
+          "due_at": 1778903980.7409816,
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "topic_id": "topic_2dd04b96",
+      "topic_name": "Biotechnology Definition",
+      "created_at": 1778818408.4895427,
+      "status": "active",
+      "current_stage": 0,
+      "steps": [
+        {
+          "stage": 0,
+          "type": "audio_summary",
+          "title": "Immediate Synthesis",
+          "content": "Audio summary for Biotechnology Definition is ready for review.",
+          "due_at": 1778818408.4895427,
+          "status": "pending"
+        },
+        {
+          "stage": 1,
+          "type": "text_recap",
+          "title": "Synaptic Calibration",
+          "content": "Recapping Biotechnology Definition: What is the general definition of biotechnology?",
+          "due_at": 1778822008.4895427,
+          "status": "pending"
+        },
+        {
+          "stage": 2,
+          "type": "quiz",
+          "title": "The Knowledge Litmus",
+          "content": "Final challenge for Biotechnology Definition.",
+          "due_at": 1778904808.4895427,
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "topic_id": "topic_d9c4de31",
+      "topic_name": "Biotechnology Definition",
+      "created_at": 1778818723.2775557,
+      "status": "active",
+      "current_stage": 0,
+      "steps": [
+        {
+          "stage": 0,
+          "type": "audio_summary",
+          "title": "Immediate Synthesis",
+          "content": "Audio summary for Biotechnology Definition is ready for review.",
+          "due_at": 1778818723.2775557,
+          "status": "pending"
+        },
+        {
+          "stage": 1,
+          "type": "text_recap",
+          "title": "Synaptic Calibration",
+          "content": "Recapping Biotechnology Definition: What is the general definition of biotechnology?",
+          "due_at": 1778822323.2775557,
+          "status": "pending"
+        },
+        {
+          "stage": 2,
+          "type": "quiz",
+          "title": "The Knowledge Litmus",
+          "content": "Final challenge for Biotechnology Definition.",
+          "due_at": 1778905123.2775557,
           "status": "pending"
         }
       ]

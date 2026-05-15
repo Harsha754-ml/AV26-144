@@ -20,16 +20,10 @@ class AudioService {
     _ttsInitialized = true;
   }
 
-  /// Play audio for a flashcard - tries server MP3, falls back to TTS
+  /// Play audio for a flashcard - uses on-device TTS (always works)
   Future<void> playForCard(String cardId, {String? fallbackText}) async {
-    try {
-      // Try backend audio first
-      await _player.play(UrlSource('${AppConstants.backendUrl}/audio/$cardId'));
-    } catch (e) {
-      // Fallback to on-device TTS
-      if (fallbackText != null && fallbackText.isNotEmpty) {
-        await speakText(fallbackText);
-      }
+    if (fallbackText != null && fallbackText.isNotEmpty) {
+      await speakText(fallbackText);
     }
   }
 
