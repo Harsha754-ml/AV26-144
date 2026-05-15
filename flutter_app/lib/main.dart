@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -684,15 +685,85 @@ class _AddBottomSheetState extends State<AddBottomSheet> with SingleTickerProvid
       setState(() => _isLoading = true);
       try {
         File file = File(result.files.single.path!);
-        // Topic name is optional - backend auto-detects from content
-        String topic = _topicCtrl.text.trim().isEmpty ? '' : _topicCtrl.text.trim();
-        await ApiService.ingestFile(topic, file);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("✅ Content uploaded successfully!")));
-          Navigator.pop(context);
+        final bytes = await file.readAsBytes();
+        final filename = file.path.split('/').last.split('\\').last;
+        
+        // Step 1: Extract text (no AI)
+        var extractReq = http.MultipartRequest('POST', Uri.parse('${AppConstants.backendUrl}/extract/file'));
+        extractReq.files.add(http.MultipartFile.fromBytes('file', bytes, filename: filename));
+        final extractRes = await extractReq.send().timeout(const Duration(seconds: 15));
+        final extractBody = await extractRes.stream.bytesToString();
+        
+        if (extractRes.statusCode != 200) {
+          throw Exception('Extraction failed');
+        }
+        
+        final extractData = json.decode(extractBody);
+        final extractedText = extractData['text'] as String;
+        final preview = extractData['preview'] as String;
+        final wordCount = extractData['word_count'] as int;
+        final pages = extractData['pages'] as int;
+
+        setState(() => _isLoading = false);
+
+        if (!mounted) return;
+
+        // Step 2: Show extracted text and ask to generate
+        final shouldGenerate = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            backgroundColor: const Color(0xFF0F0F11),
+            title: Text("Extracted: $filename", style: const TextStyle(color: Colors.white, fontSize: 16)),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(children: [
+                    Text("$pages pages • $wordCount words", style: const TextStyle(color: Color(0xFFC5A059), fontSize: 12, fontWeight: FontWeight.bold)),
+                  ]),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(color: Colors.white.withAlpha(5), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.white10)),
+                    child: Text(preview, style: const TextStyle(color: Colors.grey, fontSize: 11, height: 1.4), maxLines: 10, overflow: TextOverflow.ellipsis),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text("Generate flashcards from this content?", style: TextStyle(color: Colors.white70, fontSize: 13)),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text("Cancel")),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC5A059), foregroundColor: Colors.black),
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text("Generate Flashcards", style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        );
+
+        if (shouldGenerate != true || !mounted) return;
+
+        // Step 3: Generate flashcards (AI)
+        setState(() => _isLoading = true);
+        final genRes = await http.post(
+          Uri.parse('${AppConstants.backendUrl}/generate/flashcards'),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({'text': extractedText, 'topic_name': _topicCtrl.text.trim()}),
+        ).timeout(const Duration(seconds: 60));
+
+        if (genRes.statusCode == 200) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("✅ Flashcards generated!")));
+            Navigator.pop(context);
+          }
+        } else {
+          throw Exception('AI generation failed. Try again in a few seconds.');
         }
       } catch (e) {
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Upload Error: $e"), duration: const Duration(seconds: 5)));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e"), duration: const Duration(seconds: 5)));
       } finally {
         if (mounted) setState(() => _isLoading = false);
       }
