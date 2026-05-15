@@ -634,17 +634,24 @@ async def extract_file(file: UploadFile = File(...)):
     """Step 1: Extract text from PDF/TXT — NO AI needed."""
     try:
         contents = await file.read()
-        filename = file.filename.lower()
+        filename = (file.filename or "unknown").lower()
+        num_pages = 1
         
-        if filename.endswith(".pdf"):
+        # Detect file type from content if filename doesn't help
+        is_pdf = filename.endswith(".pdf") or contents[:4] == b'%PDF'
+        
+        if is_pdf:
             import PyPDF2
             import io
             pdf_reader = PyPDF2.PdfReader(io.BytesIO(contents))
             text = ""
             for page in pdf_reader.pages[:20]:
-                text += page.extract_text() or ""
+                extracted = page.extract_text()
+                if extracted:
+                    text += extracted + "\n"
             text = text.strip()
-        elif filename.endswith(".txt"):
+            num_pages = len(pdf_reader.pages)
+        elif filename.endswith(".txt") or not is_pdf:
             text = contents.decode('utf-8', errors='ignore').strip()
         else:
             raise HTTPException(status_code=400, detail="Only PDF and TXT supported")
@@ -652,14 +659,13 @@ async def extract_file(file: UploadFile = File(...)):
         if not text:
             raise HTTPException(status_code=400, detail="Could not extract any text from file")
         
-        # Return extracted text + metadata (no AI call)
         word_count = len(text.split())
         return {
             "success": True,
-            "filename": file.filename,
-            "text": text[:10000],  # Cap at 10k chars
+            "filename": file.filename or "uploaded_file",
+            "text": text[:10000],
             "word_count": word_count,
-            "pages": len(pdf_reader.pages) if filename.endswith(".pdf") else 1,
+            "pages": num_pages,
             "preview": text[:500],
         }
     except HTTPException:
