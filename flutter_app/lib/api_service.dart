@@ -70,7 +70,12 @@ class ApiService {
   static Future<void> ingestFile(String topicName, File file) async {
     var request = http.MultipartRequest('POST', Uri.parse('${AppConstants.backendUrl}/ingest/file'));
     request.fields['topic_name'] = topicName;
-    request.files.add(await http.MultipartFile.fromPath('file', file.path));
+    
+    // Read bytes directly (fixes Android file picker path issues)
+    final bytes = await file.readAsBytes();
+    final filename = file.path.split('/').last.split('\\').last;
+    request.files.add(http.MultipartFile.fromBytes('file', bytes, filename: filename));
+    
     final response = await request.send().timeout(const Duration(seconds: 60));
     if (response.statusCode != 200) {
       final body = await response.stream.bytesToString();
