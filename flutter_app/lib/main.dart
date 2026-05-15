@@ -341,12 +341,23 @@ class HomeScreen extends StatelessWidget {
             pinned: true,
             backgroundColor: const Color(0xFF0F0F11),
             actions: [
-              // Demo notification trigger
+              // Demo notification trigger - uses real data
               IconButton(
                 icon: const Icon(Icons.send, color: Color(0xFF8DA290), size: 20),
                 tooltip: 'Demo: Trigger Notification',
                 onPressed: () async {
-                  // Fire a real push notification instantly
+                  // Get the latest flashcard topic for real notification
+                  String topicName = 'Your Study Material';
+                  int retention = 28;
+                  try {
+                    final cards = await ApiService.getFlashcards();
+                    if (cards.isNotEmpty) {
+                      final latest = cards.last;
+                      topicName = latest.topicName;
+                      retention = latest.retentionScore;
+                    }
+                  } catch (_) {}
+
                   const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
                     'memory_forge_demo',
                     'Demo Alerts',
@@ -359,7 +370,7 @@ class HomeScreen extends StatelessWidget {
                   await flutterLocalNotificationsPlugin.show(
                     DateTime.now().millisecondsSinceEpoch ~/ 1000,
                     '⚠️ Memory Decay Alert',
-                    'Retention dropping! "Quantum Mechanics" at 28% — Review now before it\'s lost.',
+                    'Retention dropping! "$topicName" at $retention% — Review now before it\'s lost.',
                     details,
                   );
                   if (context.mounted) {
