@@ -71,7 +71,11 @@ class ApiService {
     var request = http.MultipartRequest('POST', Uri.parse('${AppConstants.backendUrl}/ingest/file'));
     request.fields['topic_name'] = topicName;
     request.files.add(await http.MultipartFile.fromPath('file', file.path));
-    await request.send();
+    final response = await request.send().timeout(const Duration(seconds: 60));
+    if (response.statusCode != 200) {
+      final body = await response.stream.bytesToString();
+      throw Exception('Upload failed: $body');
+    }
   }
 
   static Future<void> setDemoMode(bool enabled) async {

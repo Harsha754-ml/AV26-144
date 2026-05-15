@@ -684,10 +684,15 @@ class _AddBottomSheetState extends State<AddBottomSheet> with SingleTickerProvid
       setState(() => _isLoading = true);
       try {
         File file = File(result.files.single.path!);
-        await ApiService.ingestFile(_topicCtrl.text, file);
-        if (mounted) Navigator.pop(context);
+        // Topic name is optional - backend auto-detects from content
+        String topic = _topicCtrl.text.trim().isEmpty ? '' : _topicCtrl.text.trim();
+        await ApiService.ingestFile(topic, file);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("✅ Content uploaded successfully!")));
+          Navigator.pop(context);
+        }
       } catch (e) {
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Upload Error: $e")));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Upload Error: $e"), duration: const Duration(seconds: 5)));
       } finally {
         if (mounted) setState(() => _isLoading = false);
       }
