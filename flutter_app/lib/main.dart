@@ -340,6 +340,84 @@ class HomeScreen extends StatelessWidget {
             floating: true,
             pinned: true,
             backgroundColor: const Color(0xFF0F0F11),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.notifications_active, color: Color(0xFFC5A059)),
+                onPressed: () async {
+                  try {
+                    final notifications = await ApiService.getPendingNotifications();
+                    if (!context.mounted) return;
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: const Color(0xFF0F0F11),
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+                      builder: (ctx) => Container(
+                        padding: const EdgeInsets.all(20),
+                        constraints: const BoxConstraints(maxHeight: 400),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.notifications, color: Color(0xFFC5A059), size: 20),
+                                const SizedBox(width: 8),
+                                const Text("Revision Needed", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'serif')),
+                                const Spacer(),
+                                Text("${notifications.length}", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFC5A059))),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            if (notifications.isEmpty)
+                              const Center(child: Padding(padding: EdgeInsets.all(30), child: Text("✅ All caught up! No revisions needed.", style: TextStyle(color: Colors.grey))))
+                            else
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: notifications.length,
+                                  itemBuilder: (_, i) {
+                                    final n = notifications[i];
+                                    return Container(
+                                      margin: const EdgeInsets.only(bottom: 8),
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withAlpha(5),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(color: n.urgencyLevel == 'critical' ? Colors.redAccent.withAlpha(60) : Colors.white10),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            n.urgencyLevel == 'critical' ? Icons.warning : Icons.schedule,
+                                            color: n.urgencyLevel == 'critical' ? Colors.redAccent : Colors.amber,
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(n.topicName, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13)),
+                                                Text("Retention: ${n.retentionScore}%", style: TextStyle(fontSize: 11, color: n.retentionScore < 30 ? Colors.redAccent : Colors.grey)),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Could not fetch notifications")));
+                    }
+                  }
+                },
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
               title: Row(
