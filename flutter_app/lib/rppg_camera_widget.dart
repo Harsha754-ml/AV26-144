@@ -232,11 +232,19 @@ class RppgCameraWidgetState extends State<RppgCameraWidget> {
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
               child: SizedBox(
-                width: 110,
-                height: 82,
+                width: 120,
+                height: 90,
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    CameraPreview(_controller!),
+                    FittedBox(
+                      fit: BoxFit.cover,
+                      child: SizedBox(
+                        width: _controller!.value.previewSize?.height ?? 120,
+                        height: _controller!.value.previewSize?.width ?? 90,
+                        child: CameraPreview(_controller!),
+                      ),
+                    ),
                     // Scanning overlay
                     Positioned.fill(
                       child: Container(
@@ -268,7 +276,7 @@ class RppgCameraWidgetState extends State<RppgCameraWidget> {
             ),
             // Status bar
             Container(
-              width: 110,
+              width: 120,
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
               decoration: BoxDecoration(
                 color: const Color(0xFF0A0A0B),
