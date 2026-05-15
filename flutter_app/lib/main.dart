@@ -685,13 +685,19 @@ class _AddBottomSheetState extends State<AddBottomSheet> with SingleTickerProvid
       setState(() => _isLoading = true);
       try {
         File file = File(result.files.single.path!);
+        
+        // Check file exists and is readable
+        if (!await file.exists()) {
+          throw Exception('File not found at path');
+        }
+        
         final bytes = await file.readAsBytes();
-        final filename = file.path.split('/').last.split('\\').last;
+        final filename = result.files.single.name;
         
         // Step 1: Extract text (no AI)
         var extractReq = http.MultipartRequest('POST', Uri.parse('${AppConstants.backendUrl}/extract/file'));
         extractReq.files.add(http.MultipartFile.fromBytes('file', bytes, filename: filename));
-        final extractRes = await extractReq.send().timeout(const Duration(seconds: 15));
+        final extractRes = await extractReq.send().timeout(const Duration(seconds: 30));
         final extractBody = await extractRes.stream.bytesToString();
         
         if (extractRes.statusCode != 200) {
@@ -763,7 +769,7 @@ class _AddBottomSheetState extends State<AddBottomSheet> with SingleTickerProvid
           throw Exception('AI generation failed. Try again in a few seconds.');
         }
       } catch (e) {
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e"), duration: const Duration(seconds: 5)));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}"), duration: const Duration(seconds: 8)));
       } finally {
         if (mounted) setState(() => _isLoading = false);
       }
