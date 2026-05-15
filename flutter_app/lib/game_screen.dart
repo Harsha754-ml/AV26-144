@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models.dart';
 import 'api_service.dart';
+import 'rppg_camera_widget.dart';
 
 // ============================================================
 // DEMO DATA - Always available for showcase
@@ -202,15 +203,21 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
               ],
             ),
           ),
-          // Game Content
+          // Game Content with rPPG Camera overlay
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
+            child: Stack(
               children: [
-                _MatchGame(flashcards: _activeCards),
-                _SpeedRecallGame(flashcards: _activeCards),
-                _TypeChallengeGame(flashcards: _activeCards),
-                _SurvivalGame(flashcards: _activeCards),
+                TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _MatchGame(flashcards: _activeCards),
+                    _SpeedRecallGame(flashcards: _activeCards),
+                    _TypeChallengeGame(flashcards: _activeCards),
+                    _SurvivalGame(flashcards: _activeCards),
+                  ],
+                ),
+                // rPPG Camera Widget - tracks facial micro-expressions during games
+                const RppgCameraWidget(active: true),
               ],
             ),
           ),

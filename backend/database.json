@@ -6,6 +6,12 @@
       "text": "Daily email sent to harsha54k@gmail.com",
       "type": "info",
       "timestamp": 1778802828.9824307
+    },
+    {
+      "id": "evt_1778803299112",
+      "text": "Daily email sent to harsha54k@gmail.com",
+      "type": "info",
+      "timestamp": 1778803299.1125662
     }
   ],
   "pending_notifications": [],
