@@ -9,6 +9,7 @@ import LearningFlow from './LearningFlow';
 import CameraWidget from './CameraWidget';
 import SplashScreen from './SplashScreen';
 import LoginPage from './LoginPage';
+import TeacherDashboard from './TeacherDashboard';
 
 const API_BASE = "http://127.0.0.1:8000";
 const WS_URL = "ws://127.0.0.1:8000/ws";
@@ -310,7 +311,9 @@ function App() {
         <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-[#8da290]/[0.02] rounded-full blur-[140px] pointer-events-none" />
 
         <div className="p-10 lg:p-20 relative z-10">
-           {activeTab === 'dashboard' ? (
+           {activeTab === 'dashboard' && user?.role === 'teacher' ? (
+             <TeacherDashboard />
+           ) : activeTab === 'dashboard' ? (
            <>
            {/* HEADER SECTION */}
            <header className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/5 pb-10 mb-12 gap-10">
